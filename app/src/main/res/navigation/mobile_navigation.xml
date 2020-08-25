@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="id.co.kamil.autochat.ui.dasbor.DasborFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_dasbor" />
+    <fragment
+        android:id="@+id/nav_kontak"
+        android:name="id.co.kamil.autochat.ui.kontak.KontakFragment"
+        android:label="@string/menu_kontak"
+        tools:layout="@layout/fragment_kontak" />
+
+    <fragment
+        android:id="@+id/nav_group"
+        android:name="id.co.kamil.autochat.ui.grup.GrupFragment"
+        android:label="@string/menu_group"
+        tools:layout="@layout/fragment_grup" />
+
+    <fragment
+        android:id="@+id/nav_notification"
+        android:name="id.co.kamil.autochat.ui.notification.NotifFragment"
+        android:label="@string/menu_notification"
+        tools:layout="@layout/fragment_notif" />
+    <fragment
+        android:id="@+id/nav_antrian_pesan"
+        android:name="id.co.kamil.autochat.ui.pesan.AntrianPesanFragment"
+        android:label="@string/menu_antrian_pesan"
+        tools:layout="@layout/fragment_antrian_pesan" />
+    <fragment
+        android:id="@+id/nav_pesan_terkirim"
+        android:name="id.co.kamil.autochat.ui.pesan.PesanTerkirimFragment"
+        android:label="@string/menu_pesan_terkirim"
+        tools:layout="@layout/fragment_pesan_terkirim" />
+    <fragment
+        android:id="@+id/nav_autoreply"
+        android:name="id.co.kamil.autochat.ui.pesan.AutoReplyFragment"
+        android:label="@string/menu_autoreply"
+        tools:layout="@layout/fragment_auto_reply" />
+    <fragment
+        android:id="@+id/nav_wa_generator"
+        android:name="id.co.kamil.autochat.ui.shorten.WAShortenFragment"
+        android:label="@string/menu_wa_generator"
+        tools:layout="@layout/fragment_washorten" />
+    <fragment
+        android:id="@+id/nav_kirim_terjadwal"
+        android:name="id.co.kamil.autochat.ui.schedule.ScheduleFragment"
+        android:label="@string/menu_pesan_terjadwal"
+        tools:layout="@layout/fragment_schedule" />
+    <fragment
+        android:id="@+id/nav_autotext"
+        android:name="id.co.kamil.autochat.ui.autotext.AutoTextFragment"
+        android:label="@string/menu_autotext"
+        tools:layout="@layout/fragment_auto_text" />
+    <fragment
+        android:id="@+id/nav_group_autotext"
+        android:name="id.co.kamil.autochat.ui.autotext.GroupAutoTextFragment"
+        android:label="@string/menu_group_autotext"
+        tools:layout="@layout/fragment_group_auto_text" />
+    <fragment
+        android:id="@+id/nav_group_autoreply"
+        android:name="id.co.kamil.autochat.ui.grup.GrupAutoReplyFragment"
+        android:label="@string/menu_group_autoreply"
+        tools:layout="@layout/fragment_grup_auto_reply" />
+
+    <fragment
+        android:id="@+id/nav_operator"
+        android:name="id.co.kamil.autochat.ui.operator.OperatorFragment"
+        android:label="@string/menu_operator"
+        tools:layout="@layout/fragment_operator" />
+
+    <fragment
+        android:id="@+id/nav_leadmagnet"
+        android:name="id.co.kamil.autochat.ui.leadmagnet.LeadMagnetFragment"
+        android:label="@string/manu_leadmagnet"
+        tools:layout="@layout/fragment_lead_magnet" />
+    <fragment
+        android:id="@+id/nav_template"
+        android:name="id.co.kamil.autochat.ui.template.TemplateFragment"
+        android:label="@string/menu_template_promosi"
+        tools:layout="@layout/fragment_template" />
+    <fragment
+        android:id="@+id/nav_template_dictionary"
+        android:name="id.co.kamil.autochat.ui.template.TemplateDictionaryFragment"
+        android:label="@string/menu_template_kamus"
+        tools:layout="@layout/fragment_template_dictionary" />
+    <fragment
+        android:id="@+id/nav_waform"
+        android:name="id.co.kamil.autochat.ui.waform.WaformFragment"
+        android:label="@string/menu_waform"
+        tools:layout="@layout/fragment_waform" />
+    <fragment
+        android:id="@+id/nav_template_share"
+        android:name="id.co.kamil.autochat.ui.template.TemplateShareFragment"
+        android:label="@string/menu_template_dibagikan"
+        tools:layout="@layout/fragment_template_share" />
+    <fragment
+        android:id="@+id/nav_linkpage"
+        android:name="id.co.kamil.autochat.ui.linkpage.LinkPageFragment"
+        android:label="@string/menu_linkpage"
+        tools:layout="@layout/fragment_link_page" />
+</navigation>

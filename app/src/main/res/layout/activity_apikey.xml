@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    android:orientation="vertical"
+    tools:context=".ui.ApikeyActivity">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="API Key"/>
+    <EditText
+        android:id="@+id/edtAPIKey"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:enabled="false"
+        android:background="@drawable/rectangle_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnGenerate"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_rect_primary"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/md_white_1000"
+            android:text="Generate"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"/>
+        <Button
+            android:id="@+id/btnCopy"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_rect_default"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Copy"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="Url Callback "/>
+    <EditText
+        android:id="@+id/edtUrlCallback"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:textSize="16sp"
+        android:inputType="textUri"
+        android:hint="Url Notification"
+        android:background="@drawable/rectangle_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btnSimpan"
+        android:layout_margin="10dp"
+        android:background="@drawable/btn_rect_primary"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/md_white_1000"
+        android:text="Simpan"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"/>
+</LinearLayout>

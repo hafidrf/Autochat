@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "203097694045",
+    "firebase_url": "https://wabot-7ef10.firebaseio.com",
+    "project_id": "wabot-7ef10",
+    "storage_bucket": "wabot-7ef10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203097694045:android:c1eb9547e1b455c58c92b4",
+        "android_client_info": {
+          "package_name": "id.co.kamil.autochat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "203097694045-buv0prp0teejofnk8lj87e32hhketnsf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChevpdgUWNalkHs57NM4JWxPfGRSr0ixM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203097694045-buv0prp0teejofnk8lj87e32hhketnsf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

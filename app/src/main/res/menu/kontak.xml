@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/actImporKontak"
+        android:visible="false"
+        android:title="Impor Kontak" />
+    <item
+        android:id="@+id/actScan"
+        android:icon="@drawable/ic_scan_dark"
+        android:title="Scan"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actSend"
+        android:title="Kirim Langsung"
+        android:visible="false" />
+    <item
+        android:id="@+id/actSendTemplate"
+        android:title="Kirim by Template"
+        android:visible="false" />
+    <item
+        android:id="@+id/actTambah"
+        android:icon="@drawable/ic_plus_dark"
+        android:title="Tambah"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actEdit"
+        android:title="Edit"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actSemua"
+        android:title="Semua"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actBatal"
+        android:title="Batal"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actHapus"
+        android:title="Hapus"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actImport"
+        android:title="Import CSV"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actEditForExport"
+        android:title="Export CSV"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actExport"
+        android:title="Export CSV"
+        android:visible="false"
+        app:showAsAction="always" />
+</menu>

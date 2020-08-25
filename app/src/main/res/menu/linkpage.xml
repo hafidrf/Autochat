@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/actBagikan"
+        android:icon="@drawable/ic_share_white"
+        android:title="Bagikan"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/actSalin"
+        android:title="Salin" />
+    <item
+        android:id="@+id/actOpen"
+        android:title="Buka Linkpage" />
+</menu>

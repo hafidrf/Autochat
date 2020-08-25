@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="Caption"/>
+    <EditText
+        android:id="@+id/edtCaption"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rectangle_white_slim"
+        android:layout_marginRight="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:fontFamily="@font/font"
+        android:gravity="top"
+        android:layout_marginBottom="20dp"
+        android:hint="Masukan caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="Nilai"/>
+    <EditText
+        android:id="@+id/edtNilai"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rectangle_white_slim"
+        android:layout_marginRight="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:fontFamily="@font/font"
+        android:gravity="top"
+        android:layout_marginBottom="20dp"
+        android:hint="Nilai untuk caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:textColor="@color/md_red_500"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nilai akan secara default terisi sebagai caption jika dikosongkan"/>
+
+</LinearLayout>

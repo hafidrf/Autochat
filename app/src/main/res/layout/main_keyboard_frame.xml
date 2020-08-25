@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+**
+** Copyright 2014, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="vertical" >
+
+    <!-- To ensure that key preview popup is correctly placed when the current system locale is
+         one of RTL locales, layoutDirection="ltr" is needed in the SDK version 17+. -->
+    <LinearLayout
+        android:id="@+id/layAutoText"
+        android:background="@color/color_autotext"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/imgApps"
+            android:layout_margin="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_tools"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layToolbar"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:background="@color/color_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_margin="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_back_white"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerMenu"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <HorizontalScrollView
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/layBulkSender"
+                    android:gravity="center"
+
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <Switch
+                            android:id="@+id/switchBulkSender"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                    <TextView
+                        android:text="Bulk Sender"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layTambahKontak"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imgContact"
+                        android:src="@drawable/ic_add_contact_white"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="6dp"/>
+                    <TextView
+                        android:text="Tambah Kontak"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layKontak"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imgKontak"
+                        android:src="@drawable/ic_contact_white"
+                        android:layout_gravity="center"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_margin="6dp"/>
+                    <TextView
+                        android:text="Kontak"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layBroadcast"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imgBroadcast"
+                        android:src="@drawable/ic_menu_send_dark"
+                        android:layout_gravity="center"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_margin="6dp"/>
+                    <TextView
+                        android:text="Broadcast"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layFollowup"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/imgFollowup"
+                            android:src="@drawable/ic_followup_dark"
+                            android:layout_gravity="center"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_margin="6dp"/>
+                    </LinearLayout>
+                    <TextView
+                        android:text="Follow Up"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layBtnAutoText"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/ic_menu_autotext_dark"
+                        android:layout_gravity="center"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_margin="6dp"/>
+                    <TextView
+                        android:text="Auto Text"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layBtnPengaturan"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/ic_pengaturan_dark"
+                        android:layout_gravity="center"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_margin="6dp"/>
+                    <TextView
+                        android:text="Pengaturan"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layDasbor"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imgPengaturan"
+                        android:src="@drawable/ic_home_dark"
+                        android:layout_gravity="center"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_margin="6dp"/>
+                    <TextView
+                        android:text="Dashboard"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/layOngkir"
+                    android:visibility="gone"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imgCekOngkri"
+                        android:src="@drawable/ic_ongkir_dark"
+                        android:layout_gravity="center"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_margin="6dp"/>
+                    <TextView
+                        android:text="Cek Ongkir"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layKurir"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/imgKurir"
+                            android:src="@drawable/ic_ongkir_dark"
+                            android:layout_gravity="center"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_margin="6dp"/>
+                        <TextView
+                            android:layout_marginTop="5dp"
+                            android:textSize="12sp"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/md_white_1000"
+                            android:background="@drawable/rectangle_red"
+                            android:text="beta"/>
+                    </LinearLayout>
+                    <TextView
+                        android:text="Pesan Kurir"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/layPulsa"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/imgPulsa"
+                            android:src="@drawable/ic_smartphone_white"
+                            android:layout_gravity="center"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_margin="6dp"/>
+                        <TextView
+                            android:layout_marginTop="5dp"
+                            android:textSize="12sp"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/md_white_1000"
+                            android:background="@drawable/rectangle_red"
+                            android:text="beta"/>
+                    </LinearLayout>
+                    <TextView
+                        android:text="Beli Pulsa"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+    <rkr.simplekeyboard.inputmethod.keyboard.MainKeyboardView
+        android:id="@+id/keyboard_view"
+        android:layoutDirection="ltr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

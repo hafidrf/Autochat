@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/actTambah"
+        android:icon="@drawable/ic_plus_dark"
+        android:title="Tambah"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actScan"
+        android:icon="@drawable/ic_scan_dark"
+        android:title="Scan"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actEdit"
+        android:title="Edit"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actSemua"
+        android:title="Semua"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actBatal"
+        android:title="Batal"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actHapus"
+        android:title="Hapus"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+</menu>

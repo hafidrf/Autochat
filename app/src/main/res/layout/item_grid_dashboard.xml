@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/itemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/itemIcon"
+            android:layout_margin="10dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+        <TextView
+            android:id="@+id/itemTitle"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/itemIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipe Akun"/>
+        <TextView
+            android:id="@+id/itemSubtitle"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/md_black_1000"
+            android:textSize="18sp"
+            android:text="Basic"
+            android:layout_toRightOf="@id/itemIcon"
+            android:layout_below="@id/itemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+</LinearLayout>

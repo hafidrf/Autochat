@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_pengaturan"
+            android:onClick="doSetting"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/menu_pengaturan" />
+        <item
+            android:id="@+id/nav_kontak"
+            android:icon="@drawable/ic_contact"
+            android:title="@string/menu_kontak" />
+        <item
+            android:id="@+id/nav_followup"
+            android:onClick="doFollowup"
+            android:icon="@drawable/ic_followup"
+            android:title="@string/menu_followup" />
+        <item
+            android:id="@+id/nav_group"
+            android:icon="@drawable/ic_group"
+            android:title="@string/menu_group" />
+        <item
+            android:id="@+id/nav_leadmagnet"
+            android:icon="@drawable/ic_leadmagnet"
+            android:title="@string/manu_leadmagnet" />
+        <item
+            android:id="@+id/nav_waform"
+            android:icon="@drawable/ic_waform"
+            android:title="@string/menu_waform" />
+        <item
+            android:id="@+id/nav_linkpage"
+            android:icon="@drawable/ic_linkpage"
+            android:title="@string/menu_linkpage" />
+    </group>
+    <item android:title="Template Promosi">
+        <menu>
+            <item
+                android:id="@+id/nav_template"
+                android:icon="@drawable/ic_marketing_kit"
+                android:title="@string/menu_template_promosi" />
+            <item
+                android:id="@+id/nav_template_dictionary"
+                android:icon="@drawable/ic_template_dictionary"
+                android:title="@string/menu_template_kamus" />
+            <item
+                android:id="@+id/nav_template_share"
+                android:icon="@drawable/ic_template_share"
+                android:title="@string/menu_template_dibagikan" />
+        </menu>
+    </item>
+    <item android:title="Whatsapp Engine">
+        <menu>
+            <item
+                android:id="@+id/nav_kirim_pesan"
+                android:icon="@drawable/ic_menu_send"
+                android:onClick="showKirimPesan"
+                android:title="@string/menu_kirim_pesan" />
+            <item
+                android:id="@+id/nav_kirim_terjadwal"
+                android:icon="@drawable/ic_schedule"
+                android:title="@string/menu_pesan_terjadwal" />
+            <item
+                android:id="@+id/nav_antrian_pesan"
+                android:icon="@drawable/ic_antrian_pesan"
+                android:title="@string/menu_antrian_pesan" />
+            <item
+                android:id="@+id/nav_pesan_terkirim"
+                android:icon="@drawable/ic_terkirim"
+                android:title="@string/menu_pesan_terkirim" />
+            <item
+                android:id="@+id/nav_group_autoreply"
+                android:icon="@drawable/ic_group_other_light"
+                android:title="@string/menu_group_autoreply" />
+            <item
+                android:id="@+id/nav_autoreply"
+                android:icon="@drawable/ic_autoreply"
+                android:title="@string/menu_autoreply" />
+            <item
+                android:id="@+id/nav_wa_generator"
+                android:icon="@drawable/ic_wa_link_generator"
+                android:title="@string/menu_wa_generator" />
+        </menu>
+    </item>
+
+    <item android:title="Keyboard Tool">
+        <menu>
+            <item
+                android:id="@+id/nav_group_autotext"
+                android:icon="@drawable/ic_group_other_light"
+                android:title="@string/menu_group_autotext" />
+            <item
+                android:id="@+id/nav_autotext"
+                android:icon="@drawable/ic_autotext"
+                android:title="@string/menu_autotext" />
+            <item
+                android:id="@+id/nav_marketing_kit"
+                android:visible="false"
+                android:icon="@drawable/ic_marketing_kit"
+                android:title="@string/menu_marketing_kit" />
+        </menu>
+    </item>
+
+    <item android:title="Bantuan">
+        <menu>
+            <item
+                android:id="@+id/nav_afiliasi"
+                android:onClick="doAffiliasi"
+                android:icon="@drawable/ic_affiliasi"
+                android:title="@string/menu_afiliasi" />
+            <item
+                android:id="@+id/nav_landing"
+                android:visible="false"
+                android:icon="@drawable/ic_landing_page"
+                android:title="@string/manu_landing_page" />
+            <item
+                android:id="@+id/nav_akun"
+                android:onClick="doAkun"
+                android:icon="@drawable/ic_profile"
+                android:title="@string/manu_akun" />
+            <item
+                android:id="@+id/nav_upgrade"
+                android:onClick="doUpgrade"
+                android:icon="@drawable/ic_upgrade"
+                android:title="@string/menu_upgrade" />
+            <item
+                android:id="@+id/nav_help"
+                android:onClick="doHelp"
+                android:icon="@drawable/ic_help"
+                android:title="@string/menu_help" />
+            <item
+                android:id="@+id/nav_tutorial"
+                android:onClick="doTutorial"
+                android:visible="false"
+                android:icon="@drawable/ic_media"
+                android:title="@string/menu_tutorial" />
+            <item
+                android:id="@+id/nav_ecourse"
+                android:onClick="doEcourse"
+                android:icon="@drawable/ic_course"
+                android:title="@string/menu_ecourse" />
+
+            <item
+                android:id="@+id/nav_marketing_tool"
+                android:onClick="doMarketingTool"
+                android:icon="@drawable/ic_marketing_kit"
+                android:title="@string/menu_marketing_tool" />
+            <item
+                android:id="@+id/nav_operator"
+                android:icon="@drawable/ic_menu_operator"
+                android:title="@string/menu_operator" />
+            <item
+                android:id="@+id/nav_apikey"
+                android:onClick="doApikey"
+                android:icon="@drawable/ic_menu_apikey"
+                android:title="@string/menu_apikey" />
+            <item
+                android:id="@+id/nav_log"
+                android:onClick="doLog"
+                android:icon="@drawable/ic_menu_log"
+                android:title="@string/menu_log" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:onClick="doLogout"
+                android:title="@string/menu_logout" />
+        </menu>
+    </item>
+</menu>
