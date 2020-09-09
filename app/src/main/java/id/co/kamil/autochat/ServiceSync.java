@@ -1653,7 +1653,7 @@ public class ServiceSync extends Service {
         protected void onPostExecute(Bitmap result){
             String created = getTgl();
             // Hide the progress dialog
-            dbHelper.unlockOutboxById(idMessage);
+            //dbHelper.unlockOutboxById(idMessage);
             if(result!=null){
                 // Display the downloaded image into ImageView
 
@@ -1662,8 +1662,16 @@ public class ServiceSync extends Service {
                 try {
                     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                     String sha1 = sha1(timestamp.getTime() + ".jpg");
-                    dbHelper.updateOutboxImageById(idMessage,sha1);
+                    //dbHelper.updateOutboxImageById(idMessage,sha1);
+                    fOutboxRef.child(idMessage).child("image_hash").setValue(sha1);
                     Uri imageInternalUri = saveImageToInternalStorage(result,sha1);
+                    for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
+                        String[] str = dataAntrianPesanFirebase.get(i);
+                        if (str[i].equals(idMessage)) {
+                            dataAntrianPesanFirebase.remove(i);
+                            dataAntrianPesanFirebase.add(i, new String[]{idMessage, str[1], str[2], sha1, str[4], str[5]});
+                        }
+                    }
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
