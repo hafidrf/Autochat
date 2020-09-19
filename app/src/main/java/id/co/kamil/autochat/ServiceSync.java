@@ -1440,7 +1440,9 @@ public class ServiceSync extends Service {
 
                     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                     StrictMode.setVmPolicy(builder.build());
-                    Uri uri = Uri.parse(image_hash);
+                    File filePath = new File(image_hash);
+                    Uri uri = Uri.fromFile(filePath);
+                    Log.i(TAG,"path:" + image_hash);
                     Intent sendIntent = new Intent();
                     sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     sendIntent.setAction(Intent.ACTION_SEND);
@@ -1661,15 +1663,17 @@ public class ServiceSync extends Service {
                 dbHelper.insertLog(created,ID_SERVICE_WA,"berhail download gambar pesan","success",user_id);
                 try {
                     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                    String sha1 = sha1(timestamp.getTime() + ".jpg");
+                    String sha1 = sha1(timestamp.getTime() + "");
                     //dbHelper.updateOutboxImageById(idMessage,sha1);
-                    fOutboxRef.child(idMessage).child("image_hash").setValue(sha1);
-                    Uri imageInternalUri = saveImageToInternalStorage(result,sha1);
+//                    Uri imageInternalUri = saveImageToInternalStorage(result,sha1);
+                    SaveImage(result,"bulk",sha1 + ".jpg");
+                    String path = getDirWabot("bulk")  + "/" + sha1 + ".jpg";
+                    fOutboxRef.child(idMessage).child("image_hash").setValue(path);
                     for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                         String[] str = dataAntrianPesanFirebase.get(i);
                         if (str[i].equals(idMessage)) {
                             dataAntrianPesanFirebase.remove(i);
-                            dataAntrianPesanFirebase.add(i, new String[]{idMessage, str[1], str[2], sha1, str[4], str[5]});
+                            dataAntrianPesanFirebase.add(i, new String[]{idMessage, str[1], str[2], path, str[4], str[5]});
                         }
                     }
                 } catch (NoSuchAlgorithmException e) {

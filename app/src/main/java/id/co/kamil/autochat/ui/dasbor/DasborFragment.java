@@ -3,6 +3,7 @@ package id.co.kamil.autochat.ui.dasbor;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.Context;
@@ -19,8 +20,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.RemoteException;
+import android.os.StrictMode;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -34,6 +37,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -290,7 +294,6 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
 
         return view;
     }
-
     private void updateStatusBulkSender() {
         boolean status_bulk_sender = sharePref.getSessionBool(STATUS_BULK_SENDER);
         status_aksesibilitas = isAccessibilityEnabled();
