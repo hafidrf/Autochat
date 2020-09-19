@@ -1442,7 +1442,6 @@ public class ServiceSync extends Service {
                     StrictMode.setVmPolicy(builder.build());
                     File filePath = new File(image_hash);
                     Uri uri = Uri.fromFile(filePath);
-                    Log.i(TAG,"path:" + image_hash);
                     Intent sendIntent = new Intent();
                     sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     sendIntent.setAction(Intent.ACTION_SEND);
