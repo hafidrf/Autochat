@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/md_white_1000"
+    android:keepScreenOn="true"
     tools:context=".ui.kontak.FormKontakActivity">
     <RadioGroup
         android:background="@color/colorPrimary"
