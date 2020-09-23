@@ -189,6 +189,14 @@ public class ServiceSync extends Service {
                     String image_url = dataSnapshot.child("image_url").getValue().toString();
                     String index_order = dataSnapshot.child("error_again").getValue().toString();
                     String sent = dataSnapshot.child("sent").getValue().toString();
+
+                    String sha1 = sha1(image_url) + ".jpg";
+                    String path = getDirWabot("bulk")  + "/" + sha1;
+                    if (fileExist(getApplicationContext(),path)) {
+                        if (image_hash.isEmpty() || image_hash == null){
+                            image_hash = path;
+                        }
+                    }
                     if (sent.isEmpty()) {
                         dataAntrianPesanFirebase.add(new String[]{id, destination_number, message, image_hash, image_url, index_order});
                     } else {
@@ -212,6 +220,14 @@ public class ServiceSync extends Service {
                     String image_url = dataSnapshot.child("image_url").getValue().toString();
                     String index_order = dataSnapshot.child("error_again").getValue().toString();
                     String sent = dataSnapshot.child("sent").getValue().toString();
+
+                    String sha1 = sha1(image_url) + ".jpg";
+                    String path = getDirWabot("bulk")  + "/" + sha1;
+                    if (fileExist(getApplicationContext(),path)) {
+                        if (image_hash.isEmpty() || image_hash == null){
+                            image_hash = path;
+                        }
+                    }
                     for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                         String[] str = dataAntrianPesanFirebase.get(i);
                         if (str[i].equals(id)) {
@@ -1432,9 +1448,29 @@ public class ServiceSync extends Service {
                     }
                     Log.e(TAG,"Send Text:" );
                 }else if ((image_hash==null || image_hash.isEmpty() || image_hash.equals(null) || image_hash.equals("null")) && !(image_url == null || image_url.isEmpty() || image_url.equals(null)|| image_url.equals("null"))){
-                    DownloadTask task  = new DownloadTask();
-                    task.setId(id);
-                    task.execute(stringToURL(image_url));
+                    try {
+                        String sha1 = sha1(image_url) + ".jpg";
+                        String path = getDirWabot("bulk")  + "/" + sha1;
+                        if (fileExist(getApplicationContext(),path)){
+                            fOutboxRef.child(id).child("image_hash").setValue(path);
+                            for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
+                                String[] str = dataAntrianPesanFirebase.get(i);
+                                if (str[i].equals(id)) {
+                                    dataAntrianPesanFirebase.remove(i);
+                                    dataAntrianPesanFirebase.add(i, new String[]{id, str[1], str[2], path, str[4], str[5]});
+                                }
+                            }
+                        }else{
+                            DownloadTask task  = new DownloadTask();
+                            task.setId(id);
+                            task.execute(stringToURL(image_url));
+                        }
+
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
+
+
                     Log.e(TAG,"Download Image:" );
                 }else {
 
@@ -1582,6 +1618,7 @@ public class ServiceSync extends Service {
     private class DownloadTask extends AsyncTask<URL,Void,Bitmap> {
         // Before the tasks execution
         String idMessage;
+        URL url;
         public void setId(String id){
             idMessage = id;
         }
@@ -1596,6 +1633,7 @@ public class ServiceSync extends Service {
         // Do the task in background/non UI thread
         protected Bitmap doInBackground(URL...urls){
             String created = getTgl();
+            url = urls[0];
             URL url = urls[0];
             HttpURLConnection connection = null;
 
@@ -1653,6 +1691,7 @@ public class ServiceSync extends Service {
         // When all async task done
         protected void onPostExecute(Bitmap result){
             String created = getTgl();
+            String image_url = url.toString();
             // Hide the progress dialog
             //dbHelper.unlockOutboxById(idMessage);
             if(result!=null){
@@ -1662,11 +1701,11 @@ public class ServiceSync extends Service {
                 dbHelper.insertLog(created,ID_SERVICE_WA,"berhail download gambar pesan","success",user_id);
                 try {
                     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                    String sha1 = sha1(timestamp.getTime() + "");
+                    String sha1 = sha1(image_url) + ".jpg";
                     //dbHelper.updateOutboxImageById(idMessage,sha1);
 //                    Uri imageInternalUri = saveImageToInternalStorage(result,sha1);
-                    SaveImage(result,"bulk",sha1 + ".jpg");
-                    String path = getDirWabot("bulk")  + "/" + sha1 + ".jpg";
+                    SaveImage(result,"bulk",sha1);
+                    String path = getDirWabot("bulk")  + "/" + sha1;
                     fOutboxRef.child(idMessage).child("image_hash").setValue(path);
                     for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                         String[] str = dataAntrianPesanFirebase.get(i);
