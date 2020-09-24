@@ -81,6 +81,23 @@
                             android:layout_marginRight="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/labelFloatingWidget"
+                            android:textSize="16sp"
+                            android:textColor="@color/md_black_1000"
+                            android:layout_below="@id/labelAccessibility"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginRight="10dp"
+                            android:text="Floating Widget"/>
+                        <Switch
+                            android:id="@+id/switchFloatingWidget"
+                            android:layout_alignTop="@id/labelFloatingWidget"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
                     </RelativeLayout>
                 </LinearLayout>
                 <LinearLayout

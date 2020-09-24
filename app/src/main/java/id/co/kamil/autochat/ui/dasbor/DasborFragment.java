@@ -72,6 +72,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import id.co.kamil.autochat.FloatingViewService;
 import id.co.kamil.autochat.LoginActivity;
 import id.co.kamil.autochat.R;
 import id.co.kamil.autochat.adapter.AdapterDashboard;
@@ -96,6 +97,7 @@ import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_PARENT_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
+import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
 import static id.co.kamil.autochat.utils.Utils.convertDpToPixel;
 import static id.co.kamil.autochat.utils.Utils.convertPixelsToDp;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
@@ -136,7 +138,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     private int dbVersionCode;
     private ProgressDialog pDialog;
     private int page_kontak_wabot = 0;
-    private Switch switchEnabledBulkSender,switchAksesibilitas;
+    private Switch switchEnabledBulkSender,switchAksesibilitas, switchFloatingWidget;
     private boolean status_aksesibilitas;
 
 
@@ -170,6 +172,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         listDashboard = (ExpandableHeightListView) view.findViewById(R.id.listDashboard);
         switchEnabledBulkSender = (Switch) view.findViewById(R.id.switchEnabledBulkSender);
         switchAksesibilitas = (Switch) view.findViewById(R.id.switchAksesibilitas);
+        switchFloatingWidget = (Switch) view.findViewById(R.id.switchFloatingWidget);
         txtInfo = (TextView) view.findViewById(R.id.txtInfo);
         txtJoin = (TextView) view.findViewById(R.id.txtJoin);
         swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
@@ -242,6 +245,20 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 startActivity(i);
             }
         });
+        switchFloatingWidget.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharePref.createSession(STATUS_FLOATING_WIDGET,isChecked);
+
+                if (getActivity() != null) {
+                    if (isChecked) {
+                        getActivity().startService(new Intent(getContext(), FloatingViewService.class));
+                    } else {
+                        getActivity().stopService(new Intent(getContext(), FloatingViewService.class));
+                    }
+                }
+            }
+        });
         swipe_refresh.post(new Runnable() {
             @Override
             public void run() {
@@ -297,9 +314,11 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     private void updateStatusBulkSender() {
         boolean status_bulk_sender = sharePref.getSessionBool(STATUS_BULK_SENDER);
         status_aksesibilitas = isAccessibilityEnabled();
+        boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
 
         switchAksesibilitas.setChecked(status_aksesibilitas);
         switchEnabledBulkSender.setChecked(status_bulk_sender);
+        switchFloatingWidget.setChecked(status_floating_widget);
     }
 
     @Override

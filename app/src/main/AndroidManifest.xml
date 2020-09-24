@@ -36,6 +36,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".FloatingViewService"
+            android:enabled="true"
+            android:exported="false" />
         <activity android:name=".ui.linkpage.FormLinkPageAddFieldActivity"></activity>
         <activity android:name=".ui.linkpage.FormLinkPageActivity" />
         <activity android:name=".ui.template.TemplateShareDetailActivity" />

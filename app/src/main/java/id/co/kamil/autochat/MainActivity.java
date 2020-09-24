@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.android.volley.AuthFailureError;
@@ -108,15 +109,19 @@ import static id.co.kamil.autochat.utils.SharPref.LINK_ECOURSE;
 import static id.co.kamil.autochat.utils.SharPref.LINK_MARKETING_TOOL;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TIMWABOT;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TUTORIAL;
+import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
+import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 10;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_CONTACTS = 11;
+    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     private static final int REQUEST_ADD = 100;
     public static final String MAIN_RECEIVER = "MAIN_RECEIVER";
     private static final String TAG = "MainActivity";
+    public static final String TAG_OPEN_MENU = "MainActivity_OpenMenu";
 
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
@@ -279,6 +284,38 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.nav_template);
 
             }
+        }
+
+
+
+        //Check if the application has draw over other apps permission or not?
+        //This permission is by default available for API<23. But for API > 23
+        //you have to ask for the permission in runtime.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            new AlertDialog.Builder(this)
+                .setTitle("Akses Floating Widget")
+                .setMessage("WABOT memerlukan akses over draw untuk floating widget?")
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
+                    }
+                }).show();
+        } else {
+            boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
+            if (status_floating_widget) {
+                startService(new Intent(this, FloatingViewService.class));
+            }
+        }
+
+        Intent pushNotification = getIntent().getParcelableExtra(MainActivity.TAG_OPEN_MENU);
+        if (pushNotification != null) {
+            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
         }
     }
 
@@ -622,6 +659,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
+            //Check if the permission is granted or not.
+            if (resultCode == RESULT_OK) {
+                boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
+                if (status_floating_widget) {
+                    startService(new Intent(this, FloatingViewService.class));
+                }
+            } else { //Permission is not available
+                Toast.makeText(this,
+                    "Draw over other app permission not available.",
+                    Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
         super.onActivityResult(requestCode, resultCode, data);
         drawer.closeDrawers();
     }
