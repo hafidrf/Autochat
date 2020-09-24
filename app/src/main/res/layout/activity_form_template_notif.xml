@@ -3,7 +3,6 @@
     android:id="@+id/layMaster"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
     android:orientation="vertical">
     <ScrollView
         android:layout_weight="1"

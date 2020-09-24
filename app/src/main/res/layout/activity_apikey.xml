@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:padding="15dp"
     android:orientation="vertical"
-    android:keepScreenOn="true"
     tools:context=".ui.ApikeyActivity">
     <TextView
         android:layout_width="wrap_content"
