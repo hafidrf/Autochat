@@ -75,7 +75,6 @@ public class FloatingViewService extends Service {
     closeButtonCollapsed.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        sharePref.createSession(STATUS_FLOATING_WIDGET,false);
         //close the service and remove the from from the window
         stopSelf();
       }

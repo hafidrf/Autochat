@@ -34,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -99,6 +100,7 @@ import static id.co.kamil.autochat.utils.SessionManager.KEY_PARENT_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
+import static id.co.kamil.autochat.utils.SharPref.STATUS_SCREEN_ALWAYS_ON;
 import static id.co.kamil.autochat.utils.Utils.convertDpToPixel;
 import static id.co.kamil.autochat.utils.Utils.convertPixelsToDp;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
@@ -139,7 +141,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     private int dbVersionCode;
     private ProgressDialog pDialog;
     private int page_kontak_wabot = 0;
-    private Switch switchEnabledBulkSender,switchAksesibilitas, switchFloatingWidget;
+    private Switch switchEnabledBulkSender,switchAksesibilitas, switchFloatingWidget, switchScreenAlwaysOn;
     private boolean status_aksesibilitas;
 
 
@@ -174,6 +176,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchEnabledBulkSender = (Switch) view.findViewById(R.id.switchEnabledBulkSender);
         switchAksesibilitas = (Switch) view.findViewById(R.id.switchAksesibilitas);
         switchFloatingWidget = (Switch) view.findViewById(R.id.switchFloatingWidget);
+        switchScreenAlwaysOn = (Switch) view.findViewById(R.id.switchScreenAlwaysOn);
         txtInfo = (TextView) view.findViewById(R.id.txtInfo);
         txtJoin = (TextView) view.findViewById(R.id.txtJoin);
         swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
@@ -264,6 +267,18 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 }
             }
         });
+        switchScreenAlwaysOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharePref.createSession(STATUS_SCREEN_ALWAYS_ON,isChecked);
+
+                if (getContext() == null) return;
+
+                Intent pushNotification = new Intent(MAIN_RECEIVER);
+                pushNotification.putExtra("action", isChecked ? "enableAlwaysScreenOn" : "disableAlwaysScreenOn");
+                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(pushNotification);
+            }
+        });
         swipe_refresh.post(new Runnable() {
             @Override
             public void run() {
@@ -320,10 +335,12 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         boolean status_bulk_sender = sharePref.getSessionBool(STATUS_BULK_SENDER);
         status_aksesibilitas = isAccessibilityEnabled();
         boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
+        boolean screen_always_on = sharePref.getSessionBool(STATUS_SCREEN_ALWAYS_ON);
 
         switchAksesibilitas.setChecked(status_aksesibilitas);
         switchEnabledBulkSender.setChecked(status_bulk_sender);
         switchFloatingWidget.setChecked(status_floating_widget);
+        switchScreenAlwaysOn.setChecked(screen_always_on);
     }
 
     @Override
