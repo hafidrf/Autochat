@@ -1,5 +1,8 @@
 package id.co.kamil.autochat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.ContentProviderOperation;
@@ -13,9 +16,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,7 +36,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -113,6 +120,8 @@ import static id.co.kamil.autochat.utils.Utils.getDirWabot;
 import static id.co.kamil.autochat.utils.Utils.sha1;
 
 public class ServiceSync extends Service {
+    private static final String ANDROID_CHANNEL_ID = "id.co.kamil.autochat.ForegroundChannel";
+    private static final int ANDROID_FOREGROUND_ID = 3939;
     private static final String TAG = "ServiceSync";
     public static final String ID_SERVICE_WA = "BulkSender";
     private static final String ID_SERVICE_SYNC = "Sync";
@@ -156,9 +165,40 @@ public class ServiceSync extends Service {
         refreshToken();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createNotificationChannel(String channelName){
+        NotificationChannel chan = new NotificationChannel(ANDROID_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager service = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        service.createNotificationChannel(chan);
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent.getBooleanExtra(SharPref.STATUS_FOREGROUND_SERVICE, false)) {
+            String contentText = "Running service in foreground";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                createNotificationChannel(contentText);
+                Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText(contentText)
+                    .setAutoCancel(true);
+                Notification notification = builder.build();
+                startForeground(ANDROID_FOREGROUND_ID, notification);
+            } else {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText(contentText)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setAutoCancel(true);
+                Notification notification = builder.build();
+                startForeground(ANDROID_FOREGROUND_ID, notification);
+            }
+        } else {
+            stopForeground(true);
+        }
+
         // The service is starting, due to a call to startService()
         session = new SessionManager(this);
         dbHelper = new DBHelper(this);

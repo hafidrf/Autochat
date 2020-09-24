@@ -161,6 +161,14 @@ public class MainActivity extends AppCompatActivity {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             } else if (action.equals("disableAlwaysScreenOn")) {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            } else if (action.equals("enableForegroundService")) {
+                Intent intent1 = new Intent(MainActivity.this,ServiceSync.class);
+                intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, true);
+                startService(intent1);
+            } else if (action.equals("disableForegroundService")) {
+                Intent intent1 = new Intent(MainActivity.this,ServiceSync.class);
+                intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, false);
+                startService(intent1);
             }
         }
     };
