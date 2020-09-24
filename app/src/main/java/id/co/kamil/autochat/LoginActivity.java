@@ -43,6 +43,7 @@ import java.util.Map;
 import id.co.kamil.autochat.database.DBHelper;
 import id.co.kamil.autochat.installreferrer.Application;
 import id.co.kamil.autochat.installreferrer.ReferrerReceiver;
+import id.co.kamil.autochat.utils.PermissionManagement;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
@@ -276,6 +277,8 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // Permission has already been granted
         }
+
+        PermissionManagement.getInstance().needAccessToOverDrawApps(this);
     }
 
 }

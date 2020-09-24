@@ -82,6 +82,7 @@ import id.co.kamil.autochat.database.DBHelper;
 import id.co.kamil.autochat.ui.AffiliasiActivity;
 import id.co.kamil.autochat.ui.PengaturanActivity;
 import id.co.kamil.autochat.utils.ExpandableHeightListView;
+import id.co.kamil.autochat.utils.PermissionManagement;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
@@ -252,7 +253,11 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
 
                 if (getActivity() != null) {
                     if (isChecked) {
-                        getActivity().startService(new Intent(getContext(), FloatingViewService.class));
+                        if (!PermissionManagement.getInstance().needAccessToOverDrawApps(getActivity())) {
+                            getActivity().startService(new Intent(getContext(), FloatingViewService.class));
+                        } else {
+                            switchFloatingWidget.setChecked(false);
+                        }
                     } else {
                         getActivity().stopService(new Intent(getContext(), FloatingViewService.class));
                     }

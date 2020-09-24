@@ -90,6 +90,7 @@ import id.co.kamil.autochat.ui.PengaturanActivity;
 import id.co.kamil.autochat.ui.followup.MainFollowupActivity;
 import id.co.kamil.autochat.ui.linkpage.FormLinkPageActivity;
 import id.co.kamil.autochat.ui.pesan.FormKirimPesanActivity;
+import id.co.kamil.autochat.utils.PermissionManagement;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
@@ -117,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 10;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_CONTACTS = 11;
-    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     private static final int REQUEST_ADD = 100;
     public static final String MAIN_RECEIVER = "MAIN_RECEIVER";
     private static final String TAG = "MainActivity";
@@ -288,30 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //Check if the application has draw over other apps permission or not?
-        //This permission is by default available for API<23. But for API > 23
-        //you have to ask for the permission in runtime.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-            //If the draw over permission is not available open the settings screen
-            //to grant the permission.
-            new AlertDialog.Builder(this)
-                .setTitle("Akses Floating Widget")
-                .setMessage("WABOT memerlukan akses over draw untuk floating widget?")
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
-                    }
-                }).show();
-        } else {
-            boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
-            if (status_floating_widget) {
-                startService(new Intent(this, FloatingViewService.class));
-            }
-        }
+         
 
         Intent pushNotification = getIntent().getParcelableExtra(MainActivity.TAG_OPEN_MENU);
         if (pushNotification != null) {
@@ -659,7 +636,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
+        if (requestCode == PermissionManagement.CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
             //Check if the permission is granted or not.
             if (resultCode == RESULT_OK) {
                 boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
