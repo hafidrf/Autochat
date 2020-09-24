@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"/>
         <ImageView
             android:id="@+id/imgClose"
-            android:src="@drawable/ic_close"
+            android:src="@drawable/ic_close_block"
             android:layout_width="18dp"
             android:layout_height="18dp"/>
     </LinearLayout>

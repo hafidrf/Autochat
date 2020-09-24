@@ -81,6 +81,77 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                     </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Options"/>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/labelFloatingWidget"
+                            android:textSize="16sp"
+                            android:textColor="@color/md_black_1000"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="Tombol Asisten"/>
+                        <Switch
+                            android:id="@+id/switchFloatingWidget"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/labelScreenAlwaysOn"
+                            android:textSize="16sp"
+                            android:textColor="@color/md_black_1000"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="Layar Selalu Menyala"/>
+                        <Switch
+                            android:id="@+id/switchScreenAlwaysOn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/labelEnableForegroundService"
+                            android:textSize="16sp"
+                            android:textColor="@color/md_black_1000"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="Wabot Selalu Aktif"/>
+                        <Switch
+                            android:id="@+id/switchEnableForegroundService"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
                     android:orientation="vertical"

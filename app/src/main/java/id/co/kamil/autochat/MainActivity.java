@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.android.volley.AuthFailureError;
@@ -89,6 +90,7 @@ import id.co.kamil.autochat.ui.PengaturanActivity;
 import id.co.kamil.autochat.ui.followup.MainFollowupActivity;
 import id.co.kamil.autochat.ui.linkpage.FormLinkPageActivity;
 import id.co.kamil.autochat.ui.pesan.FormKirimPesanActivity;
+import id.co.kamil.autochat.utils.PermissionManagement;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
@@ -108,6 +110,9 @@ import static id.co.kamil.autochat.utils.SharPref.LINK_ECOURSE;
 import static id.co.kamil.autochat.utils.SharPref.LINK_MARKETING_TOOL;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TIMWABOT;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TUTORIAL;
+import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
+import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
+import static id.co.kamil.autochat.utils.SharPref.STATUS_SCREEN_ALWAYS_ON;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
 
 public class MainActivity extends AppCompatActivity {
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_ADD = 100;
     public static final String MAIN_RECEIVER = "MAIN_RECEIVER";
     private static final String TAG = "MainActivity";
+    public static final String TAG_OPEN_MENU = "MainActivity_OpenMenu";
 
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
@@ -151,6 +157,18 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.nav_kirim_terjadwal);
             }else if (action.equals("terkirim")) {
                 navController.navigate(R.id.nav_pesan_terkirim);
+            } else if (action.equals("enableAlwaysScreenOn")) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            } else if (action.equals("disableAlwaysScreenOn")) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            } else if (action.equals("enableForegroundService")) {
+                Intent intent1 = new Intent(MainActivity.this,ServiceSync.class);
+                intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, true);
+                startService(intent1);
+            } else if (action.equals("disableForegroundService")) {
+                Intent intent1 = new Intent(MainActivity.this,ServiceSync.class);
+                intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, false);
+                startService(intent1);
             }
         }
     };
@@ -279,6 +297,23 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.nav_template);
 
             }
+        }
+
+        boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
+        if (!PermissionManagement.getInstance().needAccessToOverDrawApps(this) && status_floating_widget) {
+            startService(new Intent(this, FloatingViewService.class));
+        }
+
+        boolean screen_always_on = sharePref.getSessionBool(STATUS_SCREEN_ALWAYS_ON);
+        if (screen_always_on) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else  {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+
+        Intent pushNotification = getIntent().getParcelableExtra(MainActivity.TAG_OPEN_MENU);
+        if (pushNotification != null) {
+            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
         }
     }
 
@@ -622,6 +657,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == PermissionManagement.CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
+            //Check if the permission is granted or not.
+            if (resultCode == RESULT_OK) {
+                boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
+                if (status_floating_widget) {
+                    startService(new Intent(this, FloatingViewService.class));
+                }
+            } else { //Permission is not available
+                Toast.makeText(this,
+                    "Draw over other app permission not available.",
+                    Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
         super.onActivityResult(requestCode, resultCode, data);
         drawer.closeDrawers();
     }

@@ -16,6 +16,9 @@ public class SharPref {
 
     // Sharedpref file name
     private static final String PREF_NAME = "SHARPREFAUTOCHAT";
+    public static final String STATUS_FLOATING_WIDGET = "status_floating_widget";
+    public static final String STATUS_SCREEN_ALWAYS_ON = "status_screen_always_on";
+    public static final String STATUS_FOREGROUND_SERVICE = "status_foreground_service";
     public static final String STATUS_BULK_SENDER = "status_bulk_sender";
     public static final String STATUS_ERROR_TRY_AGAIN = "status_error_try_agian";
     public static final String STATUS_BULK_SENDING = "STATUS_BULK_SENDING";
