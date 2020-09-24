@@ -101,7 +101,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:text="Floating Widget"/>
+                            android:text="Tombol Asisten"/>
                         <Switch
                             android:id="@+id/switchFloatingWidget"
                             android:layout_width="wrap_content"
@@ -123,7 +123,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:text="Screen Always On"/>
+                            android:text="Layar Selalu Menyala"/>
                         <Switch
                             android:id="@+id/switchScreenAlwaysOn"
                             android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:text="Foreground Service"/>
+                            android:text="Wabot Selalu Aktif"/>
                         <Switch
                             android:id="@+id/switchEnableForegroundService"
                             android:layout_width="wrap_content"
