@@ -112,6 +112,7 @@ import static id.co.kamil.autochat.utils.SharPref.LINK_TIMWABOT;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TUTORIAL;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
+import static id.co.kamil.autochat.utils.SharPref.STATUS_FOREGROUND_SERVICE;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_SCREEN_ALWAYS_ON;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
 
@@ -323,6 +324,8 @@ public class MainActivity extends AppCompatActivity {
             startService(intent);//Start service
 
             Intent intent1 = new Intent(MainActivity.this,ServiceSync.class);
+            boolean foreground_service = sharePref.getSessionBool(STATUS_FOREGROUND_SERVICE);
+            intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, foreground_service);
             startService(intent1);
         }catch (Exception e){
             new AlertDialog.Builder(this)
