@@ -1,10 +1,14 @@
 package id.co.kamil.autochat;
 
+import android.app.AlertDialog;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,15 +16,36 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
 import static id.co.kamil.autochat.MainActivity.MAIN_RECEIVER;
+import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
+import static id.co.kamil.autochat.utils.API.URL_POST_DASHBOARD;
+import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
+import static id.co.kamil.autochat.utils.Utils.convertDpToPixel;
+import static id.co.kamil.autochat.utils.Utils.errorResponse;
 
 
 public class FloatingViewService extends Service {
@@ -83,7 +108,7 @@ public class FloatingViewService extends Service {
 
     //Set the view while floating view is expanded.
     //Set the message pending button.
-    TextView messagePendingButton = mFloatingView.findViewById(R.id.buttonMessagePending);
+    LinearLayout messagePendingButton = mFloatingView.findViewById(R.id.buttonMessagePending);
     messagePendingButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -100,6 +125,8 @@ public class FloatingViewService extends Service {
         stopSelf();
       }
     });
+    TextView messagePendingCounter = mFloatingView.findViewById(R.id.labelMessagePending);
+    loadCounter(messagePendingCounter);
 
     final Switch switchEnabledBulkSender = mFloatingView.findViewById(R.id.switchEnabledBulkSender);
     boolean status_bulk_sender = sharePref.getSessionBool(STATUS_BULK_SENDER);
@@ -209,5 +236,50 @@ public class FloatingViewService extends Service {
   public void onDestroy() {
     super.onDestroy();
     if (mFloatingView != null) mWindowManager.removeView(mFloatingView);
+  }
+
+  private void loadCounter(final TextView messagePendingCounter) {
+    messagePendingCounter.setText("0");
+    final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+    final String uri = Uri.parse(URL_POST_DASHBOARD)
+        .buildUpon()
+        .toString();
+    final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, null, new Response.Listener<JSONObject>() {
+      @Override
+      public void onResponse(JSONObject response) {
+        try {
+          final boolean status = response.getBoolean("status");
+          if (status) {
+            final String message_pending = response.getString("message_pending");
+            messagePendingCounter.setText(message_pending);
+          }
+        } catch (Exception ignored) {
+          messagePendingCounter.setText("0");
+        }
+      }
+    }, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {
+        messagePendingCounter.setText("0");
+      }
+    }){
+      @Override
+      public Map<String, String> getHeaders() throws AuthFailureError {
+        HashMap<String,String> header = new HashMap<>();
+
+        SessionManager session = new SessionManager(getApplicationContext());
+        HashMap<String, String> userDetail = session.getUserDetails();
+        String token = userDetail.get(KEY_TOKEN);
+        if (!TextUtils.isEmpty(token)) {
+          header.put("x-api-key",token);
+        }
+
+        return header;
+      }
+    };
+    RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+    jsonObjectRequest.setRetryPolicy(policy);
+    requestQueue.add(jsonObjectRequest);
   }
 }
