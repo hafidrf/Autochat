@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"angličtina (Veľká Británia)"</string>
     <string name="subtype_en_US">"angličtina (USA)"</string>
     <string name="subtype_es_US">"španielčina (USA)"</string>
-    <string name="subtype_hi_ZZ">"Hinglish"</string>
     <string name="subtype_sr_ZZ">"srbčina (latinka)"</string>
-    <string name="subtype_with_layout_en_GB">"angličtina (VB) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"angličtina (USA) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"španielčina (USA) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Hinglish (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"srbčina (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (tradičná)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (kompaktná)"</string>
     <string name="custom_input_styles_title">"Vlastné štýly vstupu"</string>
@@ -55,14 +49,8 @@
     <string name="enable">"Povoliť"</string>
     <string name="not_now">"Teraz nie"</string>
     <string name="custom_input_style_already_exists">"Rovnaký štýl vstupu už existuje: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Dĺžka vibrácie klávesu"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Hlasitosť stlačenia klávesu"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Oneskorenie dlhého stlačenia"</string>
     <string name="button_default">"Predvolené"</string>
-    <string name="prefs_keyboard_height_settings">Výška klávesnice</string>
-    <string name="keyboard_color">Nastaviť vlastnú farbu klávesnice</string>
     <string name="hide_special_chars">Skryť špeciálne znaky</string>
-    <string name="hide_language_switch_key">Skryť klávesu na prepínanie jazykov</string>
     <string name="show_number_row">Zobraziť samostatný číselný riadok</string>
     <string name="space_swipe">Hýb kurzorom šúchaním po medzerníku</string>
     <string name="delete_swipe">Mazanie potiahnutím</string>

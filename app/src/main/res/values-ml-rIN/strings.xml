@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"ഇംഗ്ലീഷ് (യുകെ)"</string>
     <string name="subtype_en_US">"ഇംഗ്ലീഷ് (യുഎസ്)"</string>
     <string name="subtype_es_US">"സ്‌പാനിഷ് (യുഎസ്)"</string>
-    <string name="subtype_hi_ZZ">"ഹിംഗ്ലീഷ്"</string>
     <string name="subtype_sr_ZZ">"സെർബിയൻ (ലാറ്റിൻ)"</string>
-    <string name="subtype_with_layout_en_GB">"ഇംഗ്ലീഷ് (യുകെ) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"ഇംഗ്ലീഷ് (യുഎസ്) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"സ്‌പാനിഷ് (യുഎസ്) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"ഹിംഗ്ലീഷ് (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"സെർബിയൻ (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (പരമ്പരാഗതം)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (കോം‌പാക്‌ട്)"</string>
     <string name="custom_input_styles_title">"ഇഷ്‌ട ടൈപ്പ്സ്റ്റൈൽ"</string>
@@ -55,8 +49,5 @@
     <string name="enable">"പ്രവർത്തനക്ഷമമാക്കുക"</string>
     <string name="not_now">"ഇപ്പോൾ വേണ്ട"</string>
     <string name="custom_input_style_already_exists">"സമാന ടൈപ്പുചെയ്യൽ ശൈലി ഇതിനകം നിലവിലുണ്ട്: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"കീ അമർത്തുമ്പോഴുള്ള വൈബ്രേഷൻ ദൈർഘ്യം"</string>
-    <string name="prefs_keypress_sound_volume_settings">"കീ അമർത്തുമ്പോഴുള്ള ശബ്‌ദ വോളിയം"</string>
-    <string name="prefs_key_longpress_timeout_settings">"കീ അമർത്തിപ്പിടിക്കുന്നതിലെ കാലതാമസം"</string>
     <string name="button_default">"സ്ഥിരമായത്"</string>
 </resources>

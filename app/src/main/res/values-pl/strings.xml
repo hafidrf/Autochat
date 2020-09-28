@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"angielski (Wielka Brytania)"</string>
     <string name="subtype_en_US">"angielski (Stany Zjednoczone)"</string>
     <string name="subtype_es_US">"hiszpański (USA)"</string>
-    <string name="subtype_hi_ZZ">"Hinglish"</string>
     <string name="subtype_sr_ZZ">"serbski (alfabet łaciński)"</string>
-    <string name="subtype_with_layout_en_GB">"Angielski (Wielka Brytania) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"Angielski (USA) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"Hiszpański (USA) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Hinglish (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"serbski (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (tradycyjny)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (kompaktowa)"</string>
     <string name="custom_input_styles_title">"Style niestandardowe"</string>
@@ -55,13 +49,7 @@
     <string name="enable">"Włącz"</string>
     <string name="not_now">"Nie teraz"</string>
     <string name="custom_input_style_already_exists">"Taki styl wprowadzania już istnieje: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Wibracja przy naciśniętym klawiszu"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Głośność przy naciśniętym klawiszu"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Opóźnienie przy długim naciśnięciu"</string>
     <string name="button_default">"Domyślne"</string>
-    <string name="prefs_keyboard_height_settings">Wysokość klawiatury</string>
-    <string name="keyboard_color">Ustaw niestandardowy kolor klawiatury</string>
     <string name="hide_special_chars">Ukryj specjalne znaki</string>
-    <string name="hide_language_switch_key">Ukryj znak zmiany języka</string>
     <string name="show_number_row">Pokaż oddzielne wierszowe numery</string>
 </resources>

@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"Bahasa Inggeris (UK)"</string>
     <string name="subtype_en_US">"Bahasa Inggeris (Australia)"</string>
     <string name="subtype_es_US">"Bahasa Sepanyol (AS)"</string>
-    <string name="subtype_hi_ZZ">"Hinglish"</string>
     <string name="subtype_sr_ZZ">"Bahasa Serbia (Latin)"</string>
-    <string name="subtype_with_layout_en_GB">"Bahasa Inggeris (UK) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"Bahasa Inggeris (AS) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"Bahasa Sepanyol (AS) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Hinglish (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"Bahasa Serbia (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (Tradisional)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (Sarat)"</string>
     <string name="custom_input_styles_title">"Gaya input peribadi"</string>
@@ -55,8 +49,5 @@
     <string name="enable">"Dayakan"</string>
     <string name="not_now">"Bukan sekarang"</string>
     <string name="custom_input_style_already_exists">"The same input style already exists: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Tempoh getaran tekan kekunci"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Kelantangan bunyi tekan kekunci"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Lengah tekan lama kekunci"</string>
     <string name="button_default">"Lalai"</string>
 </resources>

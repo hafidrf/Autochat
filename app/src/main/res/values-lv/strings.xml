@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"Angļu valoda (Lielbritānija)"</string>
     <string name="subtype_en_US">"Angļu valoda (ASV)"</string>
     <string name="subtype_es_US">"Spāņu (ASV)"</string>
-    <string name="subtype_hi_ZZ">"Hindi–angļu valoda"</string>
     <string name="subtype_sr_ZZ">"Serbu (latīņu)"</string>
-    <string name="subtype_with_layout_en_GB">"Angļu (Lielbritānija) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"Angļu (ASV) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"Spāņu (ASV) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Hindi–angļu valoda (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"Serbu (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (tradicionālā)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (kompaktā)"</string>
     <string name="custom_input_styles_title">"Pielāg. ievades stili"</string>
@@ -55,8 +49,5 @@
     <string name="enable">"Iespējot"</string>
     <string name="not_now">"Vēlāk"</string>
     <string name="custom_input_style_already_exists">"Šāds ievades stils jau pastāv: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Taust. nosp. vibrācijas ilgums"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Taustiņu nosp. skaņas skaļums"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Taustiņa ilgās nosp. noildze"</string>
     <string name="button_default">"Noklusējums"</string>
 </resources>

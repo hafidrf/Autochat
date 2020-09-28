@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"英語 (英国)"</string>
     <string name="subtype_en_US">"英語 (米国)"</string>
     <string name="subtype_es_US">"スペイン語 (米国)"</string>
-    <string name="subtype_hi_ZZ">"ヒングリッシュ"</string>
     <string name="subtype_sr_ZZ">"セルビア語（ラテン文字）"</string>
-    <string name="subtype_with_layout_en_GB">"英語（英国）（<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>）"</string>
-    <string name="subtype_with_layout_en_US">"英語（米国）（<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>）"</string>
-    <string name="subtype_with_layout_es_US">"スペイン語（米国）（<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>）"</string>
-    <string name="subtype_with_layout_hi_ZZ">"ヒングリッシュ（<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>）"</string>
-    <string name="subtype_with_layout_sr_ZZ">"セルビア語（<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>）"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g>（伝統言語）"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g>（コンパクト）"</string>
     <string name="custom_input_styles_title">"カスタム入力スタイル"</string>
@@ -55,8 +49,5 @@
     <string name="enable">"有効にする"</string>
     <string name="not_now">"後で行う"</string>
     <string name="custom_input_style_already_exists">"同じ入力スタイルが既に存在します: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"キー操作バイブの振動時間"</string>
-    <string name="prefs_keypress_sound_volume_settings">"キー操作音の音量"</string>
-    <string name="prefs_key_longpress_timeout_settings">"キーの長押し時間"</string>
     <string name="button_default">"デフォルト"</string>
 </resources>

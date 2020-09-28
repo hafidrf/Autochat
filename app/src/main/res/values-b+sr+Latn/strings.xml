@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"engleski (UK)"</string>
     <string name="subtype_en_US">"engleski (SAD)"</string>
     <string name="subtype_es_US">"španski (SAD)"</string>
-    <string name="subtype_hi_ZZ">"hengleski"</string>
     <string name="subtype_sr_ZZ">"srpski (latinica)"</string>
-    <string name="subtype_with_layout_en_GB">"engleski (UK) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"engleski (SAD) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"španski (SAD) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"hengleski (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"srpski (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (tradicionalni)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (kompaktna)"</string>
     <string name="custom_input_styles_title">"Prilagođeni stilovi unosa"</string>
@@ -55,8 +49,5 @@
     <string name="enable">"Omogući"</string>
     <string name="not_now">"Ne sada"</string>
     <string name="custom_input_style_already_exists">"Isti stil unosa već postoji: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Trajanje vibracije pri pritisku"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Jačina zvuka pri pritisku"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Odlaganje pri dugom pritisku"</string>
     <string name="button_default">"Podrazumevano"</string>
 </resources>

@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"ਅੰਗ੍ਰੇਜ਼ੀ (ਯੂਕੇ)"</string>
     <string name="subtype_en_US">"ਅੰਗ੍ਰੇਜੀ (ਅਮਰੀਕਾ)"</string>
     <string name="subtype_es_US">"ਸਪੇਨੀ (ਅਮਰੀਕਾ)"</string>
-    <string name="subtype_hi_ZZ">"ਹਿੰਗਲਿੰਸ਼"</string>
     <string name="subtype_sr_ZZ">"ਸਰਬੀਅਨ (ਲਾਤੀਨੀ)"</string>
-    <string name="subtype_with_layout_en_GB">"ਅੰਗਰੇਜ਼ੀ (ਯੂ.ਕੇ.) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"ਅੰਗਰੇਜ਼ੀ (ਅਮਰੀਕਾ) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"ਸਪੇਨੀ (ਅਮਰੀਕਾ) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"ਹਿੰਗਲਿਸ਼(<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"ਸਰਬੀਅਨ (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (ਪਰੰਪਰਿਕ)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (ਕੰਪੈਕਟ)"</string>
     <string name="custom_input_styles_title">"ਕਸਟਮ ਇਨਪੁਟ ਸਟਾਈਲ"</string>
@@ -55,8 +49,5 @@
     <string name="enable">"ਸਮਰੱਥ ਬਣਾਓ"</string>
     <string name="not_now">"ਅਜੇ ਨਹੀਂ"</string>
     <string name="custom_input_style_already_exists">"ਸਮਾਨ ਇਨਪੁਟ ਸਟਾਈਲ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"ਕੀਪ੍ਰੈਸ ਵਾਈਬ੍ਰੇਸ਼ਨ ਮਿਆਦ"</string>
-    <string name="prefs_keypress_sound_volume_settings">"ਕੀਪ੍ਰੈਸ ਅਵਾਜ਼ ਵੌਲਿਊਮ"</string>
-    <string name="prefs_key_longpress_timeout_settings">"ਕੁੰਜੀ ਦਬਾਈ ਰੱਖਣ ਦੀ ਮਿਆਦ"</string>
     <string name="button_default">"ਡਿਫੌਲਟ"</string>
 </resources>

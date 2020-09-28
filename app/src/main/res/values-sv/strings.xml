@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"Engelska (brittisk)"</string>
     <string name="subtype_en_US">"Engelska (amerikansk)"</string>
     <string name="subtype_es_US">"spanska (USA)"</string>
-    <string name="subtype_hi_ZZ">"Hindi/engelska"</string>
     <string name="subtype_sr_ZZ">"Serbiska (latinsk)"</string>
-    <string name="subtype_with_layout_en_GB">"Engelska (Storbritannien) <xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>"</string>
-    <string name="subtype_with_layout_en_US">"Engelska (USA) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"Spanska (USA (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Hindi/engelska (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"Serbiska (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (traditionell)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (kompakt)"</string>
     <string name="custom_input_styles_title">"Anpassade indatastilar"</string>
@@ -55,8 +49,5 @@
     <string name="enable">"Aktivera"</string>
     <string name="not_now">"Inte nu"</string>
     <string name="custom_input_style_already_exists">"Samma indatastil finns redan: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Vibrationslängd för tangenter"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Ljudvolym för tangenter"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Fördröjning vid långt tryck"</string>
     <string name="button_default">"Standard"</string>
 </resources>

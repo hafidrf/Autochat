@@ -25,19 +25,4 @@
 
     </style>
 
-    <style name="AppToolbar.Light" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:textColorPrimary">@color/md_white_1000</item>
-        <item name="android:textColorSecondary">@color/md_white_1000</item>
-    </style>
-
-    <style name="myDialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.MaterialDialogTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-    </style>
 </resources>

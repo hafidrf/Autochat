@@ -35,13 +35,7 @@
     <string name="subtype_en_GB">"انگلیسی (بریتانیا)"</string>
     <string name="subtype_en_US">"انگلیسی (امریکا)"</string>
     <string name="subtype_es_US">"اسپانیایی (امریکا)"</string>
-    <string name="subtype_hi_ZZ">"هندی انگلیسی"</string>
     <string name="subtype_sr_ZZ">"صربی (لاتین)"</string>
-    <string name="subtype_with_layout_en_GB">"انگلیسی (بریتانیا) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"انگلیسی (امریکا) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"اسپانیایی (امریکا) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"هندی انگلیسی (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"صربی (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (سنتی)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (فشرده)"</string>
     <string name="custom_input_styles_title">"سبک‌های ورودی سفارشی"</string>
@@ -55,14 +49,8 @@
     <string name="enable">"فعال کردن"</string>
     <string name="not_now">"اکنون نه"</string>
     <string name="custom_input_style_already_exists">"سبک ورودی مشابهی در حال حاضر وجود دارد: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"طول مدت لرزش در اثر فشردن کلید"</string>
-    <string name="prefs_keypress_sound_volume_settings">"میزان صدای فشردن کلید"</string>
-    <string name="prefs_key_longpress_timeout_settings">"تأخیر فشار طولانی کلید"</string>
     <string name="button_default">"پیش‌فرض"</string>
-    <string name="prefs_keyboard_height_settings">ارتفاع صفحه کلید</string>
-    <string name="keyboard_color">تنظیم رنگ صفحه کلید سفارشی</string>
     <string name="hide_special_chars">پنهان کردن کاراکترهای ویژه</string>
-    <string name="hide_language_switch_key">پنهان کردن کلید تغییر زبان</string>
     <string name="show_number_row">نمایش جداگانه ی شماره ردیف</string>
     <string name="space_swipe">حرکت مکان نما توسط سوایپ کلید فاصله</string>
     <string name="delete_swipe">حذف سوایپ</string>
