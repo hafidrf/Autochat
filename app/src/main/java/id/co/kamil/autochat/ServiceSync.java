@@ -381,7 +381,7 @@ public class ServiceSync extends Service {
         handler.postDelayed(
                 new Runnable() {
                     public void run() {
-                        if (is_synchronizing_db == false) {
+                        if (!is_synchronizing_db) {
                             if (position == 0) {
                                 syncKontak();
                             } else if (position == 1) {
@@ -416,7 +416,7 @@ public class ServiceSync extends Service {
         handlerOutbox.postDelayed(
                 new Runnable() {
                     public void run() {
-                        if (is_synchronizing_outbox == false && is_send == false) {
+                        if (!is_synchronizing_outbox && !is_send) {
                             syncDatabaseOutbox();
                         }
                     }

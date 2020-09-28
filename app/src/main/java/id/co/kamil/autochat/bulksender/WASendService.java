@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import id.co.kamil.autochat.database.DBHelper;
 import id.co.kamil.autochat.utils.SessionManager;
@@ -28,17 +29,12 @@ public class WASendService extends AccessibilityService {
     private static String idMessage;
     private final String TAG = this.getClass().getSimpleName();
 
-    private final String waTextFieldID = "com.whatsapp:id/entry";
-    private final String waButtonSendID = "com.whatsapp:id/send";
-    private final String waBackButtonID = "com.whatsapp:id/back";
+    private static final String waTextFieldID = "com.whatsapp:id/entry";
+    private static final String waButtonSendID = "com.whatsapp:id/send";
+    private static final String waBackButtonID = "com.whatsapp:id/back";
     private static long try_again = 0;
-    private SharPref sharePref;
     private DBHelper dbHelper;
-    private SessionManager session;
-    private HashMap<String, String> userDetail;
     private String user_id;
-    private FirebaseDatabase dbFirebase;
-    private DatabaseReference fOutboxRef;
 
     public static void setID(String id) {
         idMessage = id;
@@ -51,21 +47,18 @@ public class WASendService extends AccessibilityService {
         try {
 
             AccessibilityNodeInfo nodeInfo = event.getSource();
-            if (nodeInfo == null || nodeInfo.equals(null))
+            if (nodeInfo == null)
                 return;
 
-            String packageName = nodeInfo.getPackageName().toString();
-            if (packageName.equals(null) || packageName == null) {
-                return;
-            }
-            Log.i(TAG, packageName);
+            CharSequence packageName = nodeInfo.getPackageName();
+            Log.i(TAG, packageName.toString());
 
             performWhatsAppMessage(nodeInfo);
 
             // recycle the nodeInfo object
             nodeInfo.recycle();
         } catch (Exception e) {
-            Log.i(TAG, "NullPointerException Caught");
+            Log.e(TAG, "NullPointerException Caught");
         }
 
     }
@@ -73,23 +66,22 @@ public class WASendService extends AccessibilityService {
     private void performWhatsAppMessage(final AccessibilityNodeInfo rootNode) {
         Date c2 = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate2 = df2.format(c2);
-        final String created = formattedDate2;
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        final String created = df2.format(c2);
         try {
 
             dbHelper = new DBHelper(this);
-            session = new SessionManager(this);
-            userDetail = session.getUserDetails();
+            SessionManager session = new SessionManager(this);
+            HashMap<String, String> userDetail = session.getUserDetails();
             user_id = userDetail.get(KEY_CUST_ID);
-            sharePref = new SharPref(this);
+            SharPref sharePref = new SharPref(this);
 
-            dbFirebase = FirebaseDatabase.getInstance();
-            fOutboxRef = dbFirebase.getReference().child("outbox").child(session.getValue(KEY_CUST_ID));
+            FirebaseDatabase dbFirebase = FirebaseDatabase.getInstance();
+            DatabaseReference fOutboxRef = dbFirebase.getReference().child("outbox").child(session.getValue(KEY_CUST_ID));
             fOutboxRef.keepSynced(true);
             boolean statusWASender = sharePref.getSessionBool(STATUS_BULK_SENDER);
             boolean statusSending = sharePref.getSessionBool(STATUS_BULK_SENDING);
-            if (statusWASender == false) {
+            if (!statusWASender) {
                 return;
             }
 
@@ -99,17 +91,16 @@ public class WASendService extends AccessibilityService {
             buttonSend = getNodeInfo(rootNode, waButtonSendID);
             backButton = getNodeInfo(rootNode, waBackButtonID);
 
-            if (buttonSend == null || buttonSend.equals(null) || buttonSend.equals("null")) {
-                if (backButton == null || backButton.equals(null) || backButton.equals("null")) {
+            if (buttonSend == null) {
+                if (backButton == null) {
                     dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + buttonSend + " dan ID Button Back : " + backButton, "warning", user_id);
                     Log.e(TAG, "button Send : " + buttonSend);
-                    return;
                 } else if (statusSending) {
                     backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    return;
                 } else {
                     dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + buttonSend, "warning", user_id);
                 }
+                return;
             }
             if (idMessage == null) {
                 dbHelper.insertLog(created, ID_SERVICE_WA, "Tidak ada pesan yang akan dikirim", "warning", user_id);
@@ -120,9 +111,8 @@ public class WASendService extends AccessibilityService {
             buttonSend.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             dbHelper = new DBHelper(this);
             Date c = Calendar.getInstance().getTime();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String formattedDate = df.format(c);
-            String tglSent = formattedDate;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String tglSent = df.format(c);
 
             fOutboxRef.child(idMessage).child("sent").setValue(tglSent);
             //dbHelper.updateSent(idMessage, "1", tglSent, "0");
@@ -144,9 +134,8 @@ public class WASendService extends AccessibilityService {
     private AccessibilityNodeInfo getNodeInfo(AccessibilityNodeInfo rootNode, String viewId) {
         Date c2 = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate2 = df2.format(c2);
-        final String created = formattedDate2;
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        final String created = df2.format(c2);
         AccessibilityNodeInfo node = null;
         try {
             List<AccessibilityNodeInfo> nodes = rootNode
