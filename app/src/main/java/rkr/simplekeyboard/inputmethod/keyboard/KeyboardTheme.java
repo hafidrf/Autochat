@@ -39,10 +39,10 @@ public final class KeyboardTheme {
 
     /* package private for testing */
     static final KeyboardTheme[] KEYBOARD_THEMES = {
-        new KeyboardTheme(THEME_ID_LIGHT, "LXXLight", R.style.KeyboardTheme_LXX_Light),
-        new KeyboardTheme(THEME_ID_DARK, "LXXDark", R.style.KeyboardTheme_LXX_Dark),
-        new KeyboardTheme(THEME_ID_LIGHT_BORDER, "LXXLightBorder", R.style.KeyboardTheme_LXX_Light_Border),
-        new KeyboardTheme(THEME_ID_DARK_BORDER, "LXXDarkBorder", R.style.KeyboardTheme_LXX_Dark_Border),
+            new KeyboardTheme(THEME_ID_LIGHT, "LXXLight", R.style.KeyboardTheme_LXX_Light),
+            new KeyboardTheme(THEME_ID_DARK, "LXXDark", R.style.KeyboardTheme_LXX_Dark),
+            new KeyboardTheme(THEME_ID_LIGHT_BORDER, "LXXLightBorder", R.style.KeyboardTheme_LXX_Light_Border),
+            new KeyboardTheme(THEME_ID_DARK_BORDER, "LXXDarkBorder", R.style.KeyboardTheme_LXX_Dark_Border),
     };
 
     public final int mThemeId;
@@ -60,7 +60,7 @@ public final class KeyboardTheme {
     @Override
     public boolean equals(final Object o) {
         if (o == this) return true;
-        return (o instanceof KeyboardTheme) && ((KeyboardTheme)o).mThemeId == mThemeId;
+        return (o instanceof KeyboardTheme) && ((KeyboardTheme) o).mThemeId == mThemeId;
     }
 
     @Override

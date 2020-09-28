@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2013, The Android Open Source Project
@@ -22,8 +21,7 @@
     <include latin:keyboardLayout="@xml/key_styles_common" />
     <Row
         latin:keyWidth="7.5%p"
-        latin:keyLabelFlags="fontNormal"
-    >
+        latin:keyLabelFlags="fontNormal">
         <include latin:keyboardLayout="@xml/rowkeys_lao1" />
         <Key
             latin:keyStyle="deleteKeyStyle"
@@ -31,14 +29,12 @@
     </Row>
     <Row
         latin:keyWidth="7.5%p"
-        latin:keyLabelFlags="fontNormal"
-    >
+        latin:keyLabelFlags="fontNormal">
         <include latin:keyboardLayout="@xml/rowkeys_lao2" />
     </Row>
     <Row
         latin:keyWidth="7.5%p"
-        latin:keyLabelFlags="fontNormal"
-    >
+        latin:keyLabelFlags="fontNormal">
         <include latin:keyboardLayout="@xml/rowkeys_lao3" />
         <Key
             latin:keyStyle="enterKeyStyle"
@@ -46,8 +42,7 @@
     </Row>
     <Row
         latin:keyWidth="7.5%p"
-        latin:keyLabelFlags="fontNormal"
-    >
+        latin:keyLabelFlags="fontNormal">
         <Key
             latin:keyStyle="shiftKeyStyle"
             latin:keyWidth="10.0%p" />

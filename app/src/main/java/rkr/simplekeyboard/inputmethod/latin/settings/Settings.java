@@ -112,7 +112,7 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     }
 
     public void loadSettings(final Context context, final Locale locale,
-            final InputAttributes inputAttributes) {
+                             final InputAttributes inputAttributes) {
         mSettingsValuesLock.lock();
         mContext = context;
         try {
@@ -137,13 +137,13 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
 
     // Accessed from the settings interface, hence public
     public static boolean readKeypressSoundEnabled(final SharedPreferences prefs,
-            final Resources res) {
+                                                   final Resources res) {
         return prefs.getBoolean(PREF_SOUND_ON,
                 res.getBoolean(R.bool.config_default_sound_enabled));
     }
 
     public static boolean readVibrationEnabled(final SharedPreferences prefs,
-            final Resources res) {
+                                               final Resources res) {
         final boolean hasVibrator = AudioAndHapticFeedbackManager.getInstance().hasVibrator();
         return hasVibrator && prefs.getBoolean(PREF_VIBRATE_ON,
                 res.getBoolean(R.bool.config_default_vibration_enabled));
@@ -154,7 +154,7 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     }
 
     public static boolean readKeyPreviewPopupEnabled(final SharedPreferences prefs,
-            final Resources res) {
+                                                     final Resources res) {
         final boolean defaultKeyPreviewPopup = res.getBoolean(
                 R.bool.config_default_key_preview_popup);
         if (!readFromBuildConfigIfToShowKeyPreviewPopupOption(res)) {
@@ -184,19 +184,19 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     }
 
     public static String readPrefAdditionalSubtypes(final SharedPreferences prefs,
-            final Resources res) {
+                                                    final Resources res) {
         final String predefinedPrefSubtypes = AdditionalSubtypeUtils.createPrefSubtypes(
                 res.getStringArray(R.array.predefined_subtypes));
         return prefs.getString(PREF_CUSTOM_INPUT_STYLES, predefinedPrefSubtypes);
     }
 
     public static void writePrefAdditionalSubtypes(final SharedPreferences prefs,
-            final String prefSubtypes) {
+                                                   final String prefSubtypes) {
         prefs.edit().putString(PREF_CUSTOM_INPUT_STYLES, prefSubtypes).apply();
     }
 
     public static float readKeypressSoundVolume(final SharedPreferences prefs,
-            final Resources res) {
+                                                final Resources res) {
         final float volume = prefs.getFloat(
                 PREF_KEYPRESS_SOUND_VOLUME, UNDEFINED_PREFERENCE_VALUE_FLOAT);
         return (volume != UNDEFINED_PREFERENCE_VALUE_FLOAT) ? volume
@@ -213,7 +213,7 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     }
 
     public static int readKeyLongpressTimeout(final SharedPreferences prefs,
-            final Resources res) {
+                                              final Resources res) {
         final int milliseconds = prefs.getInt(
                 PREF_KEY_LONGPRESS_TIMEOUT, UNDEFINED_PREFERENCE_VALUE_INT);
         return (milliseconds != UNDEFINED_PREFERENCE_VALUE_INT) ? milliseconds
@@ -225,7 +225,7 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     }
 
     public static int readKeypressVibrationDuration(final SharedPreferences prefs,
-            final Resources res) {
+                                                    final Resources res) {
         final int milliseconds = prefs.getInt(
                 PREF_VIBRATION_DURATION_SETTINGS, UNDEFINED_PREFERENCE_VALUE_INT);
         return (milliseconds != UNDEFINED_PREFERENCE_VALUE_INT) ? milliseconds
@@ -242,7 +242,7 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     }
 
     public static float readKeyboardHeight(final SharedPreferences prefs,
-            final float defaultValue) {
+                                           final float defaultValue) {
         return prefs.getFloat(PREF_KEYBOARD_HEIGHT, defaultValue);
     }
 

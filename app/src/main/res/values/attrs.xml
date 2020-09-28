@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2015, The Android Open Source Project
@@ -110,8 +109,7 @@
         <attr name="showMoreKeysKeyboardAtTouchedPoint" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="MoreKeysKeyboardView">
-    </declare-styleable>
+    <declare-styleable name="MoreKeysKeyboardView"></declare-styleable>
 
     <declare-styleable name="Keyboard">
         <attr name="themeId" format="enum">
@@ -327,10 +325,10 @@
             <enum name="alphabetShiftLocked" value="3" />
             <enum name="alphabetShiftLockShifted" value="4" />
             <enum name="symbols" value="5" />
-            <enum name="symbolsShifted" value="6"  />
-            <enum name="phone" value="7"  />
-            <enum name="phoneSymbols" value="8"  />
-            <enum name="number" value="9"  />
+            <enum name="symbolsShifted" value="6" />
+            <enum name="phone" value="7" />
+            <enum name="phoneSymbols" value="8" />
+            <enum name="number" value="9" />
         </attr>
         <!-- This should be aligned with Keyboard.themeId and
              {@link rkr.simplekeyboard.inputmethod.keyboard.KeyboardTheme#THEME_ID_ICS} etc. -->
@@ -394,12 +392,12 @@
             <enum name="alphabetShiftLocked" value="3" />
             <enum name="alphabetShiftLockShifted" value="4" />
             <enum name="symbols" value="5" />
-            <enum name="symbolsShifted" value="6"  />
-            <enum name="phone" value="7"  />
-            <enum name="phoneSymbols" value="8"  />
-            <enum name="number" value="9"  />
+            <enum name="symbolsShifted" value="6" />
+            <enum name="phone" value="7" />
+            <enum name="phoneSymbols" value="8" />
+            <enum name="number" value="9" />
         </attr>
-        <attr name="elementKeyboard" format="reference"/>
+        <attr name="elementKeyboard" format="reference" />
         <!-- Enable proximity characters correction. Disabled by default. -->
         <attr name="enableProximityCharsCorrection" format="boolean" />
         <!-- Indicates if the keyboard layout supports being split or not. false by default -->

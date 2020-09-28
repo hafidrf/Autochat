@@ -22,8 +22,8 @@ import android.graphics.Typeface;
 import android.util.SparseArray;
 
 public final class TypefaceUtils {
-    private static final char[] KEY_LABEL_REFERENCE_CHAR = { 'M' };
-    private static final char[] KEY_NUMERIC_HINT_LABEL_REFERENCE_CHAR = { '8' };
+    private static final char[] KEY_LABEL_REFERENCE_CHAR = {'M'};
+    private static final char[] KEY_NUMERIC_HINT_LABEL_REFERENCE_CHAR = {'8'};
 
     private TypefaceUtils() {
         // This utility class is not publicly instantiable.
@@ -70,7 +70,7 @@ public final class TypefaceUtils {
     }
 
     private static int getCharGeometryCacheKey(final char referenceChar, final Paint paint) {
-        final int labelSize = (int)paint.getTextSize();
+        final int labelSize = (int) paint.getTextSize();
         final Typeface face = paint.getTypeface();
         final int codePointOffset = referenceChar << 15;
         if (face == Typeface.DEFAULT) {

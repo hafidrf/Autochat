@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -21,14 +20,10 @@ import com.android.volley.ParseError;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -41,8 +36,8 @@ import java.util.List;
 import id.co.kamil.autochat.R;
 
 public class Utils {
-    private static String bulanId(String bln){
-        switch (bln){
+    private static String bulanId(String bln) {
+        switch (bln) {
             case "01":
             case "1":
                 return "Januari";
@@ -81,50 +76,53 @@ public class Utils {
 
         }
     }
-    public static void errorResponse(Context context, VolleyError error){
-        try{
-            if(error instanceof NoConnectionError) {
+
+    public static void errorResponse(Context context, VolleyError error) {
+        try {
+            if (error instanceof NoConnectionError) {
                 Toast.makeText(context, context.getResources().getString(R.string.toast_tidak_ada_internet), Toast.LENGTH_SHORT).show();
-            } else if(error instanceof NetworkError) {
+            } else if (error instanceof NetworkError) {
                 Toast.makeText(context, context.getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
-            } else if(error instanceof ServerError) {
+            } else if (error instanceof ServerError) {
                 Toast.makeText(context, context.getResources().getString(R.string.toast_server_error), Toast.LENGTH_SHORT).show();
-            } else if(error instanceof TimeoutError){
+            } else if (error instanceof TimeoutError) {
                 Toast.makeText(context, context.getResources().getString(R.string.toast_timeout), Toast.LENGTH_SHORT).show();
-            } else if( error instanceof AuthFailureError) {
+            } else if (error instanceof AuthFailureError) {
                 Toast.makeText(context, context.getResources().getString(R.string.toast_server_error), Toast.LENGTH_SHORT).show();
-            } else if( error instanceof ParseError) {
+            } else if (error instanceof ParseError) {
                 Toast.makeText(context, context.getResources().getString(R.string.toast_server_error), Toast.LENGTH_SHORT).show();
             } else
                 Toast.makeText(context, context.getResources().getString(R.string.toast_server_error), Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-    public static int errorResponse(VolleyError error){
-        if(error instanceof NoConnectionError) {
+
+    public static int errorResponse(VolleyError error) {
+        if (error instanceof NoConnectionError) {
             return R.string.toast_tidak_ada_internet;
-        } else if(error instanceof NetworkError) {
+        } else if (error instanceof NetworkError) {
             return R.string.toast_network_error;
-        } else if(error instanceof ServerError) {
+        } else if (error instanceof ServerError) {
             return R.string.toast_server_error;
-        } else if(error instanceof TimeoutError){
+        } else if (error instanceof TimeoutError) {
             return R.string.toast_timeout;
-        } else if( error instanceof AuthFailureError) {
+        } else if (error instanceof AuthFailureError) {
             return R.string.toast_server_error;
-        } else if( error instanceof ParseError) {
+        } else if (error instanceof ParseError) {
             return R.string.toast_server_error;
         } else {
             return R.string.toast_server_error;
         }
     }
-    public static String errorResponseString(VolleyError error){
+
+    public static String errorResponseString(VolleyError error) {
         String json = null;
 
         NetworkResponse response = error.networkResponse;
-        if(response != null && response.data != null){
-            switch(response.statusCode){
+        if (response != null && response.data != null) {
+            switch (response.statusCode) {
                 case 403:
                 case 500:
                     json = new String(response.data);
@@ -133,13 +131,14 @@ public class Utils {
             }
             //Additional cases
         }
-        if (json == null){
+        if (json == null) {
             return "false";
-        }else{
-            return json.toString();
+        } else {
+            return json;
         }
     }
-    public static String formateDateFromstring(String inputFormat, String outputFormat, String inputDate){
+
+    public static String formateDateFromstring(String inputFormat, String outputFormat, String inputDate) {
 
         Date parsed = null;
         String outputDate = "";
@@ -158,6 +157,7 @@ public class Utils {
         return outputDate;
 
     }
+
     public static float convertDpToPixel(float dp, Context context) {
         return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
@@ -165,8 +165,9 @@ public class Utils {
     public static float convertPixelsToDp(float px, Context context) {
         return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
+
     public static void setClipboard(Context context, String text) {
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setText(text);
         } else {
@@ -175,26 +176,28 @@ public class Utils {
             clipboard.setPrimaryClip(clip);
         }
     }
-    public static String formatIdDateFromString(String inputDate){
-        if (inputDate.length()>=15){
+
+    public static String formatIdDateFromString(String inputDate) {
+        if (inputDate.length() >= 15) {
             String tglBaru = null;
-            try{
-                String tgl[] = inputDate.split(" ")[0].split("-");
-                String jam[] = inputDate.split(" ")[1].split(":");
+            try {
+                String[] tgl = inputDate.split(" ")[0].split("-");
+                String[] jam = inputDate.split(" ")[1].split(":");
 
                 tglBaru = tgl[2] + " " + bulanId(tgl[1]) + " " + tgl[0];
                 tglBaru = tglBaru + " " + jam[0] + ":" + jam[1];
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return tglBaru;
-        }else{
+        } else {
             return inputDate;
         }
 
     }
-    public static String formatCurrencyId(double harga){
+
+    public static String formatCurrencyId(double harga) {
         DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
         DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
 
@@ -205,6 +208,7 @@ public class Utils {
         kursIndonesia.setDecimalFormatSymbols(formatRp);
         return kursIndonesia.format(harga);
     }
+
     public static void openAppPlaystore(Context context) {
         // you can also use BuildConfig.APPLICATION_ID
         String appId = context.getPackageName();
@@ -215,7 +219,7 @@ public class Utils {
         // find all applications able to handle our rateIntent
         final List<ResolveInfo> otherApps = context.getPackageManager()
                 .queryIntentActivities(rateIntent, 0);
-        for (ResolveInfo otherApp: otherApps) {
+        for (ResolveInfo otherApp : otherApps) {
             // look for Google Play application
             if (otherApp.activityInfo.applicationInfo.packageName
                     .equals("com.android.vending")) {
@@ -245,10 +249,11 @@ public class Utils {
         // if GP not present on device, open web browser
         if (!marketFound) {
             Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id="+appId));
+                    Uri.parse("https://play.google.com/store/apps/details?id=" + appId));
             context.startActivity(webIntent);
         }
     }
+
     public static String getFileExtension(File file) {
         String name = file.getName();
         try {
@@ -257,6 +262,7 @@ public class Utils {
             return "";
         }
     }
+
     public static String sha1(String input) throws NoSuchAlgorithmException {
         MessageDigest mDigest = MessageDigest.getInstance("SHA1");
         byte[] result = mDigest.digest(input.getBytes());
@@ -269,12 +275,12 @@ public class Utils {
     }
     //method to convert the selected image to base64 encoded string
 
-    public static String ConvertBitmapToString(Bitmap bitmap){
+    public static String ConvertBitmapToString(Bitmap bitmap) {
         String encodedImage = "";
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        encodedImage= "data:image/png;base64," + Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.NO_WRAP);
+        encodedImage = "data:image/png;base64," + Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.NO_WRAP);
 //        try {
 //            encodedImage= URLEncoder.encode("data:image/png;base64," + Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT), "UTF-8");
 //        } catch (UnsupportedEncodingException e) {
@@ -283,24 +289,27 @@ public class Utils {
 
         return encodedImage;
     }
-    public static boolean fileExist(Context context,String fileName) {
+
+    public static boolean fileExist(Context context, String fileName) {
         File file = new File(fileName);
         return file.exists();
     }
-    public static String getDirWabot(String dir){
+
+    public static String getDirWabot(String dir) {
         String root = Environment.getExternalStorageDirectory().getAbsolutePath();
         File myDir = new File(root + "/wabot/" + dir + "/");
         return myDir.getPath();
     }
-    public static void SaveImage(Bitmap finalBitmap,String dir,String filename) {
+
+    public static void SaveImage(Bitmap finalBitmap, String dir, String filename) {
 
         String root = Environment.getExternalStorageDirectory().getAbsolutePath();
         File myDir = new File(root + "/wabot/" + dir + "/");
         myDir.mkdirs();
 
         String fname = filename;
-        File file = new File (myDir, fname);
-        if (file.exists ()) file.delete ();
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);

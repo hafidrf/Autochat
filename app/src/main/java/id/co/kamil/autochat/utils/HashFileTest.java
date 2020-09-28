@@ -14,14 +14,14 @@ public class HashFileTest {
 
     /**
      * Verifies file's SHA1 checksum
-     * @param Filepath and name of a file that is to be verified
+     *
+     * @param Filepath     and name of a file that is to be verified
      * @param testChecksum the expected checksum
      * @return true if the expeceted SHA1 checksum matches the file's SHA1 checksum; false otherwise.
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
-    public static boolean verifyChecksum(String file, String testChecksum) throws NoSuchAlgorithmException, IOException
-    {
+    public static boolean verifyChecksum(String file, String testChecksum) throws NoSuchAlgorithmException, IOException {
         MessageDigest sha1 = MessageDigest.getInstance("SHA1");
         FileInputStream fis = new FileInputStream(file);
 
@@ -29,7 +29,7 @@ public class HashFileTest {
         int read = 0;
         while ((read = fis.read(data)) != -1) {
             sha1.update(data, 0, read);
-        };
+        }
         byte[] hashBytes = sha1.digest();
 
         StringBuffer sb = new StringBuffer();

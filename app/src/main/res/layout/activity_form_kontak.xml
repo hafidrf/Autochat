@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/md_white_1000"
     tools:context=".ui.kontak.FormKontakActivity">
+
     <RadioGroup
         android:background="@color/colorPrimary"
         android:paddingLeft="15dp"
@@ -16,6 +16,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <RadioButton
             android:id="@+id/optUmum"
             android:background="@drawable/i_radiobutton_custom"
@@ -29,7 +30,8 @@
             android:paddingBottom="5dp"
             android:textColor="@color/md_white_1000"
             android:checked="true"
-            android:text="Umum"/>
+            android:text="Umum" />
+
         <RadioButton
             android:id="@+id/optRiwayat"
             android:background="@drawable/i_radiobutton_custom"
@@ -42,29 +44,34 @@
             android:layout_height="wrap_content"
             android:textColor="@color/md_white_1000"
             android:layout_marginRight="10dp"
-            android:text="Riwayat Kontak"/>
+            android:text="Riwayat Kontak" />
     </RadioGroup>
+
     <ScrollView
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:paddingBottom="10dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <LinearLayout
                 android:id="@+id/layRiwayatKontak"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="25dp"
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Komentar"/>
+                    android:text="Komentar" />
+
                 <EditText
                     android:id="@+id/edtKomentar"
                     android:layout_marginTop="5dp"
@@ -80,7 +87,7 @@
                     android:hint="Komentar"
                     android:gravity="top"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"/>
+                    android:layout_height="100dp" />
 
                 <Button
                     android:id="@+id/tambahRiwayat"
@@ -92,7 +99,8 @@
                     android:background="@drawable/btn_rect_default"
                     android:text="Tambah Riwayat"
                     android:layout_width="170dp"
-                    android:layout_height="40dp"/>
+                    android:layout_height="40dp" />
+
                 <TextView
                     android:id="@+id/labelNotfoundRiwayat"
                     android:fontFamily="@font/font"
@@ -100,7 +108,8 @@
                     android:textAlignment="center"
                     android:gravity="center_vertical"
                     android:layout_height="40dp"
-                    android:text="Tidak ada data Riwayat Kontak"/>
+                    android:text="Tidak ada data Riwayat Kontak" />
+
                 <id.co.kamil.autochat.utils.ExpandableHeightListView
                     android:id="@+id/listRiwayat"
                     android:layout_marginTop="10dp"
@@ -108,20 +117,23 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginRight="15dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/layUmum"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="25dp"
-                    android:text="Nama Depan"/>
+                    android:text="Nama Depan" />
+
                 <EditText
                     android:id="@+id/edtNamaDepan"
                     android:singleLine="true"
@@ -137,14 +149,16 @@
                     android:inputType="text"
                     android:hint="Nama Depan"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="25dp"
-                    android:text="Nama Belakang"/>
+                    android:text="Nama Belakang" />
+
                 <EditText
                     android:id="@+id/edtNamaBelakang"
                     android:singleLine="true"
@@ -160,14 +174,15 @@
                     android:inputType="text"
                     android:hint="Nama Belakang"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Sapaan"/>
+                    android:text="Sapaan" />
 
                 <Spinner
                     android:id="@+id/spinSapaan"
@@ -177,30 +192,31 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-<!--                <EditText-->
-<!--                    android:id="@+id/edtSapaan"-->
-<!--                    android:singleLine="true"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:background="@drawable/rectangle_white_slim"-->
-<!--                    android:layout_marginRight="15dp"-->
-<!--                    android:paddingLeft="15dp"-->
-<!--                    android:paddingTop="10dp"-->
-<!--                    android:paddingBottom="10dp"-->
-<!--                    android:paddingRight="15dp"-->
-<!--                    android:layout_marginLeft="15dp"-->
-<!--                    android:fontFamily="@font/font"-->
-<!--                    android:inputType="text"-->
-<!--                    android:hint="Bapak/Ibu/Mas/Mbak"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"/>-->
+                    android:layout_height="wrap_content" />
+                <!--                <EditText-->
+                <!--                    android:id="@+id/edtSapaan"-->
+                <!--                    android:singleLine="true"-->
+                <!--                    android:layout_marginTop="5dp"-->
+                <!--                    android:background="@drawable/rectangle_white_slim"-->
+                <!--                    android:layout_marginRight="15dp"-->
+                <!--                    android:paddingLeft="15dp"-->
+                <!--                    android:paddingTop="10dp"-->
+                <!--                    android:paddingBottom="10dp"-->
+                <!--                    android:paddingRight="15dp"-->
+                <!--                    android:layout_marginLeft="15dp"-->
+                <!--                    android:fontFamily="@font/font"-->
+                <!--                    android:inputType="text"-->
+                <!--                    android:hint="Bapak/Ibu/Mas/Mbak"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"/>-->
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Handphone"/>
+                    android:text="Handphone" />
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -222,7 +238,8 @@
                         android:inputType="phone"
                         android:hint="Nomor HP"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
+
                     <ImageButton
                         android:id="@+id/btnCariKontak"
                         android:padding="5dp"
@@ -232,15 +249,17 @@
                         android:background="@drawable/btn_rect_primary"
                         android:src="@drawable/ic_contact_white"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Alamat"/>
+                    android:text="Alamat" />
+
                 <EditText
                     android:id="@+id/edtAlamat"
                     android:layout_marginTop="5dp"
@@ -255,7 +274,7 @@
                     android:hint="Alamat"
                     android:gravity="top"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"/>
+                    android:layout_height="100dp" />
 
                 <TextView
                     android:fontFamily="@font/font"
@@ -263,7 +282,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Telegram"/>
+                    android:text="Telegram" />
+
                 <EditText
                     android:id="@+id/edtTelegram"
                     android:singleLine="true"
@@ -279,7 +299,7 @@
                     android:inputType="text"
                     android:hint="Username Telegram"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:fontFamily="@font/font"
@@ -287,7 +307,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Email"/>
+                    android:text="Email" />
+
                 <EditText
                     android:id="@+id/edtEmail"
                     android:singleLine="true"
@@ -303,14 +324,16 @@
                     android:inputType="textEmailAddress"
                     android:hint="Email"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Web"/>
+                    android:text="Web" />
+
                 <EditText
                     android:id="@+id/edtWeb"
                     android:singleLine="true"
@@ -326,14 +349,16 @@
                     android:inputType="textWebEditText"
                     android:hint="Web"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Facebook"/>
+                    android:text="Facebook" />
+
                 <EditText
                     android:id="@+id/edtFacebook"
                     android:singleLine="true"
@@ -349,14 +374,16 @@
                     android:inputType="text"
                     android:hint="Facebook"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Instagram"/>
+                    android:text="Instagram" />
+
                 <EditText
                     android:id="@+id/edtInstagram"
                     android:singleLine="true"
@@ -372,14 +399,16 @@
                     android:inputType="text"
                     android:hint="Instagram"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Linkedin"/>
+                    android:text="Linkedin" />
+
                 <EditText
                     android:id="@+id/edtLinkedin"
                     android:singleLine="true"
@@ -395,14 +424,16 @@
                     android:inputType="text"
                     android:hint="Linkedin"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Tokopedia"/>
+                    android:text="Tokopedia" />
+
                 <EditText
                     android:id="@+id/edtTokopedia"
                     android:singleLine="true"
@@ -418,14 +449,16 @@
                     android:inputType="text"
                     android:hint="Tokopedia"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Bukalapak"/>
+                    android:text="Bukalapak" />
+
                 <EditText
                     android:id="@+id/edtBukalapak"
                     android:singleLine="true"
@@ -441,14 +474,16 @@
                     android:inputType="text"
                     android:hint="Bukalapak"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Shopee"/>
+                    android:text="Shopee" />
+
                 <EditText
                     android:id="@+id/edtShopee"
                     android:singleLine="true"
@@ -464,14 +499,16 @@
                     android:inputType="text"
                     android:hint="Shopee"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Olshop ID"/>
+                    android:text="Olshop ID" />
+
                 <EditText
                     android:id="@+id/edtOlshopid"
                     android:singleLine="true"
@@ -487,14 +524,16 @@
                     android:inputType="text"
                     android:hint="Olshop ID"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Provinsi"/>
+                    android:text="Provinsi" />
+
                 <Spinner
                     android:id="@+id/spinProvinsi"
                     android:layout_marginTop="5dp"
@@ -507,14 +546,16 @@
                     android:fontFamily="@font/font"
                     android:layout_marginRight="15dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Kota"/>
+                    android:text="Kota" />
+
                 <Spinner
                     android:id="@+id/spinKota"
                     android:layout_marginTop="5dp"
@@ -527,7 +568,7 @@
                     android:fontFamily="@font/font"
                     android:layout_marginRight="15dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:fontFamily="@font/font"
@@ -535,7 +576,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Jenis Kelamin"/>
+                    android:text="Jenis Kelamin" />
+
                 <Spinner
                     android:id="@+id/spinGender"
                     style="@style/spinner_style"
@@ -544,14 +586,16 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Tanggal Lahir"/>
+                    android:text="Tanggal Lahir" />
+
                 <EditText
                     android:id="@+id/edtTglLahir"
                     android:singleLine="true"
@@ -570,20 +614,23 @@
                     android:drawableRight="@drawable/ic_calendar"
                     android:hint="Tanggal Lahir"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <CheckBox
                     android:id="@+id/chkUltah"
                     android:layout_marginLeft="15dp"
                     android:text="Kirim otomatis Ucapan Selamat"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Note"/>
+                    android:text="Note" />
+
                 <EditText
                     android:id="@+id/edtNote"
                     android:singleLine="true"
@@ -599,7 +646,7 @@
                     android:inputType="text"
                     android:hint="Note"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:fontFamily="@font/font"
@@ -607,7 +654,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Grup"/>
+                    android:text="Grup" />
+
                 <Button
                     android:id="@+id/btnTambahGrup"
                     android:layout_marginTop="10dp"
@@ -619,20 +667,23 @@
                     android:textColor="@color/md_white_1000"
                     android:text="Tambah Grup"
                     android:layout_width="150dp"
-                    android:layout_height="30dp"/>
+                    android:layout_height="30dp" />
+
                 <id.co.kamil.autochat.utils.ExpandableHeightListView
                     android:id="@+id/listGrup"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_100"/>
+        android:background="@color/md_blue_grey_100" />
+
     <Button
         android:id="@+id/btnSimpan"
         android:layout_marginTop="10dp"
@@ -644,5 +695,5 @@
         android:textColor="@color/md_white_1000"
         android:text="Simpan"
         android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        android:layout_height="40dp" />
 </LinearLayout>

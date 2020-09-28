@@ -5,12 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -28,6 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -94,7 +93,6 @@ public class AutoTextFragment extends Fragment {
     private Button btnPengaturan;
 
 
-
     public AutoTextFragment() {
         // Required empty public constructor
     }
@@ -154,10 +152,10 @@ public class AutoTextFragment extends Fragment {
         listAutotext.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getContext(),FormAutoTextActivity.class);
-                intent.putExtra("tipe","edit");
+                Intent intent = new Intent(getContext(), FormAutoTextActivity.class);
+                intent.putExtra("tipe", "edit");
                 intent.putExtra("id", dataAutoText.get(i).getId());
-                startActivityForResult(intent,REQUEST_ADD);
+                startActivityForResult(intent, REQUEST_ADD);
             }
         });
         edtCari.addTextChangedListener(new TextWatcher() {
@@ -171,7 +169,7 @@ public class AutoTextFragment extends Fragment {
                 try {
                     autoTextAdapter.filter(edtCari.getText().toString().trim());
                     listAutotext.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -211,11 +209,12 @@ public class AutoTextFragment extends Fragment {
         });
         return view;
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadData();
             }
         }
@@ -228,6 +227,7 @@ public class AutoTextFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -237,29 +237,31 @@ public class AutoTextFragment extends Fragment {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
     }
-    private void listDefault(){
-        for (int i = 0; i < dataAutoText.size(); i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataAutoText.size(); i++) {
             ItemAutotext ikontak = dataAutoText.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataAutoText.set(i,ikontak);
+            dataAutoText.set(i, ikontak);
         }
         autoTextAdapter.notifyDataSetChanged();
-        if (dataAutoText.size()==0){
+        if (dataAutoText.size() == 0) {
             loadData();
         }
     }
-    private void loadData(){
+
+    private void loadData() {
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final String uri = Uri.parse(URL_POST_LIST_AUTO_TEXT)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataAutoText.clear();
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, null, new Response.Listener<JSONObject>() {
@@ -271,9 +273,9 @@ public class AutoTextFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
 
                             final String id = data.getJSONObject(i).getString("id");
                             final String shorcut = data.getJSONObject(i).getString("shorcut");
@@ -281,16 +283,16 @@ public class AutoTextFragment extends Fragment {
                             final String group_id = data.getJSONObject(i).getString("group_id");
                             final String group_name = data.getJSONObject(i).getString("group_name");
                             final String group_description = data.getJSONObject(i).getString("group_description");
-                            dataAutoText.add(new ItemAutotext(id,shorcut,template,group_id,group_name,group_description,false,false));
+                            dataAutoText.add(new ItemAutotext(id, shorcut, template, group_id, group_name, group_description, false, false));
                         }
-                    }else{
-                        Log.i(TAG,response.toString());
-                        showError(true,message,false);
+                    } else {
+                        Log.i(TAG, response.toString());
+                        showError(true, message, false);
                     }
                     displayPesan();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -299,15 +301,15 @@ public class AutoTextFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else {
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -320,27 +322,27 @@ public class AutoTextFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -348,57 +350,60 @@ public class AutoTextFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listAutotext.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listAutotext.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayPesan() {
-        autoTextAdapter = new AdapterAutotext(dataAutoText,getContext());
+        autoTextAdapter = new AdapterAutotext(dataAutoText, getContext());
         listAutotext.setAdapter(autoTextAdapter);
         adapterInstance = true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
-            Intent intent = new Intent(getContext(),FormAutoTextActivity.class);
-            intent.putExtra("tipe","tambah");
-            startActivityForResult(intent,REQUEST_ADD);
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataAutoText.size()>0){
+        if (item.getItemId() == R.id.actTambah) {
+            Intent intent = new Intent(getContext(), FormAutoTextActivity.class);
+            intent.putExtra("tipe", "tambah");
+            startActivityForResult(intent, REQUEST_ADD);
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataAutoText.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0; i < dataAutoText.size(); i++){
+                for (int i = 0; i < dataAutoText.size(); i++) {
                     ItemAutotext ikontak = dataAutoText.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataAutoText.set(i,ikontak);
+                    dataAutoText.set(i, ikontak);
                 }
                 autoTextAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data Autoreply tidak tersedia", Toast.LENGTH_SHORT).show();
             }
 
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(true);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(getContext())
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -407,35 +412,36 @@ public class AutoTextFragment extends Fragment {
                             hapusPesan();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0; i < dataAutoText.size(); i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataAutoText.size(); i++) {
                 ItemAutotext ikontak = dataAutoText.get(i);
                 ikontak.setCheckbox(true);
-                dataAutoText.set(i,ikontak);
+                dataAutoText.set(i, ikontak);
             }
             autoTextAdapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void hapusPesan() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final JSONArray jsonArray = new JSONArray();
 
-        for (int i = 0; i < dataAutoText.size(); i++){
-            if (dataAutoText.get(i).isCheckbox() ){
+        for (int i = 0; i < dataAutoText.size(); i++) {
+            if (dataAutoText.get(i).isCheckbox()) {
                 jsonArray.put(Integer.parseInt(dataAutoText.get(i).getId()));
             }
         }
         final JSONObject request_body = new JSONObject();
         try {
-            request_body.put("id",jsonArray);
+            request_body.put("id", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i(TAG,request_body.toString());
+        Log.i(TAG, request_body.toString());
         final String uri = Uri.parse(URL_POST_HAPUS_AUTO_TEXT)
                 .buildUpon()
                 .toString();
@@ -443,7 +449,7 @@ public class AutoTextFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body , new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -451,10 +457,10 @@ public class AutoTextFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
-                        for (int i = 0; i < dataAutoText.size(); i++){
-                            if (dataAutoText.get(i).isCheckbox()){
+                    Log.i(TAG, message);
+                    if (status) {
+                        for (int i = 0; i < dataAutoText.size(); i++) {
+                            if (dataAutoText.get(i).isCheckbox()) {
                                 dataAutoText.remove(i);
                                 i = i - 1;
                             }
@@ -467,17 +473,17 @@ public class AutoTextFragment extends Fragment {
                         menuTop.findItem(R.id.actTambah).setVisible(true);
                         listDefault();
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -486,17 +492,17 @@ public class AutoTextFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -509,7 +515,7 @@ public class AutoTextFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -520,7 +526,7 @@ public class AutoTextFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
@@ -532,12 +538,12 @@ public class AutoTextFragment extends Fragment {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };

@@ -22,15 +22,18 @@ public class AdapterGrup extends BaseAdapter {
     ArrayList<ItemGrup> arraylist;
 
     private static final int resource = R.layout.item_list_grup;
+
     public class ViewHolder {
         TextView txtJudul;
         CheckBox chk1;
 
     }
-    public void reloadArrayList(){
+
+    public void reloadArrayList() {
         arraylist = new ArrayList<ItemGrup>();
         arraylist.addAll(dataGrup);
     }
+
     public AdapterGrup(List<ItemGrup> apps, Context context) {
         this.dataGrup = apps;
         this.context = context;
@@ -79,9 +82,9 @@ public class AdapterGrup extends BaseAdapter {
         viewHolder.chk1.setChecked(item.isCheckbox());
 
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
@@ -105,8 +108,7 @@ public class AdapterGrup extends BaseAdapter {
             for (ItemGrup postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getJudul().toLowerCase(Locale.getDefault()).contains(charText)) {
                     dataGrup.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getDeskripsi().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getDeskripsi().toLowerCase(Locale.getDefault()).contains(charText)) {
                     dataGrup.add(postDetail);
                 }
             }

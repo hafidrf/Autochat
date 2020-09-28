@@ -4,10 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ItemWaform {
-    String id,judul,redaksi,submit_text,dest_number,dest_name,domain_code,domain,created,url;
+    String id, judul, redaksi, submit_text, dest_number, dest_name, domain_code, domain, created, url;
     JSONArray field;
     JSONObject jsonObject;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     public ItemWaform(String id, String judul, String redaksi, String submit_text, String dest_number, String dest_name, String domain_code, String domain, String created, String url, JSONArray field, JSONObject jsonObject, boolean checkbox, boolean chkvisible) {
         this.id = id;

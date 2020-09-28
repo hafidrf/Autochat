@@ -3,9 +3,10 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemKontak {
-    String id,judul,nomorhp;
-    boolean checkbox,chkvisible;
+    String id, judul, nomorhp;
+    boolean checkbox, chkvisible;
     JSONObject jsonObject;
+
     @Override
     public String toString() {
         return "{" +

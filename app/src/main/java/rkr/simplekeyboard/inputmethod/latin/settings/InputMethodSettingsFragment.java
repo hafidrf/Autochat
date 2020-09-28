@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
 /**
  * This is a helper class for an IME's settings preference fragment. It's recommended for every
  * IME to have its own settings preference fragment which inherits this class.
@@ -26,6 +27,7 @@ import android.preference.PreferenceFragment;
 public abstract class InputMethodSettingsFragment extends PreferenceFragment
         implements InputMethodSettingsInterface {
     private final InputMethodSettingsImpl mSettings = new InputMethodSettingsImpl();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,7 @@ public abstract class InputMethodSettingsFragment extends PreferenceFragment
         setPreferenceScreen(getPreferenceManager().createPreferenceScreen(context));
         mSettings.init(context, getPreferenceScreen());
     }
+
     /**
      * {@inheritDoc}
      */
@@ -40,6 +43,7 @@ public abstract class InputMethodSettingsFragment extends PreferenceFragment
     public void setInputMethodSettingsCategoryTitle(int resId) {
         mSettings.setInputMethodSettingsCategoryTitle(resId);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -47,6 +51,7 @@ public abstract class InputMethodSettingsFragment extends PreferenceFragment
     public void setInputMethodSettingsCategoryTitle(CharSequence title) {
         mSettings.setInputMethodSettingsCategoryTitle(title);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -54,6 +59,7 @@ public abstract class InputMethodSettingsFragment extends PreferenceFragment
     public void setSubtypeEnablerTitle(int resId) {
         mSettings.setSubtypeEnablerTitle(resId);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -61,6 +67,7 @@ public abstract class InputMethodSettingsFragment extends PreferenceFragment
     public void setSubtypeEnablerTitle(CharSequence title) {
         mSettings.setSubtypeEnablerTitle(title);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -68,6 +75,7 @@ public abstract class InputMethodSettingsFragment extends PreferenceFragment
     public void setSubtypeEnablerIcon(int resId) {
         mSettings.setSubtypeEnablerIcon(resId);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -75,6 +83,7 @@ public abstract class InputMethodSettingsFragment extends PreferenceFragment
     public void setSubtypeEnablerIcon(Drawable drawable) {
         mSettings.setSubtypeEnablerIcon(drawable);
     }
+
     /**
      * {@inheritDoc}
      */

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.PengaturanActivity">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/labelWAEngine"
             android:layout_marginLeft="10dp"
@@ -15,7 +16,8 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="WhatsApp Engine"/>
+            android:text="WhatsApp Engine" />
+
         <TextView
             android:id="@+id/labelDelayBulk"
             android:textSize="16sp"
@@ -24,7 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Delay Bulk Sender"/>
+            android:text="Delay Bulk Sender" />
+
         <EditText
             android:id="@+id/edtDelayBulkSender"
             android:background="@drawable/rectangle_white"
@@ -35,7 +38,8 @@
             android:inputType="number"
             android:layout_marginRight="10dp"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/labelDetikBulkSender"
             android:layout_alignParentRight="true"
@@ -43,7 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/edtDelayBulkSender"
             android:layout_marginRight="10dp"
-            android:text="detik"/>
+            android:text="detik" />
+
         <TextView
             android:id="@+id/labelStatusError"
             android:textSize="16sp"
@@ -52,14 +57,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Status Coba Kirim Pesan (jika gagal)"/>
+            android:text="Status Coba Kirim Pesan (jika gagal)" />
+
         <Switch
             android:id="@+id/switchEnabledStatusError"
             android:layout_alignTop="@id/labelStatusError"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/labelTryAgain"
             android:textSize="16sp"
@@ -68,7 +75,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Maks Coba Kirim Pesan (Jika gagal)"/>
+            android:text="Maks Coba Kirim Pesan (Jika gagal)" />
+
         <EditText
             android:id="@+id/edtTryAgain"
             android:background="@drawable/rectangle_white"
@@ -79,7 +87,8 @@
             android:inputType="number"
             android:layout_marginRight="10dp"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/labelMaksTryAgain"
             android:layout_toRightOf="@id/edtTryAgain"
@@ -87,7 +96,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/edtTryAgain"
             android:layout_marginRight="10dp"
-            android:text="kali"/>
+            android:text="kali" />
+
         <TextView
             android:id="@+id/labelOnScreen"
             android:textSize="16sp"
@@ -97,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Layar tetap menyala"/>
+            android:text="Layar tetap menyala" />
 
         <Switch
             android:id="@+id/switchOnScreen"
@@ -106,7 +116,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/labelStatusBulkSender"
             android:textSize="16sp"
@@ -115,14 +126,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Status Bulk Sender"/>
+            android:text="Status Bulk Sender" />
+
         <Switch
             android:id="@+id/switchEnabledBulkSender"
             android:layout_alignTop="@id/labelStatusBulkSender"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/labelAccessibility"
             android:textSize="16sp"
@@ -131,14 +144,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Aksesibilitas Wabot"/>
+            android:text="Aksesibilitas Wabot" />
+
         <Switch
             android:id="@+id/switchAksesibilitas"
             android:layout_alignTop="@id/labelAccessibility"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/labelAutoReply"
@@ -148,7 +162,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Auto Reply"/>
+            android:text="Auto Reply" />
+
         <Button
             android:id="@+id/btnPengaturanAutoReply"
             android:background="@drawable/btn_rect_primary"
@@ -161,7 +176,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="10dp"
-            android:text="Setting"/>
+            android:text="Setting" />
 
         <TextView
             android:id="@+id/labelAutoReplyPersonal"
@@ -171,14 +186,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Auto Reply Personal"/>
+            android:text="Auto Reply Personal" />
+
         <Switch
             android:id="@+id/switchAutoReplyPersonal"
             android:layout_alignTop="@id/labelAutoReplyPersonal"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/labelAutoReplyBusiness"
@@ -188,14 +204,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Auto Reply Business"/>
+            android:text="Auto Reply Business" />
+
         <Switch
             android:id="@+id/switchAutoReplyBusiness"
             android:layout_alignTop="@id/labelAutoReplyBusiness"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/labelKeyboardTool"
             android:layout_below="@id/labelAutoReplyBusiness"
@@ -204,7 +222,7 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Keyboard Tool"/>
+            android:text="Keyboard Tool" />
 
 
         <TextView
@@ -215,7 +233,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Aktivasi Keyboard Wabot"/>
+            android:text="Aktivasi Keyboard Wabot" />
+
         <Button
             android:id="@+id/btnPengaturanKeyboard"
             android:background="@drawable/btn_rect_primary"
@@ -228,7 +247,8 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="10dp"
-            android:text="Aktivasi"/>
+            android:text="Aktivasi" />
+
         <TextView
             android:id="@+id/labelKeyboardPref"
             android:textSize="16sp"
@@ -237,7 +257,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Pengaturan Keyboard Wabot"/>
+            android:text="Pengaturan Keyboard Wabot" />
+
         <Button
             android:id="@+id/btnKeyboardPref"
             android:background="@drawable/btn_rect_primary"
@@ -250,7 +271,8 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="10dp"
-            android:text="Setting"/>
+            android:text="Setting" />
+
         <TextView
             android:id="@+id/labelAutoText"
             android:visibility="gone"
@@ -260,7 +282,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Auto Text"/>
+            android:text="Auto Text" />
+
         <Switch
             android:id="@+id/switchAutoText"
             android:visibility="gone"
@@ -268,7 +291,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/labelToolbar"
             android:textSize="16sp"
@@ -278,7 +302,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Toolbar"/>
+            android:text="Toolbar" />
 
         <TextView
             android:id="@+id/labelGeneral"
@@ -288,7 +312,8 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="General"/>
+            android:text="General" />
+
         <TextView
             android:id="@+id/labelRedaksiUltah"
             android:textSize="16sp"
@@ -297,7 +322,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Redaksi Ucapan Selamat Ulang Tahun"/>
+            android:text="Redaksi Ucapan Selamat Ulang Tahun" />
 
         <Button
             android:id="@+id/btnRedaksiUltah"
@@ -311,7 +336,8 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="10dp"
-            android:text="Setting"/>
+            android:text="Setting" />
+
         <Switch
             android:id="@+id/switchToolbar"
             android:visibility="gone"
@@ -319,7 +345,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 </ScrollView>

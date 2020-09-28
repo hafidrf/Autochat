@@ -24,7 +24,6 @@ import java.util.Locale;
 
 import rkr.simplekeyboard.inputmethod.latin.common.Constants;
 import rkr.simplekeyboard.inputmethod.latin.utils.RunInLocale;
-import rkr.simplekeyboard.inputmethod.latin.utils.SubtypeLocaleUtils;
 
 // TODO: Make this an immutable class.
 public final class KeyboardTextsSet {
@@ -48,7 +47,7 @@ public final class KeyboardTextsSet {
     }
 
     public void setLocale(final Locale locale, final Resources res,
-            final String resourcePackageName) {
+                          final String resourcePackageName) {
         mResources = res;
         // Null means the current system locale.
         mResourceLocale = locale;
@@ -126,7 +125,7 @@ public final class KeyboardTextsSet {
     }
 
     private int expandReference(final String text, final int pos, final String prefix,
-            final StringBuilder sb) {
+                                final StringBuilder sb) {
         final int prefixLength = prefix.length();
         final int end = searchTextNameEnd(text, pos + prefixLength);
         final String name = text.substring(pos + prefixLength, end);

@@ -77,8 +77,8 @@ public final class KeyStylesSet {
         private final SparseArray<Object> mStyleAttributes = new SparseArray<>();
 
         public DeclaredKeyStyle(final String parentStyleName,
-                final KeyboardTextsSet textsSet,
-                final HashMap<String, KeyStyle> styles) {
+                                final KeyboardTextsSet textsSet,
+                                final HashMap<String, KeyStyle> styles) {
             super(textsSet);
             mParentStyleName = parentStyleName;
             mStyles = styles;
@@ -91,7 +91,7 @@ public final class KeyStylesSet {
             }
             final Object value = mStyleAttributes.get(index);
             if (value != null) {
-                final String[] array = (String[])value;
+                final String[] array = (String[]) value;
                 return Arrays.copyOf(array, array.length);
             }
             final KeyStyle parentStyle = mStyles.get(mParentStyleName);
@@ -105,7 +105,7 @@ public final class KeyStylesSet {
             }
             final Object value = mStyleAttributes.get(index);
             if (value != null) {
-                return (String)value;
+                return (String) value;
             }
             final KeyStyle parentStyle = mStyles.get(mParentStyleName);
             return parentStyle.getString(a, index);
@@ -118,7 +118,7 @@ public final class KeyStylesSet {
             }
             final Object value = mStyleAttributes.get(index);
             if (value != null) {
-                return (Integer)value;
+                return (Integer) value;
             }
             final KeyStyle parentStyle = mStyles.get(mParentStyleName);
             return parentStyle.getInt(a, index, defaultValue);
@@ -127,7 +127,7 @@ public final class KeyStylesSet {
         @Override
         public int getFlags(final TypedArray a, final int index) {
             final int parentFlags = mStyles.get(mParentStyleName).getFlags(a, index);
-            final Integer value = (Integer)mStyleAttributes.get(index);
+            final Integer value = (Integer) mStyleAttributes.get(index);
             final int styleFlags = (value != null) ? value : 0;
             final int flags = a.getInt(index, 0);
             return flags | styleFlags | parentFlags;
@@ -161,7 +161,7 @@ public final class KeyStylesSet {
 
         private void readFlags(final TypedArray a, final int index) {
             if (a.hasValue(index)) {
-                final Integer value = (Integer)mStyleAttributes.get(index);
+                final Integer value = (Integer) mStyleAttributes.get(index);
                 final int styleFlags = value != null ? value : 0;
                 mStyleAttributes.put(index, a.getInt(index, 0) | styleFlags);
             }
@@ -175,7 +175,7 @@ public final class KeyStylesSet {
     }
 
     public void parseKeyStyleAttributes(final TypedArray keyStyleAttr, final TypedArray keyAttrs,
-            final XmlPullParser parser) throws XmlPullParserException {
+                                        final XmlPullParser parser) throws XmlPullParserException {
         final String styleName = keyStyleAttr.getString(R.styleable.Keyboard_KeyStyle_styleName);
         if (styleName == null) {
             throw new XmlParseUtils.ParseException(

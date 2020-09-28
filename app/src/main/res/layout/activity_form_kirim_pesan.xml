@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layMaster"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.pesan.FormKirimPesanActivity">
+
     <ScrollView
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/layUmum"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/txtWarningWhatsApp"
                 android:text="WhatsApp tidak terinstall"
@@ -25,7 +27,8 @@
                 android:textColor="@color/md_white_1000"
                 android:background="@color/md_deep_orange_300"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/labelNomorTujuan"
                 android:fontFamily="@font/font"
@@ -33,11 +36,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="25dp"
-                android:text="Nomor Tujuan"/>
+                android:text="Nomor Tujuan" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/gridNoTujuan"
                     android:layout_weight="1"
@@ -48,14 +53,15 @@
                     android:paddingRight="5dp"
                     android:background="@drawable/rectangle_white_slim"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <ImageButton
                     android:id="@+id/btnKontak"
                     android:background="@drawable/btn_rect_primary"
                     android:src="@drawable/ic_contact_white"
                     android:layout_marginRight="15dp"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"/>
+                    android:layout_height="50dp" />
             </LinearLayout>
 
             <Button
@@ -68,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:textSize="12sp"
-                android:text="Kontak yg tidak dipilih"/>
+                android:text="Kontak yg tidak dipilih" />
 
             <TextView
                 android:fontFamily="@font/font"
@@ -76,16 +82,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="10dp"
-                android:text="Personalisasi"/>
+                android:text="Personalisasi" />
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:id="@+id/txtSapaan"
                         android:fontFamily="@font/font"
@@ -93,20 +102,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:textColor="@color/md_deep_orange_500"
-                        android:text="[sapaan]"/>
+                        android:text="[sapaan]" />
 
                     <TextView
                         android:fontFamily="@font/font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
-                        android:text=": Sapaan"/>
+                        android:text=": Sapaan" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:id="@+id/txtNamaDepan"
                         android:fontFamily="@font/font"
@@ -114,20 +125,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:textColor="@color/md_deep_orange_500"
-                        android:text="[nama_depan]"/>
+                        android:text="[nama_depan]" />
 
                     <TextView
                         android:fontFamily="@font/font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
-                        android:text=": Nama Depan"/>
+                        android:text=": Nama Depan" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:id="@+id/txtNamaBelakang"
                         android:fontFamily="@font/font"
@@ -135,34 +148,38 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:textColor="@color/md_deep_orange_500"
-                        android:text="[nama_belakang]"/>
+                        android:text="[nama_belakang]" />
 
                     <TextView
                         android:fontFamily="@font/font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
-                        android:text=": Nama Belakang"/>
+                        android:text=": Nama Belakang" />
                 </LinearLayout>
             </LinearLayout>
+
             <TextView
                 android:fontFamily="@font/font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="10dp"
-                android:text="Gambar"/>
+                android:text="Gambar" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
                     android:id="@+id/imgPesan"
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="20dp"
                     android:src="@drawable/ic_image"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"/>
+                    android:layout_height="100dp" />
+
                 <LinearLayout
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="10dp"
@@ -170,16 +187,18 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <ImageButton
                         android:id="@+id/btnBrowse"
                         android:src="@drawable/ic_camera"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
+
                     <ImageButton
                         android:id="@+id/btnHapus"
                         android:src="@drawable/ic_trash"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -189,7 +208,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="10dp"
-                android:text="Pesan"/>
+                android:text="Pesan" />
+
             <EditText
                 android:id="@+id/edtPesan"
                 android:layout_marginTop="5dp"
@@ -205,14 +225,16 @@
                 android:layout_marginBottom="20dp"
                 android:hint="Isi Pesan"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"/>
+                android:layout_height="300dp" />
 
         </LinearLayout>
     </ScrollView>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_100"/>
+        android:background="@color/md_blue_grey_100" />
+
     <Button
         android:id="@+id/btnSimpan"
         android:layout_marginTop="10dp"
@@ -224,5 +246,5 @@
         android:textColor="@color/md_white_1000"
         android:text="Simpan"
         android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        android:layout_height="40dp" />
 </androidx.appcompat.widget.LinearLayoutCompat>

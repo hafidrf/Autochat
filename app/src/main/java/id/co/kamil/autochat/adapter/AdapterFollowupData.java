@@ -5,17 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import id.co.kamil.autochat.R;
 
@@ -32,10 +28,11 @@ public class AdapterFollowupData extends ArrayAdapter<ItemFollowupData> {
     }
 
     public class ViewHolder {
-        TextView txtJudul,txtSchedule;
-        ImageButton btnHapus,btnEdit;
+        TextView txtJudul, txtSchedule;
+        ImageButton btnHapus, btnEdit;
 
     }
+
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
@@ -45,7 +42,7 @@ public class AdapterFollowupData extends ArrayAdapter<ItemFollowupData> {
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater)
                     getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(resource, parent,false);
+            rowView = inflater.inflate(resource, parent, false);
             // configure view holder
             viewHolder = new ViewHolder();
             viewHolder.txtJudul = (TextView) rowView.findViewById(R.id.judul);
@@ -60,13 +57,13 @@ public class AdapterFollowupData extends ArrayAdapter<ItemFollowupData> {
 
         final ItemFollowupData item = getItem(position);
         String pesan = item.getMessage();
-        if(pesan.length()>100){
-            pesan = pesan.substring(0,100);
+        if (pesan.length() > 100) {
+            pesan = pesan.substring(0, 100);
         }
         viewHolder.txtJudul.setText(pesan);
-        if (Integer.parseInt(item.getInterval())>0 && position>0){
+        if (Integer.parseInt(item.getInterval()) > 0 && position > 0) {
             viewHolder.txtSchedule.setText(item.getInterval() + " hari");
-        }else{
+        } else {
             viewHolder.txtSchedule.setText(formatIdDateFromString(item.getSchedule()));
         }
 
@@ -74,13 +71,13 @@ public class AdapterFollowupData extends ArrayAdapter<ItemFollowupData> {
         viewHolder.btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView) parent).performItemClick(view,position,0);
+                ((ListView) parent).performItemClick(view, position, 0);
             }
         });
         viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView) parent).performItemClick(view,position,0);
+                ((ListView) parent).performItemClick(view, position, 0);
             }
         });
         return rowView;

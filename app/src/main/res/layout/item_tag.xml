@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+<LinearLayout android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:layout_margin="5dp"
         android:paddingBottom="5dp"
@@ -13,17 +14,19 @@
         android:background="@drawable/rectangle_grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/itemTitle"
             android:text="Irham Mustofa Kamil"
             android:layout_marginRight="10dp"
             android:fontFamily="@font/font"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <ImageView
             android:id="@+id/imgClose"
             android:src="@drawable/ic_close_block"
             android:layout_width="18dp"
-            android:layout_height="18dp"/>
+            android:layout_height="18dp" />
     </LinearLayout>
 </LinearLayout>

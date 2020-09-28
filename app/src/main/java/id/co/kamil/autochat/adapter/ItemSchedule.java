@@ -1,8 +1,8 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemSchedule {
-    String id,nama,jadwalkirim,tipe,pesan,status;
-    boolean checkbox,chkvisible,group;
+    String id, nama, jadwalkirim, tipe, pesan, status;
+    boolean checkbox, chkvisible, group;
 
     public ItemSchedule(String id, String nama, String jadwalkirim, String tipe, String pesan, String status, boolean group, boolean checkbox, boolean chkvisible) {
         this.id = id;

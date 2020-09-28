@@ -1,7 +1,5 @@
 package id.co.kamil.autochat.ui.linkpage;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,14 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import id.co.kamil.autochat.R;
 
 public class FormLinkPageAddFieldActivity extends AppCompatActivity {
 
     private String tipeForm;
-    private String judulField,linkField;
+    private String judulField, linkField;
     private int positionList;
-    private EditText edtJudul,edtLink;
+    private EditText edtJudul, edtLink;
     private Button btnSimpan;
 
     @Override
@@ -32,7 +32,7 @@ public class FormLinkPageAddFieldActivity extends AppCompatActivity {
         tipeForm = getIntent().getStringExtra("tipe");
         judulField = getIntent().getStringExtra("judul");
         linkField = getIntent().getStringExtra("link");
-        positionList = getIntent().getIntExtra("positionList",0);
+        positionList = getIntent().getIntExtra("positionList", 0);
 
 
         edtJudul = (EditText) findViewById(R.id.edtJudul);
@@ -41,13 +41,13 @@ public class FormLinkPageAddFieldActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isRequired()){
+                if (isRequired()) {
                     simpan();
                 }
             }
         });
 
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             edtJudul.setText(judulField);
             edtLink.setText(linkField);
         }
@@ -62,26 +62,26 @@ public class FormLinkPageAddFieldActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         Intent intent = new Intent();
-                        intent.putExtra("tipeForm",tipeForm);
-                        intent.putExtra("judul",edtJudul.getText().toString());
-                        intent.putExtra("link",edtLink.getText().toString());
-                        intent.putExtra("positionList",positionList);
-                        setResult(RESULT_OK,intent);
+                        intent.putExtra("tipeForm", tipeForm);
+                        intent.putExtra("judul", edtJudul.getText().toString());
+                        intent.putExtra("link", edtLink.getText().toString());
+                        intent.putExtra("positionList", positionList);
+                        setResult(RESULT_OK, intent);
                         finish();
                         Toast.makeText(getApplicationContext(), "Field berhasil disimpan", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("Tidak",null)
+                .setNegativeButton("Tidak", null)
                 .show();
 
     }
 
     private boolean isRequired() {
-        if (TextUtils.isEmpty(edtJudul.getText())){
+        if (TextUtils.isEmpty(edtJudul.getText())) {
             edtJudul.setError("Field ini tidak boleh kosong");
             edtJudul.requestFocus();
             return false;
-        }else if (TextUtils.isEmpty(edtLink.getText())){
+        } else if (TextUtils.isEmpty(edtLink.getText())) {
             edtLink.setError("Field ini tidak boleh kosong");
             edtLink.requestFocus();
             return false;

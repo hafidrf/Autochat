@@ -6,13 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
@@ -35,6 +28,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -66,7 +64,6 @@ import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static androidx.core.content.ContextCompat.getSystemService;
 import static id.co.kamil.autochat.utils.API.LIMIT_PESAN;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_DIRECT_LINK_UPGRADE;
@@ -111,7 +108,7 @@ public class PesanTerkirimFragment extends Fragment {
     private int count_number = 0;
     private SharPref sharePref;
     private int limit_pesan;
-    private boolean isLoading = false,isloadMore = true;
+    private boolean isLoading = false, isloadMore = true;
     private int current_page = 1;
     private View ftView;
     private MyHandler mHandler;
@@ -146,7 +143,7 @@ public class PesanTerkirimFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pesan_terkirim, container, false);
         LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ftView = li.inflate(R.layout.footer_view_loading,null);
+        ftView = li.inflate(R.layout.footer_view_loading, null);
         session = new SessionManager(getContext());
         userDetail = session.getUserDetails();
         token = userDetail.get(KEY_TOKEN);
@@ -154,7 +151,7 @@ public class PesanTerkirimFragment extends Fragment {
         sharePref = new SharPref(getContext());
 
         limit_pesan = Integer.parseInt(sharePref.getSessionStr(SharPref.KEY_LIMIT_PESAN));
-        if (limit_pesan<=0){
+        if (limit_pesan <= 0) {
             limit_pesan = LIMIT_PESAN;
         }
         mHandler = new MyHandler();
@@ -162,10 +159,10 @@ public class PesanTerkirimFragment extends Fragment {
         labelStorage = (TextView) view.findViewById(R.id.labelStorage);
         progressStorage = (ProgressBar) view.findViewById(R.id.progressStorage);
 
-        if (type.equals("1")){ // basic
+        if (type.equals("1")) { // basic
             progressStorage.setVisibility(View.VISIBLE);
             labelStorage.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             progressStorage.setVisibility(View.GONE);
             labelStorage.setVisibility(View.GONE);
         }
@@ -204,7 +201,7 @@ public class PesanTerkirimFragment extends Fragment {
                 try {
                     pesanAdapter.filter(edtCari.getText().toString().trim());
                     listPesan.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -223,12 +220,12 @@ public class PesanTerkirimFragment extends Fragment {
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int topRowVerticalPosition =
-                        (listPesan== null || listPesan.getChildCount() == 0) ?
+                        (listPesan == null || listPesan.getChildCount() == 0) ?
                                 0 : listPesan.getChildAt(0).getTop();
                 swipe_refresh.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-                if(absListView.getLastVisiblePosition()==totalItemCount-1 && listPesan.getCount()>=10 && isLoading == false && isloadMore){
+                if (absListView.getLastVisiblePosition() == totalItemCount - 1 && listPesan.getCount() >= 10 && isLoading == false && isloadMore) {
                     isLoading = true;
-                    loadMore(current_page+1);
+                    loadMore(current_page + 1);
                 }
             }
         });
@@ -246,14 +243,14 @@ public class PesanTerkirimFragment extends Fragment {
                 loadPesan();
             }
         });
-        if (isAccessibilityEnabled()==false){
+        if (isAccessibilityEnabled() == false) {
             View v = (CoordinatorLayout) getActivity().findViewById(R.id.layMaster);
             showSnackBar(v);
         }
         btnDeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(type.equals("1")){ // basic
+                if (type.equals("1")) { // basic
                     new android.app.AlertDialog.Builder(getContext())
                             .setMessage("Akun basic tidak bisa menghapus pesan terkirim")
                             .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
@@ -265,9 +262,9 @@ public class PesanTerkirimFragment extends Fragment {
                                     startActivity(intent2);
                                 }
                             })
-                            .setNegativeButton("Batal",null)
+                            .setNegativeButton("Batal", null)
                             .show();
-                }else{
+                } else {
                     try {
                         new AlertDialog.Builder(getContext())
                                 .setMessage("Apakah anda yakin akan menghapus semua data pesan terkirim?")
@@ -277,10 +274,10 @@ public class PesanTerkirimFragment extends Fragment {
                                         deleteAll();
                                     }
                                 })
-                                .setNegativeButton("Tidak",null)
+                                .setNegativeButton("Tidak", null)
                                 .show();
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -288,15 +285,16 @@ public class PesanTerkirimFragment extends Fragment {
         });
         return view;
     }
+
     public class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     listPesan.addFooterView(ftView);
                     break;
                 case 1:
-                    pesanAdapter.addListItemToAdapter((ArrayList<ItemPesan>)msg.obj);
+                    pesanAdapter.addListItemToAdapter((ArrayList<ItemPesan>) msg.obj);
                     listPesan.removeFooterView(ftView);
                     isLoading = false;
                     break;
@@ -309,14 +307,14 @@ public class PesanTerkirimFragment extends Fragment {
             }
         }
     }
-    public void showSnackBar(View llShow)
-    {
+
+    public void showSnackBar(View llShow) {
         // Create the Snackbar
         LinearLayout.LayoutParams objLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final Snackbar snackbar = Snackbar.make(llShow, "", Snackbar.LENGTH_INDEFINITE);
         // Get the Snackbar's layout view
         Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
-        layout.setPadding(0,0,0,0);
+        layout.setPadding(0, 0, 0, 0);
         // Hide the text
         TextView textView = (TextView) layout.findViewById(R.id.snackbar_text);
         textView.setVisibility(View.INVISIBLE);
@@ -350,6 +348,7 @@ public class PesanTerkirimFragment extends Fragment {
         // Show the Snackbar
         snackbar.show();
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menuTop = menu;
@@ -357,6 +356,7 @@ public class PesanTerkirimFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -366,29 +366,31 @@ public class PesanTerkirimFragment extends Fragment {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
     }
-    private void listDefault(){
-        for (int i = 0 ; i < dataPesan.size();i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataPesan.size(); i++) {
             ItemPesan ikontak = dataPesan.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataPesan.set(i,ikontak);
+            dataPesan.set(i, ikontak);
         }
         pesanAdapter.notifyDataSetChanged();
-        if (dataPesan.size()==0){
+        if (dataPesan.size() == 0) {
             loadPesan();
         }
     }
-    private void loadMore(int page){
+
+    private void loadMore(int page) {
         mHandler.sendEmptyMessage(0);
         JSONObject parameter = new JSONObject();
         try {
-            parameter.put("status","pesanterkirim");
-            parameter.put("page",page);
-            parameter.put("limit",10);
+            parameter.put("status", "pesanterkirim");
+            parameter.put("page", page);
+            parameter.put("limit", 10);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -403,11 +405,11 @@ public class PesanTerkirimFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         count_number = response.getInt("count_number");
                         final JSONArray data = response.getJSONArray("data");
                         List<ItemPesan> dataPesanTemp = new ArrayList<>();
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
 
                             final String id = data.getJSONObject(i).getString("id");
                             final String created_at = data.getJSONObject(i).getString("created");
@@ -416,12 +418,12 @@ public class PesanTerkirimFragment extends Fragment {
                             final String name = data.getJSONObject(i).getString("name");
                             final String msg = data.getJSONObject(i).getString("message");
                             final String status_pesan = data.getJSONObject(i).getString("status");
-                            dataPesanTemp.add(new ItemPesan(id,phone,name,sent_date,msg,status_pesan));
+                            dataPesanTemp.add(new ItemPesan(id, phone, name, sent_date, msg, status_pesan));
                         }
                         current_page++;
-                        Message msg = mHandler.obtainMessage(1,dataPesanTemp);
+                        Message msg = mHandler.obtainMessage(1, dataPesanTemp);
                         mHandler.sendMessage(msg);
-                    }else{
+                    } else {
                         mHandler.sendEmptyMessage(3);
                     }
                 } catch (JSONException e) {
@@ -436,12 +438,12 @@ public class PesanTerkirimFragment extends Fragment {
                 mHandler.sendEmptyMessage(3);
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -449,11 +451,12 @@ public class PesanTerkirimFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
+
     private void deleteAll() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JSONObject bodyRequest = new JSONObject();
         try {
-            bodyRequest.put("status","exclude_antrian");
+            bodyRequest.put("status", "exclude_antrian");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -464,7 +467,7 @@ public class PesanTerkirimFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, bodyRequest , new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, bodyRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -472,20 +475,20 @@ public class PesanTerkirimFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
+                    Log.i(TAG, message);
+                    if (status) {
                         loadPesan();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -494,17 +497,17 @@ public class PesanTerkirimFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -517,34 +520,34 @@ public class PesanTerkirimFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -553,13 +556,14 @@ public class PesanTerkirimFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void loadPesan(){
+
+    private void loadPesan() {
         current_page = 1;
         JSONObject parameter = new JSONObject();
         try {
-            parameter.put("status","pesanterkirim");
-            parameter.put("page",current_page);
-            parameter.put("limit",10);
+            parameter.put("status", "pesanterkirim");
+            parameter.put("page", current_page);
+            parameter.put("limit", 10);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -567,7 +571,7 @@ public class PesanTerkirimFragment extends Fragment {
         final String uri = Uri.parse(URL_POST_LIST_ANTRIAN_PESAN)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataPesan.clear();
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, parameter, new Response.Listener<JSONObject>() {
@@ -579,10 +583,10 @@ public class PesanTerkirimFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         count_number = response.getInt("count_number");
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
 
                             final String id = data.getJSONObject(i).getString("id");
                             final String created_at = data.getJSONObject(i).getString("created");
@@ -591,16 +595,16 @@ public class PesanTerkirimFragment extends Fragment {
                             final String name = data.getJSONObject(i).getString("name");
                             final String msg = data.getJSONObject(i).getString("message");
                             final String status_pesan = data.getJSONObject(i).getString("status");
-                            dataPesan.add(new ItemPesan(id,phone,name,sent_date,msg,status_pesan));
+                            dataPesan.add(new ItemPesan(id, phone, name, sent_date, msg, status_pesan));
                         }
-                    }else{
-                        Log.i(TAG,response.toString());
-                        showError(true,message,false);
+                    } else {
+                        Log.i(TAG, response.toString());
+                        showError(true, message, false);
                     }
                     displayPesan();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -609,15 +613,15 @@ public class PesanTerkirimFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -630,28 +634,28 @@ public class PesanTerkirimFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -659,63 +663,66 @@ public class PesanTerkirimFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listPesan.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listPesan.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayPesan() {
-        pesanAdapter = new AdapterPesan(dataPesan,getContext());
+        pesanAdapter = new AdapterPesan(dataPesan, getContext());
         listPesan.setAdapter(pesanAdapter);
         adapterInstance = true;
 
-        if (type.equals("1")){ // basic
+        if (type.equals("1")) { // basic
             labelStorage.setText("Penyimpanan (Akun Basic) : " + count_number + " s.d " + limit_pesan + " (nomor)");
 
-            if (count_number<limit_pesan){
-                progressStorage.setProgress((count_number* 100 ) / limit_pesan);
-            }else{
+            if (count_number < limit_pesan) {
+                progressStorage.setProgress((count_number * 100) / limit_pesan);
+            } else {
                 progressStorage.setProgress(100);
             }
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actEdit) {
-            if(dataPesan.size()>0){
+        if (item.getItemId() == R.id.actEdit) {
+            if (dataPesan.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0 ; i < dataPesan.size();i++){
+                for (int i = 0; i < dataPesan.size(); i++) {
                     ItemPesan ikontak = dataPesan.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataPesan.set(i,ikontak);
+                    dataPesan.set(i, ikontak);
                 }
                 pesanAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data Pesan Terkirim tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(false);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
-            if(type.equals("1")){ // basic
+        } else if (item.getItemId() == R.id.actHapus) {
+            if (type.equals("1")) { // basic
                 new android.app.AlertDialog.Builder(getContext())
                         .setMessage("Akun basic tidak bisa menghapus pesan terkirim")
                         .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
@@ -727,7 +734,7 @@ public class PesanTerkirimFragment extends Fragment {
                                 startActivity(intent2);
                             }
                         })
-                        .setNegativeButton("Batal",null)
+                        .setNegativeButton("Batal", null)
                         .show();
                 return false;
             }
@@ -739,35 +746,36 @@ public class PesanTerkirimFragment extends Fragment {
                             hapusPesan();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0 ; i < dataPesan.size();i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataPesan.size(); i++) {
                 ItemPesan ikontak = dataPesan.get(i);
                 ikontak.setCheckbox(true);
-                dataPesan.set(i,ikontak);
+                dataPesan.set(i, ikontak);
             }
             pesanAdapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void hapusPesan() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final JSONArray jsonArray = new JSONArray();
 
-        for (int i = 0 ; i < dataPesan.size();i++){
-            if (dataPesan.get(i).isCheckbox() ){
+        for (int i = 0; i < dataPesan.size(); i++) {
+            if (dataPesan.get(i).isCheckbox()) {
                 jsonArray.put(Integer.parseInt(dataPesan.get(i).getId()));
             }
         }
         final JSONObject request_body = new JSONObject();
         try {
-            request_body.put("id",jsonArray);
+            request_body.put("id", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i(TAG,request_body.toString());
+        Log.i(TAG, request_body.toString());
         final String uri = Uri.parse(URL_POST_HAPUS_PESAN_ANTRIAN)
                 .buildUpon()
                 .toString();
@@ -775,7 +783,7 @@ public class PesanTerkirimFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body , new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -783,10 +791,10 @@ public class PesanTerkirimFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
-                        for (int i = 0 ; i < dataPesan.size();i++){
-                            if (dataPesan.get(i).isCheckbox()){
+                    Log.i(TAG, message);
+                    if (status) {
+                        for (int i = 0; i < dataPesan.size(); i++) {
+                            if (dataPesan.get(i).isCheckbox()) {
                                 dataPesan.remove(i);
                                 i = i - 1;
                             }
@@ -799,17 +807,17 @@ public class PesanTerkirimFragment extends Fragment {
                         menuTop.findItem(R.id.actTambah).setVisible(false);
                         listDefault();
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -818,17 +826,17 @@ public class PesanTerkirimFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -841,33 +849,33 @@ public class PesanTerkirimFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -882,9 +890,10 @@ public class PesanTerkirimFragment extends Fragment {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
+
     private boolean isAccessibilityEnabled() {
         int enabled = 0;
-        final String service = getActivity().getPackageName() +"/"+ WASendService.class.getCanonicalName();
+        final String service = getActivity().getPackageName() + "/" + WASendService.class.getCanonicalName();
 
         try {
             enabled = Settings.Secure.getInt(getActivity().getApplicationContext().getContentResolver()

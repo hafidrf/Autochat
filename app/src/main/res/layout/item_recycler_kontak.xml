@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:padding="5dp"
+<LinearLayout android:padding="5dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="50dp"
     android:layout_height="50dp">
+
     <ImageView
         android:id="@+id/itemIcon"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:src="@drawable/ic_lock"/>
+        android:src="@drawable/ic_lock" />
 </LinearLayout>

@@ -1,13 +1,5 @@
 package id.co.kamil.autochat.ui.schedule;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -38,6 +30,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -59,7 +59,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,26 +106,26 @@ public class FormScheduleActivity extends AppCompatActivity {
     private RecylerTagAdapter adapterTag;
     private JSONArray excludeContact = new JSONArray();
     private List<ItemRecyclerTag> listNoTujuan = new ArrayList<>();
-    private String[] dataStatus = new String[]{"aktif","tidak aktif"};
-    private String[] dataTipe = new String[]{"once (satu kali)","daily","weekly","monthly","annually"};
+    private String[] dataStatus = new String[]{"aktif", "tidak aktif"};
+    private String[] dataTipe = new String[]{"once (satu kali)", "daily", "weekly", "monthly", "annually"};
     private EditText edtJadwalKirim;
-    private Spinner spinTipeJadwal,spinStatus;
+    private Spinner spinTipeJadwal, spinStatus;
     private boolean is_new;
     private EditText edtJadwalKirimSelanjutnya;
     private LinearLayout layJadwalNext;
     private String idSchedule;
-    private TextView txtSapaan,txtNamaBelakang,txtNamaDepan;
+    private TextView txtSapaan, txtNamaBelakang, txtNamaDepan;
     private ImageView imgPesan;
     private ImageButton btnBrowse;
     private ImageButton btnHapus;
     private String imagePath = null;
     private boolean imageSelect = false;
-    private String stringPesan,stringFilename;
-    private LinearLayout layHari,layTgl;
+    private String stringPesan, stringFilename;
+    private LinearLayout layHari, layTgl;
     private TextView labelJadwalKirim;
-    private String[] dataHari = {"Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"};
+    private String[] dataHari = {"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"};
     private String[] dataTgl;
-    private Spinner spinHari,spinTgl;
+    private Spinner spinHari, spinTgl;
     private boolean loadData = false;
 
     @Override
@@ -135,20 +134,20 @@ public class FormScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_form_schedule);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         dataTgl = new String[28];
-        for (int i=1;i<29;i++){
-            dataTgl[i-1] = String.valueOf(i);
+        for (int i = 1; i < 29; i++) {
+            dataTgl[i - 1] = String.valueOf(i);
         }
         stringPesan = getIntent().getStringExtra("pesan");
         stringFilename = getIntent().getStringExtra("filename");
-        is_new = getIntent().getBooleanExtra("is_new",false);
+        is_new = getIntent().getBooleanExtra("is_new", false);
         tipeForm = getIntent().getStringExtra("tipe");
         lblNomorTujuan = (TextView) findViewById(R.id.labelNomorTujuan);
         btnKontakTdkDipilih = (Button) findViewById(R.id.btnKontakTdkDipilih);
-        if (tipeForm.equals("kontak")){
+        if (tipeForm.equals("kontak")) {
             getSupportActionBar().setTitle("Jadwal Pesan berdasarkan Kontak");
             lblNomorTujuan.setText("Nomor Tujuan");
             btnKontakTdkDipilih.setVisibility(View.GONE);
-        }else{
+        } else {
             getSupportActionBar().setTitle("Jadwal Pesan berdasarkan Grup Kontak");
             lblNomorTujuan.setText("Nama Grup");
             btnKontakTdkDipilih.setVisibility(View.VISIBLE);
@@ -197,20 +196,20 @@ public class FormScheduleActivity extends AppCompatActivity {
         txtSapaan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[sapaan] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[sapaan] ");
             }
         });
 
         txtNamaDepan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[nama_depan] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_depan] ");
             }
         });
         txtNamaBelakang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[nama_belakang] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_belakang] ");
             }
         });
         edtJadwalKirimSelanjutnya.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +224,7 @@ public class FormScheduleActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                tempSelectDate[0] = year + "-" +  (monthOfYear + 1) + "-" + dayOfMonth;
+                                tempSelectDate[0] = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                                 Calendar mcurrentTime = Calendar.getInstance();
                                 final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                                 final int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -233,7 +232,7 @@ public class FormScheduleActivity extends AppCompatActivity {
                                 mTimePicker = new TimePickerDialog(FormScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                        tempSelectDate[0] = tempSelectDate[0] + " "+ selectedHour + ":" + selectedMinute;
+                                        tempSelectDate[0] = tempSelectDate[0] + " " + selectedHour + ":" + selectedMinute;
                                         edtJadwalKirimSelanjutnya.setText(tempSelectDate[0]);
                                     }
                                 }, hour, minute, true);//Yes 24 hour time
@@ -256,22 +255,22 @@ public class FormScheduleActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 layHari.setVisibility(View.GONE);
                 layTgl.setVisibility(View.GONE);
-                if(spinTipeJadwal.getSelectedItemPosition()==3 || spinTipeJadwal.getSelectedItemPosition()==4){
+                if (spinTipeJadwal.getSelectedItemPosition() == 3 || spinTipeJadwal.getSelectedItemPosition() == 4) {
                     labelJadwalKirim.setText("Jadwal Kirim");
                     edtJadwalKirim.setHint("Masukan Tgl dan Jam Kirim");
-                }else if(spinTipeJadwal.getSelectedItemPosition()==0){
+                } else if (spinTipeJadwal.getSelectedItemPosition() == 0) {
                     labelJadwalKirim.setText("Jadwal Kirim");
                     edtJadwalKirim.setHint("Masukan Jam Kirim");
-                }else if(spinTipeJadwal.getSelectedItemPosition()==1){
+                } else if (spinTipeJadwal.getSelectedItemPosition() == 1) {
                     layHari.setVisibility(View.VISIBLE);
                     labelJadwalKirim.setText("Jam Kirim");
                     edtJadwalKirim.setHint("Masukan Jam Kirim");
-                }else{
+                } else {
                     layTgl.setVisibility(View.VISIBLE);
                     labelJadwalKirim.setText("Jam Kirim");
                     edtJadwalKirim.setHint("Masukan Jam Kirim");
                 }
-                if(loadData == false){
+                if (loadData == false) {
                     edtJadwalKirim.setText("");
                 }
 
@@ -285,13 +284,13 @@ public class FormScheduleActivity extends AppCompatActivity {
         edtJadwalKirim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(spinTipeJadwal.getSelectedItemPosition()==0 || spinTipeJadwal.getSelectedItemPosition()==4){
+                if (spinTipeJadwal.getSelectedItemPosition() == 0 || spinTipeJadwal.getSelectedItemPosition() == 4) {
                     pilihTglJam(edtJadwalKirim);
-                }else if(spinTipeJadwal.getSelectedItemPosition()==1){
+                } else if (spinTipeJadwal.getSelectedItemPosition() == 1) {
                     pilihJam(edtJadwalKirim);
-                }else if(spinTipeJadwal.getSelectedItemPosition()==2){
+                } else if (spinTipeJadwal.getSelectedItemPosition() == 2) {
                     pilihJam(edtJadwalKirim);
-                }else{
+                } else {
                     pilihJam(edtJadwalKirim);
                 }
             }
@@ -302,7 +301,7 @@ public class FormScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (isRequired()){
+                if (isRequired()) {
                     simpanSchedule();
                 }
 
@@ -313,8 +312,8 @@ public class FormScheduleActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 JSONArray id_exclude_contact = new JSONArray();
-                if (excludeContact.length()>0){
-                    for(int i =0;i<excludeContact.length();i++){
+                if (excludeContact.length() > 0) {
+                    for (int i = 0; i < excludeContact.length(); i++) {
                         try {
                             id_exclude_contact.put(excludeContact.getJSONObject(i).getString("contact_id"));
                         } catch (JSONException e) {
@@ -323,20 +322,20 @@ public class FormScheduleActivity extends AppCompatActivity {
                     }
                 }
                 Intent intent = new Intent(FormScheduleActivity.this, ExcludeContactActivity.class);
-                intent.putExtra("contact_id",id_exclude_contact.toString());
-                startActivityForResult(intent,REQUEST_EXCLUDE);
+                intent.putExtra("contact_id", id_exclude_contact.toString());
+                startActivityForResult(intent, REQUEST_EXCLUDE);
             }
         });
         btnCariKontak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tipeForm.equals("grup")){
+                if (tipeForm.equals("grup")) {
                     Intent i = new Intent(FormScheduleActivity.this, PilihGrupKontakActivity.class);
-                    startActivityForResult(i,REQUEST_GRUP);
-                }else{
+                    startActivityForResult(i, REQUEST_GRUP);
+                } else {
                     Intent i = new Intent(FormScheduleActivity.this, CariKontakActivity.class);
-                    i.putExtra("exclude",excludeContact.toString());
-                    startActivityForResult(i,REQUEST_KONTAK);
+                    i.putExtra("exclude", excludeContact.toString());
+                    startActivityForResult(i, REQUEST_KONTAK);
                 }
             }
         });
@@ -345,11 +344,11 @@ public class FormScheduleActivity extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gridNoTujuan);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         new LinearSnapHelper().attachToRecyclerView(recyclerView);
-        adapterTag = new RecylerTagAdapter(listNoTujuan, this,new RecylerTagAdapter.OnItemClickListener() {
+        adapterTag = new RecylerTagAdapter(listNoTujuan, this, new RecylerTagAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ItemRecyclerTag item) {
-                for(int i=0;i<listNoTujuan.size();i++){
-                    if (listNoTujuan.get(i).getId().equals(item.getId())){
+                for (int i = 0; i < listNoTujuan.size(); i++) {
+                    if (listNoTujuan.get(i).getId().equals(item.getId())) {
                         listNoTujuan.remove(i);
                         adapterTag.notifyDataSetChanged();
                         break;
@@ -359,38 +358,38 @@ public class FormScheduleActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapterTag);
-        recyclerView.setMinimumHeight((int) convertDpToPixel(35,this));
+        recyclerView.setMinimumHeight((int) convertDpToPixel(35, this));
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager();
         layoutManager.setFlexWrap(FlexWrap.WRAP);
         layoutManager.setFlexDirection(FlexDirection.ROW);
         recyclerView.setLayoutManager(layoutManager);
 
-        final ArrayAdapter tipeAdapter = new ArrayAdapter(this,R.layout.item_spinner,dataTipe);
+        final ArrayAdapter tipeAdapter = new ArrayAdapter(this, R.layout.item_spinner, dataTipe);
         spinTipeJadwal.setAdapter(tipeAdapter);
-        final ArrayAdapter statusAdapter = new ArrayAdapter(this,R.layout.item_spinner,dataStatus);
+        final ArrayAdapter statusAdapter = new ArrayAdapter(this, R.layout.item_spinner, dataStatus);
         spinStatus.setAdapter(statusAdapter);
-        final ArrayAdapter hariAdapter = new ArrayAdapter(this,R.layout.item_spinner,dataHari);
+        final ArrayAdapter hariAdapter = new ArrayAdapter(this, R.layout.item_spinner, dataHari);
         spinHari.setAdapter(hariAdapter);
-        final ArrayAdapter tglAdapter = new ArrayAdapter(this,R.layout.item_spinner,dataTgl);
+        final ArrayAdapter tglAdapter = new ArrayAdapter(this, R.layout.item_spinner, dataTgl);
         spinTgl.setAdapter(tglAdapter);
 
-        if(is_new){
+        if (is_new) {
             layJadwalNext.setVisibility(View.GONE);
-        }else{
+        } else {
             layJadwalNext.setVisibility(View.VISIBLE);
             loadDataSchedule();
         }
-        if (stringPesan != null){
-            if (stringPesan.isEmpty() == false){
+        if (stringPesan != null) {
+            if (stringPesan.isEmpty() == false) {
                 StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                 StrictMode.setVmPolicy(builder.build());
                 edtIsiPesan.setText(stringPesan);
-                if (stringFilename.isEmpty() == false && stringFilename != null){
+                if (stringFilename.isEmpty() == false && stringFilename != null) {
                     String pathPicture = getDirWabot("template_promosi") + "/" + stringFilename;
                     File filePath = new File(pathPicture);
-                    if(filePath.exists()){
+                    if (filePath.exists()) {
                         Uri uri = Uri.fromFile(filePath);
-                        if (checkPermissionGallery()){
+                        if (checkPermissionGallery()) {
                             imgPesan.setImageURI(uri);
                             imageSelect = true;
                             imagePath = pathPicture;
@@ -402,7 +401,8 @@ public class FormScheduleActivity extends AppCompatActivity {
             }
         }
     }
-    private void pilihJam(final EditText editText){
+
+    private void pilihJam(final EditText editText) {
         Calendar mcurrentTime = Calendar.getInstance();
         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -416,7 +416,8 @@ public class FormScheduleActivity extends AppCompatActivity {
         mTimePicker.setTitle("Pilih Jam Jadwal Kirim");
         mTimePicker.show();
     }
-    private void pilihTglJam(final EditText editText){
+
+    private void pilihTglJam(final EditText editText) {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
@@ -426,7 +427,7 @@ public class FormScheduleActivity extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        tempSelectDate[0] = year + "-" +  (monthOfYear + 1) + "-" + dayOfMonth;
+                        tempSelectDate[0] = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                         Calendar mcurrentTime = Calendar.getInstance();
                         final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                         final int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -434,7 +435,7 @@ public class FormScheduleActivity extends AppCompatActivity {
                         mTimePicker = new TimePickerDialog(FormScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                tempSelectDate[0] = tempSelectDate[0] + " "+ selectedHour + ":" + selectedMinute;
+                                tempSelectDate[0] = tempSelectDate[0] + " " + selectedHour + ":" + selectedMinute;
                                 editText.setText(tempSelectDate[0]);
                             }
                         }, hour, minute, true);//Yes 24 hour time
@@ -451,7 +452,8 @@ public class FormScheduleActivity extends AppCompatActivity {
         //datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
         datePickerDialog.show();
     }
-    public boolean checkPermissionGallery(){
+
+    public boolean checkPermissionGallery() {
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -466,7 +468,8 @@ public class FormScheduleActivity extends AppCompatActivity {
         }
         return false;
     }
-    public void callGalleryPhoto(){
+
+    public void callGalleryPhoto() {
 
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -485,24 +488,25 @@ public class FormScheduleActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
     private boolean isRequired() {
-        if (tipeForm.equals("grup")){
-            if (listNoTujuan.size()<=0){
+        if (tipeForm.equals("grup")) {
+            if (listNoTujuan.size() <= 0) {
                 Toast.makeText(FormScheduleActivity.this, "Belum ada grup yang dipilih", Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }else if(excludeContact.length()<=0){
+        } else if (excludeContact.length() <= 0) {
             Toast.makeText(FormScheduleActivity.this, "Belum ada kontak yang dipilih", Toast.LENGTH_SHORT).show();
             return false;
-        }else if(TextUtils.isEmpty(edtIsiPesan.getText().toString())){
+        } else if (TextUtils.isEmpty(edtIsiPesan.getText().toString())) {
             edtIsiPesan.setError("Field ini tidak boleh kosong");
             edtIsiPesan.requestFocus();
             return false;
-        }else if(TextUtils.isEmpty(edtJadwalKirim.getText().toString())){
+        } else if (TextUtils.isEmpty(edtJadwalKirim.getText().toString())) {
             edtJadwalKirim.setError("Field ini tidak boleh kosong");
             edtJadwalKirim.requestFocus();
             return false;
-        }else if(TextUtils.isEmpty(edtJadwalKirimSelanjutnya.getText()) && is_new == false){
+        } else if (TextUtils.isEmpty(edtJadwalKirimSelanjutnya.getText()) && is_new == false) {
             edtJadwalKirimSelanjutnya.setError("Field ini tidak boleh kosong");
             edtJadwalKirimSelanjutnya.requestFocus();
             return false;
@@ -515,7 +519,7 @@ public class FormScheduleActivity extends AppCompatActivity {
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",idSchedule);
+            requestBody.put("id", idSchedule);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -523,7 +527,7 @@ public class FormScheduleActivity extends AppCompatActivity {
         String uri = Uri.parse(URL_POST_GET_SCHEDULE)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         loadData = true;
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
@@ -537,7 +541,7 @@ public class FormScheduleActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         excludeContact = new JSONArray();
                         listNoTujuan.clear();
                         final JSONArray data = response.getJSONArray("data");
@@ -559,62 +563,61 @@ public class FormScheduleActivity extends AppCompatActivity {
                         final JSONArray exclude_contact = data.getJSONObject(0).getJSONArray("exclude_contact");
                         final String status_sch = data.getJSONObject(0).getString("status");
 
-                        if (!(img_hash.equals(null) || img_hash.equals("null") || img_hash == null )){
+                        if (!(img_hash.equals(null) || img_hash.equals("null") || img_hash == null)) {
                             try {
                                 imgPesan.setImageURI(Uri.parse(img_hash));
                                 imagePath = img_hash;
-                            }catch (Exception e){
+                            } catch (Exception e) {
 
                             }
                         }
-                        if (time_type.equals("daily")){
+                        if (time_type.equals("daily")) {
                             spinTipeJadwal.setSelection(1);
-                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss","HH:mm",schedule_at));
-                        }else if (time_type.equals("weekly")){
-                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss","HH:mm",schedule_at));
+                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
+                        } else if (time_type.equals("weekly")) {
+                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
                             spinTipeJadwal.setSelection(2);
-                        }else if (time_type.equals("monthly")){
-                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss","HH:mm",schedule_at));
+                        } else if (time_type.equals("monthly")) {
+                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
                             spinTipeJadwal.setSelection(3);
-                        }else if (time_type.equals("annually")){
-                            edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss","yyyy-MM-dd HH:mm",tgl_kirim));
+                        } else if (time_type.equals("annually")) {
+                            edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", tgl_kirim));
                             spinTipeJadwal.setSelection(4);
-                        }else if (time_type.equals("once")){
-                            edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss","yyyy-MM-dd HH:mm",tgl_kirim));
+                        } else if (time_type.equals("once")) {
+                            edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", tgl_kirim));
                             spinTipeJadwal.setSelection(0);
                         }
-                        if (day!=null && !day.equals("null")){
+                        if (day != null && !day.equals("null")) {
                             spinHari.setSelection(Integer.parseInt(day));
                         }
-                        if (tgl!=null && !tgl.equals("null")){
-                            spinTgl.setSelection(Integer.parseInt(tgl)-1);
+                        if (tgl != null && !tgl.equals("null")) {
+                            spinTgl.setSelection(Integer.parseInt(tgl) - 1);
                         }
 
                         edtIsiPesan.setText(message_sch);
-                        edtJadwalKirimSelanjutnya.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss","yyyy-MM-dd HH:mm",next_schedule));
+                        edtJadwalKirimSelanjutnya.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", next_schedule));
 
 
-
-                        if (group_id.equals(null) || group_id.equals("null") || group_id == null){
+                        if (group_id.equals(null) || group_id.equals("null") || group_id == null) {
                             excludeContact.put(contact_id);
-                            if (status_sch.equals("aktif")){
+                            if (status_sch.equals("aktif")) {
                                 spinStatus.setSelection(0);
-                            }else{
+                            } else {
                                 spinStatus.setSelection(1);
                             }
-                            listNoTujuan.add(new ItemRecyclerTag(contact_id,contact_name));
-                        }else{
+                            listNoTujuan.add(new ItemRecyclerTag(contact_id, contact_name));
+                        } else {
                             excludeContact = exclude_contact;
-                            if (status_sch.equals("aktif")){
+                            if (status_sch.equals("aktif")) {
                                 spinStatus.setSelection(0);
-                            }else{
+                            } else {
                                 spinStatus.setSelection(1);
                             }
-                            listNoTujuan.add(new ItemRecyclerTag(group_id,group_name));
+                            listNoTujuan.add(new ItemRecyclerTag(group_id, group_name));
                         }
                         reloadExcludeContact();
 
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormScheduleActivity.this)
                                 .setMessage(message)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -644,21 +647,21 @@ public class FormScheduleActivity extends AppCompatActivity {
                     public void run() {
                         loadData = false;
                     }
-                },1500);
+                }, 1500);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
                 loadData = false;
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response.statusCode==403){
+                if (response.statusCode == 403) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.data.toString());
                         final boolean status = jsonObject.getBoolean("status");
                         final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")){
+                        if (msg.trim().toLowerCase().equals("invalid api key")) {
                             new AlertDialog.Builder(FormScheduleActivity.this)
                                     .setMessage("Session telah habias / telah login di perangkat lain.")
                                     .setCancelable(false)
@@ -671,10 +674,10 @@ public class FormScheduleActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                        }else{
+                        } else {
                             new AlertDialog.Builder(FormScheduleActivity.this)
                                     .setMessage(msg)
-                                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             finish();
@@ -686,11 +689,11 @@ public class FormScheduleActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
                     final String msg = getResources().getString(errorResponse(error));
                     new AlertDialog.Builder(FormScheduleActivity.this)
                             .setMessage(msg)
-                            .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -700,12 +703,12 @@ public class FormScheduleActivity extends AppCompatActivity {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -714,44 +717,44 @@ public class FormScheduleActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void simpanSchedule(){
+    private void simpanSchedule() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         String time_type = dataTipe[spinTipeJadwal.getSelectedItemPosition()];
-        if (spinTipeJadwal.getSelectedItemPosition()==0){
+        if (spinTipeJadwal.getSelectedItemPosition() == 0) {
             time_type = "once";
         }
         final JSONObject requestBody = new JSONObject();
         String url = "";
         try {
-            requestBody.put("versi",2);
-            requestBody.put("day",spinHari.getSelectedItemPosition());
-            requestBody.put("tgl",dataTgl[spinTgl.getSelectedItemPosition()]);
-            requestBody.put("img_hash",imagePath);
-            requestBody.put("message",edtIsiPesan.getText().toString());
-            requestBody.put("schedule_at",edtJadwalKirim.getText().toString());
-            requestBody.put("time_type",time_type);
-            requestBody.put("status",dataStatus[spinStatus.getSelectedItemPosition()]);
-            if (tipeForm.equals("grup")){
-                requestBody.put("group_id",listNoTujuan.get(0).getId());
-                requestBody.put("exclude_contact",excludeContact);
-            }else{
-                requestBody.put("contact_id",excludeContact.get(0));
+            requestBody.put("versi", 2);
+            requestBody.put("day", spinHari.getSelectedItemPosition());
+            requestBody.put("tgl", dataTgl[spinTgl.getSelectedItemPosition()]);
+            requestBody.put("img_hash", imagePath);
+            requestBody.put("message", edtIsiPesan.getText().toString());
+            requestBody.put("schedule_at", edtJadwalKirim.getText().toString());
+            requestBody.put("time_type", time_type);
+            requestBody.put("status", dataStatus[spinStatus.getSelectedItemPosition()]);
+            if (tipeForm.equals("grup")) {
+                requestBody.put("group_id", listNoTujuan.get(0).getId());
+                requestBody.put("exclude_contact", excludeContact);
+            } else {
+                requestBody.put("contact_id", excludeContact.get(0));
             }
 
-            if (is_new){
-                if (tipeForm.equals("grup")){
+            if (is_new) {
+                if (tipeForm.equals("grup")) {
                     url = URL_POST_CREATE_JADWAL_BY_GROUP;
-                }else{
+                } else {
                     url = URL_POST_CREATE_JADWAL_BY_CONTACT;
                 }
-            }else{
-                if (tipeForm.equals("grup")){
+            } else {
+                if (tipeForm.equals("grup")) {
                     url = URL_POST_UPDATE_JADWAL_BY_GROUP;
-                }else{
+                } else {
                     url = URL_POST_UPDATE_JADWAL_BY_CONTACT;
                 }
-                requestBody.put("schedule_id",idSchedule);
-                requestBody.put("next_schedule",edtJadwalKirimSelanjutnya.getText().toString());
+                requestBody.put("schedule_id", idSchedule);
+                requestBody.put("next_schedule", edtJadwalKirimSelanjutnya.getText().toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -760,7 +763,7 @@ public class FormScheduleActivity extends AppCompatActivity {
         String uri = Uri.parse(url)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -771,21 +774,21 @@ public class FormScheduleActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(FormScheduleActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormScheduleActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormScheduleActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -793,14 +796,14 @@ public class FormScheduleActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response.statusCode==403){
+                if (response.statusCode == 403) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.data.toString());
                         final boolean status = jsonObject.getBoolean("status");
                         final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")){
+                        if (msg.trim().toLowerCase().equals("invalid api key")) {
                             new AlertDialog.Builder(FormScheduleActivity.this)
                                     .setMessage("Session telah habias / telah login di perangkat lain.")
                                     .setCancelable(false)
@@ -813,32 +816,32 @@ public class FormScheduleActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                        }else{
+                        } else {
                             new AlertDialog.Builder(FormScheduleActivity.this)
                                     .setMessage(msg)
-                                    .setPositiveButton("OK",null)
+                                    .setPositiveButton("OK", null)
                                     .show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
                     final String msg = getResources().getString(errorResponse(error));
                     new AlertDialog.Builder(FormScheduleActivity.this)
                             .setMessage(msg)
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -855,17 +858,17 @@ public class FormScheduleActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_KONTAK){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_KONTAK) {
+            if (resultCode == RESULT_OK) {
                 String dataId = data.getStringExtra("id");
                 String dataTitle = data.getStringExtra("title");
                 String dataNomor = data.getStringExtra("nomor");
-                listNoTujuan.add(new ItemRecyclerTag(dataId,dataTitle));
+                listNoTujuan.add(new ItemRecyclerTag(dataId, dataTitle));
                 adapterTag.notifyDataSetChanged();
                 reloadExcludeContact();
             }
-        }else if(requestCode==REQUEST_GRUP){
-            if (resultCode==RESULT_OK){
+        } else if (requestCode == REQUEST_GRUP) {
+            if (resultCode == RESULT_OK) {
                 String dataExclude = data.getStringExtra("exclude");
                 String dataGroupName = data.getStringExtra("group_name");
                 String dataGroupId = data.getStringExtra("group_id");
@@ -874,15 +877,15 @@ public class FormScheduleActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                listNoTujuan.add(new ItemRecyclerTag(dataGroupId,dataGroupName));
+                listNoTujuan.add(new ItemRecyclerTag(dataGroupId, dataGroupName));
                 adapterTag.notifyDataSetChanged();
                 reloadExcludeContact();
             }
-        }else if(requestCode==REQUEST_EXCLUDE){
-            if (resultCode==RESULT_OK){
+        } else if (requestCode == REQUEST_EXCLUDE) {
+            if (resultCode == RESULT_OK) {
 
             }
-        }else if(requestCode== LOAD_IMAGE_RESULT) {
+        } else if (requestCode == LOAD_IMAGE_RESULT) {
             if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -904,37 +907,39 @@ public class FormScheduleActivity extends AppCompatActivity {
                     Toast.makeText(this, "Maaf, Tipe File tidak diizinkan", Toast.LENGTH_SHORT).show();
                 }
             }
-        }else if(requestCode==LOAD_IMAGE_RESULT_PROMOSI){
+        } else if (requestCode == LOAD_IMAGE_RESULT_PROMOSI) {
             checkPermissionGallery();
         }
     }
-    private void reloadExcludeContact(){
-        if (tipeForm.equals("kontak")){
+
+    private void reloadExcludeContact() {
+        if (tipeForm.equals("kontak")) {
             excludeContact = new JSONArray();
-            for(int i = 0; i< listNoTujuan.size();i++){
+            for (int i = 0; i < listNoTujuan.size(); i++) {
                 excludeContact.put(listNoTujuan.get(i).getId());
             }
-            if (excludeContact.length()>0){
+            if (excludeContact.length() > 0) {
                 btnCariKontak.setEnabled(false);
-            }else{
+            } else {
                 btnCariKontak.setEnabled(true);
             }
-        }else{
-            if (listNoTujuan.size()>0){
+        } else {
+            if (listNoTujuan.size() > 0) {
                 btnCariKontak.setEnabled(false);
-            }else{
+            } else {
                 btnCariKontak.setEnabled(true);
             }
         }
-        if (excludeContact.length()>0){
+        if (excludeContact.length() > 0) {
             btnKontakTdkDipilih.setEnabled(true);
-        }else{
+        } else {
             btnKontakTdkDipilih.setEnabled(false);
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

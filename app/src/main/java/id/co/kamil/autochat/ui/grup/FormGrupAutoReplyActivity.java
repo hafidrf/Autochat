@@ -1,8 +1,5 @@
 package id.co.kamil.autochat.ui.grup;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -48,7 +48,7 @@ import static id.co.kamil.autochat.utils.Utils.errorResponseString;
 public class FormGrupAutoReplyActivity extends AppCompatActivity {
     private static final String TAG = "FormGrupAutoReply";
     private String tipeForm;
-    private EditText edtName,edtDesc;
+    private EditText edtName, edtDesc;
     private Button btnSimpan;
     private String idGrup;
     private ProgressDialog pDialog;
@@ -69,7 +69,7 @@ public class FormGrupAutoReplyActivity extends AppCompatActivity {
         session = new SessionManager(this);
         userDetail = session.getUserDetails();
         token = userDetail.get(KEY_TOKEN);
-        Log.i(TAG,token);
+        Log.i(TAG, token);
         pDialog = new ProgressDialog(this);
         edtName = (EditText) findViewById(R.id.edtNama);
         edtDesc = (EditText) findViewById(R.id.edtDeskripsi);
@@ -77,15 +77,15 @@ public class FormGrupAutoReplyActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     simpan();
                 }
             }
         });
         tipeForm = getIntent().getStringExtra("tipe");
-        if (tipeForm.equals("add")){
+        if (tipeForm.equals("add")) {
             getSupportActionBar().setTitle("Tambah Grup");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Edit Grup");
             idGrup = getIntent().getStringExtra("id");
             final String tmpData = getIntent().getStringExtra("data");
@@ -102,12 +102,12 @@ public class FormGrupAutoReplyActivity extends AppCompatActivity {
     }
 
     private boolean isRequired() {
-        if (TextUtils.isEmpty(edtName.getText())){
+        if (TextUtils.isEmpty(edtName.getText())) {
             edtName.setError("Field ini tidak boleh kosong");
             edtName.requestFocus();
             return false;
         }
-        if (TextUtils.isEmpty(edtDesc.getText())){
+        if (TextUtils.isEmpty(edtDesc.getText())) {
             edtDesc.setError("Field ini tidak boleh kosong");
             edtDesc.requestFocus();
             return false;
@@ -115,31 +115,31 @@ public class FormGrupAutoReplyActivity extends AppCompatActivity {
         return true;
     }
 
-    private void simpan(){
+    private void simpan() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         try {
-            if (tipeForm.equals("edit")){
-                requestBody.put("id",idGrup);
+            if (tipeForm.equals("edit")) {
+                requestBody.put("id", idGrup);
             }
-            requestBody.put("name",edtName.getText().toString());
-            requestBody.put("description",edtDesc.getText().toString());
+            requestBody.put("name", edtName.getText().toString());
+            requestBody.put("description", edtDesc.getText().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         String uri = "";
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             uri = Uri.parse(URL_POST_EDIT_GROUP_AUTO_REPLY)
                     .buildUpon()
                     .toString();
-        }else{
+        } else {
             uri = Uri.parse(URL_POST_CREATE_GROUP_AUTO_REPLY)
                     .buildUpon()
                     .toString();
         }
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -150,21 +150,21 @@ public class FormGrupAutoReplyActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(FormGrupAutoReplyActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormGrupAutoReplyActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormGrupAutoReplyActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -172,11 +172,11 @@ public class FormGrupAutoReplyActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
-                    errorResponse(FormGrupAutoReplyActivity.this,error);
-                }else {
+                    errorResponse(FormGrupAutoReplyActivity.this, error);
+                } else {
                     if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
@@ -218,13 +218,13 @@ public class FormGrupAutoReplyActivity extends AppCompatActivity {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -234,9 +234,10 @@ public class FormGrupAutoReplyActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

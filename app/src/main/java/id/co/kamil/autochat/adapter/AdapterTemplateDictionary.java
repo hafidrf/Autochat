@@ -22,8 +22,9 @@ public class AdapterTemplateDictionary extends BaseAdapter {
     ArrayList<ItemTemplateDictionary> arraylist;
 
     private static final int resource = R.layout.item_list_template_dictionary;
+
     public class ViewHolder {
-        TextView txtKeyword,txtNilai;
+        TextView txtKeyword, txtNilai;
         CheckBox chk1;
 
     }
@@ -74,8 +75,8 @@ public class AdapterTemplateDictionary extends BaseAdapter {
 
         final ItemTemplateDictionary item = listData.get(position);
         String nilai = item.getNilai();
-        if (nilai.length()>100){
-            nilai = nilai.substring(0,100) + "...";
+        if (nilai.length() > 100) {
+            nilai = nilai.substring(0, 100) + "...";
         }
 
 
@@ -83,9 +84,9 @@ public class AdapterTemplateDictionary extends BaseAdapter {
         viewHolder.txtKeyword.setText(item.getKeyword());
         viewHolder.chk1.setChecked(item.isCheckbox());
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
@@ -109,8 +110,7 @@ public class AdapterTemplateDictionary extends BaseAdapter {
             for (ItemTemplateDictionary postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getKeyword().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getNilai().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getNilai().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
                 }
             }

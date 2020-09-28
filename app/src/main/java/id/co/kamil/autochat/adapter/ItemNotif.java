@@ -3,9 +3,9 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemNotif {
-    String id,title,body,url;
+    String id, title, body, url;
     JSONObject json;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     @Override
     public String toString() {

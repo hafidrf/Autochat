@@ -31,7 +31,8 @@ public class ViewOutlineProviderCompatUtils {
 
     private static final InsetsUpdater EMPTY_INSETS_UPDATER = new InsetsUpdater() {
         @Override
-        public void setInsets(final InputMethodService.Insets insets) {}
+        public void setInsets(final InputMethodService.Insets insets) {
+        }
     };
 
     public static InsetsUpdater setInsetsOutlineProvider(final View view) {

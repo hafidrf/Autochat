@@ -57,18 +57,17 @@ public class MyNotifServiceBackup extends NotificationListenerService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("KEVIN", "Service is started" + "-----");
 //        data = intent.getStringExtra("data");
-        try{
+        try {
             sharePref = new SharPref(this);
             dbHelper = new DBHelper(this);
             session = new SessionManager(this);
             userDetail = session.getUserDetails();
             is_child = Boolean.parseBoolean(userDetail.get(KEY_CHILD));
-        }catch (NullPointerException e){
-            Log.i(TAG,e.getMessage());
+        } catch (NullPointerException e) {
+            Log.i(TAG, e.getMessage());
         }
         return super.onStartCommand(intent, flags, startId);
     }
-
 
 
     @Override
@@ -86,7 +85,7 @@ public class MyNotifServiceBackup extends NotificationListenerService {
 //        dataKeyword.put("x-ass","waalaikumsalam");
 //        dataKeyword.put("x-thanks","sama-sama");
 //        dataKeyword.put("x-ready gan?","ready, silahkan di order kak");
-        try{
+        try {
 
             sharePref = new SharPref(this);
             dbHelper = new DBHelper(this);
@@ -95,12 +94,12 @@ public class MyNotifServiceBackup extends NotificationListenerService {
             is_child = Boolean.parseBoolean(userDetail.get(KEY_CHILD));
             user_id = userDetail.get(KEY_CUST_ID);
 
-        }catch (NullPointerException e){
-            Log.i(TAG,e.getMessage());
+        } catch (NullPointerException e) {
+            Log.i(TAG, e.getMessage());
         }
         Log.i(TAG, "Here");
-        if (statusAutoReply==false || is_child==true) return;
-        try{
+        if (statusAutoReply == false || is_child == true) return;
+        try {
             Date c = Calendar.getInstance().getTime();
             System.out.println("Current time => " + c);
 
@@ -118,11 +117,11 @@ public class MyNotifServiceBackup extends NotificationListenerService {
                 boolean autoreply_business = sharePref.getSessionBool(AUTOREPLY_BUSINESS);
 
 
-                if(!autoreply_personal){
-                    dbHelper.insertLog(created,ID_SERVICE,"AutoReply Personal Disabled","warning",user_id);
+                if (!autoreply_personal) {
+                    dbHelper.insertLog(created, ID_SERVICE, "AutoReply Personal Disabled", "warning", user_id);
                 }
-                if(!autoreply_business){
-                    dbHelper.insertLog(created,ID_SERVICE,"AutoReply Business Disabled","warning",user_id);
+                if (!autoreply_business) {
+                    dbHelper.insertLog(created, ID_SERVICE, "AutoReply Business Disabled", "warning", user_id);
                 }
                 if (autoreply_personal && sbn.getPackageName().equals("com.whatsapp")) {
                     reply(sbn, action);
@@ -131,7 +130,7 @@ public class MyNotifServiceBackup extends NotificationListenerService {
                     reply(sbn, action);
                 }
             } else {
-                dbHelper.insertLog(created,ID_SERVICE,"Tombol Quick Reply tidak tersedia","warning",user_id);
+                dbHelper.insertLog(created, ID_SERVICE, "Tombol Quick Reply tidak tersedia", "warning", user_id);
                 Log.i(TAG, "not success");
             }
 
@@ -158,8 +157,8 @@ public class MyNotifServiceBackup extends NotificationListenerService {
 //            } catch (Exception e) {
 //                //Toast.makeText(MyNotifiService.this, "Unresolvable notification", Toast.LENGTH_SHORT).show();
 //            }
-        }catch (NullPointerException e){
-            Log.i(TAG,e.getMessage());
+        } catch (NullPointerException e) {
+            Log.i(TAG, e.getMessage());
         }
 
 
@@ -177,42 +176,42 @@ public class MyNotifServiceBackup extends NotificationListenerService {
         String cari = dbHelper.cari_keyword(msg_client);
         String sender_ori = sbn.getNotification().extras.getString("android.title");
         String sender = sender_ori;
-        sender = sender.replace("+62","0")
-                .replace("-","").replace(" ","");
+        sender = sender.replace("+62", "0")
+                .replace("-", "").replace(" ", "");
         List<String[]> personalisasi = dbHelper.cari_phone(sender);
-        List<String> contactExist = searchContact(this,sender_ori);
-        Log.i(TAG,"contactExist:" + contactExist.size());
-        if (personalisasi.size()<=0 && contactExist.size() > 0){
-            for(int x=0;x<contactExist.size();x++){
+        List<String> contactExist = searchContact(this, sender_ori);
+        Log.i(TAG, "contactExist:" + contactExist.size());
+        if (personalisasi.size() <= 0 && contactExist.size() > 0) {
+            for (int x = 0; x < contactExist.size(); x++) {
                 personalisasi = dbHelper.cari_phone(contactExist.get(x));
-                if (personalisasi.size()>0){
+                if (personalisasi.size() > 0) {
                     break;
                 }
             }
         }
-        if (!(cari.equals("") || cari.isEmpty())){
+        if (!(cari.equals("") || cari.isEmpty())) {
             //Log.i(TAG,"OK Brooooh");
             //cari = cari.replace("[sender_name]",sbn.getNotification().extras.getString("android.title").replace("+","").replace("-","").replace(" ",""));
-            if (personalisasi.size()>0){
-                cari = cari.replace("[sapaan]",personalisasi.get(0)[2])
-                        .replace("[nama]",personalisasi.get(0)[3] + " " + personalisasi.get(0)[4]);
-                dbHelper.insertLog(created,ID_SERVICE,"Nomor Pengirim berhasil ditemukan di DB Wabot","normal",user_id);
-                dbHelper.insertLog(created,ID_SERVICE,"Balas : " + cari + " ke " + sender + "("+ personalisasi.get(0)[3] +")","normal",user_id);
-            }else{
-                cari = cari.replace("[sapaan]","")
-                        .replace("[nama]",sender_ori);
-                dbHelper.insertLog(created,ID_SERVICE,"Nomor Pengirim tidak ditemukan di DB Wabot","warning",user_id);
-                dbHelper.insertLog(created,ID_SERVICE,"Balas : " + cari + " ke " + sender_ori,"normal",user_id);
+            if (personalisasi.size() > 0) {
+                cari = cari.replace("[sapaan]", personalisasi.get(0)[2])
+                        .replace("[nama]", personalisasi.get(0)[3] + " " + personalisasi.get(0)[4]);
+                dbHelper.insertLog(created, ID_SERVICE, "Nomor Pengirim berhasil ditemukan di DB Wabot", "normal", user_id);
+                dbHelper.insertLog(created, ID_SERVICE, "Balas : " + cari + " ke " + sender + "(" + personalisasi.get(0)[3] + ")", "normal", user_id);
+            } else {
+                cari = cari.replace("[sapaan]", "")
+                        .replace("[nama]", sender_ori);
+                dbHelper.insertLog(created, ID_SERVICE, "Nomor Pengirim tidak ditemukan di DB Wabot", "warning", user_id);
+                dbHelper.insertLog(created, ID_SERVICE, "Balas : " + cari + " ke " + sender_ori, "normal", user_id);
             }
             try {
                 action.sendReply(getApplicationContext(), cari);
-                dbHelper.insertLog(created,ID_SERVICE,"Berhasil dibalas","success",user_id);
+                dbHelper.insertLog(created, ID_SERVICE, "Berhasil dibalas", "success", user_id);
             } catch (PendingIntent.CanceledException e) {
                 e.printStackTrace();
-                dbHelper.insertLog(created,ID_SERVICE,"Gagal dibalas. Error : " + e.getStackTrace().toString(),"danger",user_id);
+                dbHelper.insertLog(created, ID_SERVICE, "Gagal dibalas. Error : " + e.getStackTrace().toString(), "danger", user_id);
             }
-        }else{
-            Log.i(TAG,"Msg: " + msg_client);
+        } else {
+            Log.i(TAG, "Msg: " + msg_client);
         }
 //                    Log.e("Salman", "package name " + sbn.getPackageName());
         Log.e("Salman", "phone number " + sbn.getKey());  // extract from it
@@ -221,14 +220,15 @@ public class MyNotifServiceBackup extends NotificationListenerService {
 //                    Log.e("Salman", "extras " + sbn.getNotification().extras.getString("android.title"));
 //                    Log.e("Salman", "Salman " + sbn.getNotification().tickerText);
     }
+
     public List<String> searchContact(Context context, String name) {
 /// number is the phone number
         String selection = String.format("%s > 0", ContactsContract.Contacts.HAS_PHONE_NUMBER);
         Uri lookupUri = Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(name));
-        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
-        Cursor cur = context.getContentResolver().query(lookupUri,mPhoneNumberProjection, selection, null, null);
+        String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null);
         try {
             if (cur.moveToFirst()) {
                 List<String> list = new ArrayList<>();
@@ -238,8 +238,7 @@ public class MyNotifServiceBackup extends NotificationListenerService {
                 }
                 return list;
             }
-        }
-        finally {
+        } finally {
             if (cur != null)
                 cur.close();
         }

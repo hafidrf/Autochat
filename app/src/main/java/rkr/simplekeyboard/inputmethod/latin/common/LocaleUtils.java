@@ -21,7 +21,7 @@ import java.util.Locale;
 
 /**
  * A class to help with handling Locales in string form.
- *
+ * <p>
  * This file has the same meaning and features (and shares all of its code) with the one with the
  * same name in Latin IME. They need to be kept synchronized; for any update/bugfix to
  * this file, consider also updating/fixing the version in Latin IME.
@@ -42,8 +42,9 @@ public final class LocaleUtils {
 
     /**
      * Creates a locale from a string specification.
+     *
      * @param localeString a string specification of a locale, in a format of "ll_cc_variant" where
-     * "ll" is a language code, "cc" is a country code.
+     *                     "ll" is a language code, "cc" is a country code.
      */
     public static Locale constructLocaleFromString(final String localeString) {
         synchronized (sLocaleCache) {

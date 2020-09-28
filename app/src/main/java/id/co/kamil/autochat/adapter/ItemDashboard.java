@@ -1,7 +1,7 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemDashboard {
-    String title,val,color;
+    String title, val, color;
 
     public ItemDashboard(String title, String val, String color) {
         this.title = title;

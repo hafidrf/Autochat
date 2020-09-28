@@ -34,25 +34,25 @@ public class KeyDetector {
     /**
      * Key detection object constructor with key hysteresis distances.
      *
-     * @param keyHysteresisDistance if the pointer movement distance is smaller than this, the
-     * movement will not be handled as meaningful movement. The unit is pixel.
+     * @param keyHysteresisDistance                   if the pointer movement distance is smaller than this, the
+     *                                                movement will not be handled as meaningful movement. The unit is pixel.
      * @param keyHysteresisDistanceForSlidingModifier the same parameter for sliding input that
-     * starts from a modifier key such as shift and symbols key.
+     *                                                starts from a modifier key such as shift and symbols key.
      */
     public KeyDetector(final float keyHysteresisDistance,
-            final float keyHysteresisDistanceForSlidingModifier) {
-        mKeyHysteresisDistanceSquared = (int)(keyHysteresisDistance * keyHysteresisDistance);
-        mKeyHysteresisDistanceForSlidingModifierSquared = (int)(
+                       final float keyHysteresisDistanceForSlidingModifier) {
+        mKeyHysteresisDistanceSquared = (int) (keyHysteresisDistance * keyHysteresisDistance);
+        mKeyHysteresisDistanceForSlidingModifierSquared = (int) (
                 keyHysteresisDistanceForSlidingModifier * keyHysteresisDistanceForSlidingModifier);
     }
 
     public void setKeyboard(final Keyboard keyboard, final float correctionX,
-            final float correctionY) {
+                            final float correctionY) {
         if (keyboard == null) {
             throw new NullPointerException();
         }
-        mCorrectionX = (int)correctionX;
-        mCorrectionY = (int)correctionY;
+        mCorrectionX = (int) correctionX;
+        mCorrectionY = (int) correctionY;
         mKeyboard = keyboard;
     }
 
@@ -94,7 +94,7 @@ public class KeyDetector {
 
         int minDistance = Integer.MAX_VALUE;
         Key primaryKey = null;
-        for (final Key key: mKeyboard.getNearestKeys(touchX, touchY)) {
+        for (final Key key : mKeyboard.getNearestKeys(touchX, touchY)) {
             // An edge key always has its enlarged hitbox to respond to an event that occurred in
             // the empty area around the key. (@see Key#markAsLeftEdge(KeyboardParams)} etc.)
             if (!key.isOnKey(touchX, touchY)) {

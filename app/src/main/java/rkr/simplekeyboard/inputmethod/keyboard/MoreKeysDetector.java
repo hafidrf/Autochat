@@ -22,7 +22,7 @@ public final class MoreKeysDetector extends KeyDetector {
 
     public MoreKeysDetector(float slideAllowance) {
         super();
-        mSlideAllowanceSquare = (int)(slideAllowance * slideAllowance);
+        mSlideAllowanceSquare = (int) (slideAllowance * slideAllowance);
         // Top slide allowance is slightly longer (sqrt(2) times) than other edges.
         mSlideAllowanceSquareTop = mSlideAllowanceSquare * 2;
     }

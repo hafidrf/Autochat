@@ -3,10 +3,10 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemTemplatePromosi {
-    String id,created_at,tags,content,picture,name,owner_name,status_image;
+    String id, created_at, tags, content, picture, name, owner_name, status_image;
     boolean owner;
     JSONObject jsonObject;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     public ItemTemplatePromosi(String id, String created_at, String tags, String content, String picture, String name, String owner_name, String status_image, boolean owner, JSONObject jsonObject, boolean checkbox, boolean chkvisible) {
         this.id = id;

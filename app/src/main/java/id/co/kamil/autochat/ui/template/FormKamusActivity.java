@@ -1,10 +1,6 @@
 package id.co.kamil.autochat.ui.template;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -57,7 +56,7 @@ public class FormKamusActivity extends AppCompatActivity {
     private SessionManager session;
     private HashMap<String, String> userDetail;
     private String token;
-    private EditText edtNilai,edtKeyword;
+    private EditText edtNilai, edtKeyword;
     private Button btnSimpan;
     private DBHelper dbHelper;
 
@@ -67,10 +66,10 @@ public class FormKamusActivity extends AppCompatActivity {
         setContentView(R.layout.activity_form_kamus);
 
         tipeForm = getIntent().getStringExtra("tipe");
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             getSupportActionBar().setTitle("Edit Kamus");
             templateId = getIntent().getStringExtra("id");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Tambah Kamus");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -87,19 +86,19 @@ public class FormKamusActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(TextUtils.isEmpty(edtKeyword.getText().toString())) {
+                if (TextUtils.isEmpty(edtKeyword.getText().toString())) {
                     edtKeyword.setError("Field ini tidak boleh kosong");
                     edtKeyword.requestFocus();
-                }else if(TextUtils.isEmpty(edtNilai.getText().toString())){
+                } else if (TextUtils.isEmpty(edtNilai.getText().toString())) {
                     edtNilai.setError("Field ini tidak boleh kosong");
                     edtNilai.requestFocus();
-                }else{
+                } else {
                     simpanTemplate();
                 }
             }
         });
 
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             loadData();
         }
     }
@@ -109,7 +108,7 @@ public class FormKamusActivity extends AppCompatActivity {
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",templateId);
+            requestBody.put("id", templateId);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -128,14 +127,14 @@ public class FormKamusActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final JSONObject data = response.getJSONObject("data");
                         final String keyword = data.getString("keyword");
                         final String nilai = data.getString("nilai");
 
                         edtKeyword.setText(keyword);
                         edtNilai.setText(nilai);
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormKamusActivity.this)
                                 .setMessage(message)
                                 .setCancelable(false)
@@ -165,17 +164,17 @@ public class FormKamusActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getApplicationContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getApplicationContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormKamusActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -188,7 +187,7 @@ public class FormKamusActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormKamusActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -204,7 +203,7 @@ public class FormKamusActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormKamusActivity.this)
@@ -222,12 +221,12 @@ public class FormKamusActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -236,17 +235,17 @@ public class FormKamusActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void simpanTemplate(){
+    private void simpanTemplate() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         String url = "";
         try {
-            requestBody.put("keyword",edtKeyword.getText().toString());
-            requestBody.put("nilai",edtNilai.getText().toString());
-            if (tipeForm.equals("edit")){
+            requestBody.put("keyword", edtKeyword.getText().toString());
+            requestBody.put("nilai", edtNilai.getText().toString());
+            if (tipeForm.equals("edit")) {
                 url = URL_POST_EDIT_TEMPLATE_DICTIONARY;
-                requestBody.put("id",templateId);
-            }else{
+                requestBody.put("id", templateId);
+            } else {
                 url = URL_POST_CREATE_TEMPLATE_DICTIONARY;
             }
         } catch (JSONException e) {
@@ -256,7 +255,7 @@ public class FormKamusActivity extends AppCompatActivity {
         String uri = Uri.parse(url)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -267,27 +266,27 @@ public class FormKamusActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final String id = response.getString("id");
                         Toast.makeText(FormKamusActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
-                        if (tipeForm.equals("add")){
-                            dbHelper.insertKamus(id,edtKeyword.getText().toString(),edtNilai.getText().toString());
-                        }else{
-                            dbHelper.updateKamus(id,requestBody);
+                        if (tipeForm.equals("add")) {
+                            dbHelper.insertKamus(id, edtKeyword.getText().toString(), edtNilai.getText().toString());
+                        } else {
+                            dbHelper.updateKamus(id, requestBody);
                         }
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormKamusActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormKamusActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -295,15 +294,15 @@ public class FormKamusActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response !=null){
-                    if (response.statusCode==403){
+                if (response != null) {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormKamusActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -316,18 +315,18 @@ public class FormKamusActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormKamusActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormKamusActivity.this)
@@ -336,16 +335,16 @@ public class FormKamusActivity extends AppCompatActivity {
                                 .setPositiveButton("OK", null)
                                 .show();
                     }
-                }else {
+                } else {
                     errorResponse(getApplicationContext(), error);
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -361,7 +360,7 @@ public class FormKamusActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

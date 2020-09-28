@@ -22,15 +22,18 @@ public class AdapterOperator extends BaseAdapter {
     ArrayList<ItemOperator> arraylist;
 
     private static final int resource = R.layout.item_list_operator;
+
     public class ViewHolder {
-        TextView txtNama,txtEmail;
+        TextView txtNama, txtEmail;
         CheckBox chk1;
 
     }
-    public void reloadArrayList(){
+
+    public void reloadArrayList() {
         arraylist = new ArrayList<ItemOperator>();
         arraylist.addAll(dataOperator);
     }
+
     public AdapterOperator(List<ItemOperator> apps, Context context) {
         this.dataOperator = apps;
         this.context = context;
@@ -81,9 +84,9 @@ public class AdapterOperator extends BaseAdapter {
         viewHolder.chk1.setChecked(item.isCheckbox());
 
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
@@ -107,8 +110,7 @@ public class AdapterOperator extends BaseAdapter {
             for (ItemOperator postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getNama().toLowerCase(Locale.getDefault()).contains(charText)) {
                     dataOperator.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getEmail().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getEmail().toLowerCase(Locale.getDefault()).contains(charText)) {
                     dataOperator.add(postDetail);
                 }
             }

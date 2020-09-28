@@ -29,7 +29,7 @@ import rkr.simplekeyboard.inputmethod.latin.AudioAndHapticFeedbackManager;
 
 /**
  * "Advanced" settings sub screen.
- *
+ * <p>
  * This settings sub screen handles the following advanced preferences.
  * - Key popup dismiss delay
  * - Keypress vibration duration
@@ -85,7 +85,7 @@ public final class AdvancedSettingsFragment extends SubScreenFragment {
     }
 
     private void setupKeypressVibrationDurationSettings() {
-        final SeekBarDialogPreference pref = (SeekBarDialogPreference)findPreference(
+        final SeekBarDialogPreference pref = (SeekBarDialogPreference) findPreference(
                 Settings.PREF_VIBRATION_DURATION_SETTINGS);
         if (pref == null) {
             return;
@@ -129,14 +129,14 @@ public final class AdvancedSettingsFragment extends SubScreenFragment {
     }
 
     private void setupKeypressSoundVolumeSettings() {
-        final SeekBarDialogPreference pref = (SeekBarDialogPreference)findPreference(
+        final SeekBarDialogPreference pref = (SeekBarDialogPreference) findPreference(
                 Settings.PREF_KEYPRESS_SOUND_VOLUME);
         if (pref == null) {
             return;
         }
         final SharedPreferences prefs = getSharedPreferences();
         final Resources res = getResources();
-        final AudioManager am = (AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE);
+        final AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         pref.setInterface(new SeekBarDialogPreference.ValueProxy() {
             private static final float PERCENTAGE_FLOAT = 100.0f;
 
@@ -145,7 +145,7 @@ public final class AdvancedSettingsFragment extends SubScreenFragment {
             }
 
             private int getPercentageFromValue(final float floatValue) {
-                return (int)(floatValue * PERCENTAGE_FLOAT);
+                return (int) (floatValue * PERCENTAGE_FLOAT);
             }
 
             @Override
@@ -187,7 +187,7 @@ public final class AdvancedSettingsFragment extends SubScreenFragment {
     private void setupKeyLongpressTimeoutSettings() {
         final SharedPreferences prefs = getSharedPreferences();
         final Resources res = getResources();
-        final SeekBarDialogPreference pref = (SeekBarDialogPreference)findPreference(
+        final SeekBarDialogPreference pref = (SeekBarDialogPreference) findPreference(
                 Settings.PREF_KEY_LONGPRESS_TIMEOUT);
         if (pref == null) {
             return;
@@ -219,12 +219,13 @@ public final class AdvancedSettingsFragment extends SubScreenFragment {
             }
 
             @Override
-            public void feedbackValue(final int value) {}
+            public void feedbackValue(final int value) {
+            }
         });
     }
 
     private void setupKeyboardHeightSettings() {
-        final SeekBarDialogPreference pref = (SeekBarDialogPreference)findPreference(
+        final SeekBarDialogPreference pref = (SeekBarDialogPreference) findPreference(
                 Settings.PREF_KEYBOARD_HEIGHT);
         if (pref == null) {
             return;
@@ -271,12 +272,13 @@ public final class AdvancedSettingsFragment extends SubScreenFragment {
             }
 
             @Override
-            public void feedbackValue(final int value) {}
+            public void feedbackValue(final int value) {
+            }
         });
     }
 
     private void setupKeyboardColorSettings() {
-        final ColorDialogPreference pref = (ColorDialogPreference)findPreference(
+        final ColorDialogPreference pref = (ColorDialogPreference) findPreference(
                 Settings.PREF_KEYBOARD_COLOR);
         if (pref == null) {
             return;

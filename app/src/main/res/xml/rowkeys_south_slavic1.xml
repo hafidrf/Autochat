@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2012, The Android Open Source Project
@@ -22,36 +21,28 @@
     <switch>
         <case latin:showNumberRow="true">
             <!-- U+0459: "љ" CYRILLIC SMALL LETTER LJE -->
-            <Key
-                latin:keySpec="&#x0459;" />
+            <Key latin:keySpec="&#x0459;" />
             <!-- U+045A: "њ" CYRILLIC SMALL LETTER NJE -->
-            <Key
-                latin:keySpec="&#x045A;" />
+            <Key latin:keySpec="&#x045A;" />
             <!-- U+0435: "е" CYRILLIC SMALL LETTER IE -->
             <Key
                 latin:keySpec="&#x0435;"
                 latin:moreKeys="!text/morekeys_cyrillic_ie" />
             <!-- U+0440: "р" CYRILLIC SMALL LETTER ER -->
-            <Key
-                latin:keySpec="&#x0440;" />
+            <Key latin:keySpec="&#x0440;" />
             <!-- U+0442: "т" CYRILLIC SMALL LETTER TE -->
-            <Key
-                latin:keySpec="&#x0442;" />
-            <Key
-                latin:keySpec="!text/keyspec_south_slavic_row1_6" />
+            <Key latin:keySpec="&#x0442;" />
+            <Key latin:keySpec="!text/keyspec_south_slavic_row1_6" />
             <!-- U+0443: "у" CYRILLIC SMALL LETTER U -->
-            <Key
-                latin:keySpec="&#x0443;" />
+            <Key latin:keySpec="&#x0443;" />
             <!-- U+0438: "и" CYRILLIC SMALL LETTER I -->
             <Key
                 latin:keySpec="&#x0438;"
                 latin:moreKeys="!text/morekeys_cyrillic_i" />
             <!-- U+043E: "о" CYRILLIC SMALL LETTER O -->
-            <Key
-                latin:keySpec="&#x043E;" />
+            <Key latin:keySpec="&#x043E;" />
             <!-- U+043F: "п" CYRILLIC SMALL LETTER PE -->
-            <Key
-                latin:keySpec="&#x043F;" />
+            <Key latin:keySpec="&#x043F;" />
         </case>
         <default>
             <!-- U+0459: "љ" CYRILLIC SMALL LETTER LJE -->
@@ -108,6 +99,5 @@
         </default>
     </switch>
     <!-- U+0448: "ш" CYRILLIC SMALL LETTER SHA -->
-    <Key
-        latin:keySpec="&#x0448;" />
+    <Key latin:keySpec="&#x0448;" />
 </merge>

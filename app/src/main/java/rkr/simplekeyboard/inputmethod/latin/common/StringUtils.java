@@ -29,8 +29,10 @@ public final class StringUtils {
 
     // Taken from android.text.TextUtils. We are extensively using this method in many places,
     // some of which don't have the android libraries available.
+
     /**
      * Returns true if the string is null or 0-length.
+     *
      * @param str the string to be examined
      * @return true if str is null or zero length
      */
@@ -39,17 +41,19 @@ public final class StringUtils {
     }
 
     // Taken from android.text.TextUtils to cut the dependency to the Android framework.
+
     /**
      * Returns a string containing the tokens joined by delimiters.
+     *
      * @param delimiter the delimiter
-     * @param tokens an array objects to be joined. Strings will be formed from
-     *     the objects by calling object.toString().
+     * @param tokens    an array objects to be joined. Strings will be formed from
+     *                  the objects by calling object.toString().
      */
     public static String join(final CharSequence delimiter,
-            final Iterable<?> tokens) {
+                              final Iterable<?> tokens) {
         final StringBuilder sb = new StringBuilder();
         boolean firstTime = true;
-        for (final Object token: tokens) {
+        for (final Object token : tokens) {
             if (firstTime) {
                 firstTime = false;
             } else {
@@ -78,7 +82,7 @@ public final class StringUtils {
     }
 
     public static boolean containsInArray(final String text,
-            final String[] array) {
+                                          final String[] array) {
         for (final String element : array) {
             if (text.equals(element)) {
                 return true;
@@ -95,7 +99,7 @@ public final class StringUtils {
     private static final String SEPARATOR_FOR_COMMA_SPLITTABLE_TEXT = ",";
 
     public static boolean containsInCommaSplittableText(final String text,
-            final String extraValues) {
+                                                        final String extraValues) {
         if (isEmpty(extraValues)) {
             return false;
         }
@@ -103,7 +107,7 @@ public final class StringUtils {
     }
 
     public static String removeFromCommaSplittableTextIfExists(final String text,
-            final String extraValues) {
+                                                               final String extraValues) {
         if (isEmpty(extraValues)) {
             return EMPTY_STRING;
         }
@@ -121,7 +125,7 @@ public final class StringUtils {
     }
 
     public static String capitalizeFirstCodePoint(final String s,
-            final Locale locale) {
+                                                  final Locale locale) {
         if (s.length() <= 1) {
             return s.toUpperCase(getLocaleUsedForToTitleCase(locale));
         }
@@ -140,13 +144,14 @@ public final class StringUtils {
 
     /**
      * Converts a range of a string to an array of code points.
+     *
      * @param charSequence the source string.
-     * @param startIndex the start index inside the string in java chars, inclusive.
-     * @param endIndex the end index inside the string in java chars, exclusive.
+     * @param startIndex   the start index inside the string in java chars, inclusive.
+     * @param endIndex     the end index inside the string in java chars, exclusive.
      * @return a new array of code points. At most endIndex - startIndex, but possibly less.
      */
     public static int[] toCodePointArray(final CharSequence charSequence,
-            final int startIndex, final int endIndex) {
+                                         final int startIndex, final int endIndex) {
         final int length = charSequence.length();
         if (length <= 0) {
             return EMPTY_CODEPOINTS;
@@ -160,7 +165,7 @@ public final class StringUtils {
 
     /**
      * Copies the codepoints in a CharSequence to an int array.
-     *
+     * <p>
      * This method assumes there is enough space in the array to store the code points. The size
      * can be measured with Character#codePointCount(CharSequence, int, int) before passing to this
      * method. If the int array is too small, an ArrayIndexOutOfBoundsException will be thrown.
@@ -169,19 +174,19 @@ public final class StringUtils {
      * This method can optionally downcase code points before copying them, but it pays no attention
      * to locale while doing so.
      *
-     * @param destination the int array.
+     * @param destination  the int array.
      * @param charSequence the CharSequence.
-     * @param startIndex the start index inside the string in java chars, inclusive.
-     * @param endIndex the end index inside the string in java chars, exclusive.
-     * @param downCase if this is true, code points will be downcased before being copied.
+     * @param startIndex   the start index inside the string in java chars, inclusive.
+     * @param endIndex     the end index inside the string in java chars, exclusive.
+     * @param downCase     if this is true, code points will be downcased before being copied.
      * @return the number of copied code points.
      */
     public static int copyCodePointsAndReturnCodePointCount(final int[] destination,
-            final CharSequence charSequence, final int startIndex, final int endIndex,
-            final boolean downCase) {
+                                                            final CharSequence charSequence, final int startIndex, final int endIndex,
+                                                            final boolean downCase) {
         int destIndex = 0;
         for (int index = startIndex; index < endIndex;
-                index = Character.offsetByCodePoints(charSequence, index, 1)) {
+             index = Character.offsetByCodePoints(charSequence, index, 1)) {
             final int codePoint = Character.codePointAt(charSequence, index);
             // TODO: stop using this, as it's not aware of the locale and does not always do
             // the right thing.
@@ -224,7 +229,7 @@ public final class StringUtils {
     }
 
     public static boolean isIdenticalAfterCapitalizeEachWord(final String text,
-            final int[] sortedSeparators) {
+                                                             final int[] sortedSeparators) {
         boolean needsCapsNext = true;
         final int len = text.length();
         for (int i = 0; i < len; i = text.offsetByCodePoints(i, 1)) {
@@ -244,7 +249,7 @@ public final class StringUtils {
     // TODO: like capitalizeFirst*, this does not work perfectly for Dutch because of the IJ digraph
     // which should be capitalized together in *some* cases.
     public static String capitalizeEachWord(final String text,
-            final int[] sortedSeparators, final Locale locale) {
+                                            final int[] sortedSeparators, final Locale locale) {
         final StringBuilder builder = new StringBuilder();
         boolean needsCapsNext = true;
         final int len = text.length();
@@ -273,7 +278,7 @@ public final class StringUtils {
     }
 
     public static String toTitleCaseOfKeyLabel(final String label,
-            final Locale locale) {
+                                               final Locale locale) {
         if (label == null) {
             return label;
         }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2012, The Android Open Source Project
@@ -18,20 +17,15 @@
 */
 -->
 
-<merge
-    xmlns:latin="http://schemas.android.com/apk/res-auto"
->
+<merge xmlns:latin="http://schemas.android.com/apk/res-auto">
     <switch>
         <case latin:showNumberRow="true">
-            <Key
-                latin:keySpec="q" />
+            <Key latin:keySpec="q" />
             <Key
                 latin:keySpec="w"
                 latin:moreKeys="!text/morekeys_w" />
-            <Key
-                latin:keySpec="f" />
-            <Key
-                latin:keySpec="p" />
+            <Key latin:keySpec="f" />
+            <Key latin:keySpec="p" />
             <Key
                 latin:keySpec="g"
                 latin:moreKeys="!text/morekeys_g" />
@@ -48,11 +42,8 @@
                 latin:keySpec="y"
                 latin:moreKeys="!text/morekeys_y" />
             <switch>
-                <case
-                    latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetShiftLockShifted"
-                >
-                    <Key
-                        latin:keySpec=":" />
+                <case latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetShiftLockShifted">
+                    <Key latin:keySpec=":" />
                 </case>
                 <default>
                     <Key
@@ -106,9 +97,7 @@
                 latin:additionalMoreKeys="9"
                 latin:moreKeys="!text/morekeys_y" />
             <switch>
-                <case
-                    latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetShiftLockShifted"
-                    >
+                <case latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetShiftLockShifted">
                     <Key
                         latin:keySpec=":"
                         latin:keyHintLabel="0"

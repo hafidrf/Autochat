@@ -21,7 +21,7 @@ import rkr.simplekeyboard.inputmethod.latin.common.StringUtils;
 
 /**
  * Class representing a generic input event as handled by Latin IME.
- *
+ * <p>
  * This contains information about the origin of the event, but it is generalized and should
  * represent a software keypress, hardware keypress, or d-pad move alike.
  * Very importantly, this does not necessarily result in inputting one character, or even anything
@@ -96,8 +96,8 @@ public class Event {
 
     // This method is private - to create a new event, use one of the create* utility methods.
     private Event(final int type, final CharSequence text, final int codePoint, final int keyCode,
-            final int x, final int y, final int flags,
-            final Event next) {
+                  final int x, final int y, final int flags,
+                  final Event next) {
         mEventType = type;
         mText = text;
         mCodePoint = codePoint;
@@ -109,7 +109,7 @@ public class Event {
     }
 
     public static Event createSoftwareKeypressEvent(final int codePoint, final int keyCode,
-            final int x, final int y, final boolean isKeyRepeat) {
+                                                    final int x, final int y, final boolean isKeyRepeat) {
         return new Event(EVENT_TYPE_INPUT_KEYPRESS, null, codePoint, keyCode, x, y,
                 isKeyRepeat ? FLAG_REPEAT : FLAG_NONE, null);
     }
@@ -118,7 +118,8 @@ public class Event {
      * Creates an input event with a CharSequence. This is used by some software processes whose
      * output is a string, possibly with styling. Examples include press on a multi-character key,
      * or combination that outputs a string.
-     * @param text the CharSequence associated with this event.
+     *
+     * @param text    the CharSequence associated with this event.
      * @param keyCode the key code, or NOT_A_KEYCODE if not applicable.
      * @return an event for this text.
      */
@@ -139,22 +140,24 @@ public class Event {
         return 0 != (FLAG_REPEAT & mFlags);
     }
 
-    public boolean isConsumed() { return 0 != (FLAG_CONSUMED & mFlags); }
+    public boolean isConsumed() {
+        return 0 != (FLAG_CONSUMED & mFlags);
+    }
 
     public CharSequence getTextToCommit() {
         if (isConsumed()) {
             return ""; // A consumed event should input no text.
         }
         switch (mEventType) {
-        case EVENT_TYPE_MODE_KEY:
-        case EVENT_TYPE_NOT_HANDLED:
-        case EVENT_TYPE_TOGGLE:
-        case EVENT_TYPE_CURSOR_MOVE:
-            return "";
-        case EVENT_TYPE_INPUT_KEYPRESS:
-            return StringUtils.newSingleCodePointString(mCodePoint);
-        case EVENT_TYPE_SOFTWARE_GENERATED_STRING:
-            return mText;
+            case EVENT_TYPE_MODE_KEY:
+            case EVENT_TYPE_NOT_HANDLED:
+            case EVENT_TYPE_TOGGLE:
+            case EVENT_TYPE_CURSOR_MOVE:
+                return "";
+            case EVENT_TYPE_INPUT_KEYPRESS:
+                return StringUtils.newSingleCodePointString(mCodePoint);
+            case EVENT_TYPE_SOFTWARE_GENERATED_STRING:
+                return mText;
         }
         throw new RuntimeException("Unknown event type: " + mEventType);
     }

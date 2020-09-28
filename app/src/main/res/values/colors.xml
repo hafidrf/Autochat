@@ -319,7 +319,7 @@
     <color name="md_blue_grey_900">#263238</color>
     <color name="colorKeyboardPrimary">#3F51B5</color>
     <color name="colorKeyboardPrimaryDark">#303F9F</color>
-    
+
     <color name="key_text_color_lxx_light">#37474F</color>
     <color name="key_functional_text_color_lxx_light">#CC37474F</color>
     <color name="key_text_inactive_color_lxx_light">#B337474F</color>

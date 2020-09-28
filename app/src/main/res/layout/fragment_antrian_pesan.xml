@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.pesan.AntrianPesanFragment">
+
     <EditText
         android:id="@+id/edtCari"
         android:hint="Cari"
@@ -20,16 +21,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rectangle_grey"
-        android:drawableLeft="@drawable/ic_search_light"/>
+        android:drawableLeft="@drawable/ic_search_light" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <LinearLayout
                 android:id="@+id/layMessage"
                 android:visibility="gone"
@@ -38,13 +41,15 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <TextView
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="20dp"
                     android:text="Message"
-                    android:id="@+id/lblMessage"/>
+                    android:id="@+id/lblMessage" />
+
                 <Button
                     android:id="@+id/btnCobaLagi"
                     android:layout_width="wrap_content"
@@ -53,7 +58,7 @@
                     android:paddingRight="20dp"
                     android:textColor="@color/md_white_1000"
                     android:background="@drawable/btn_rect_primary"
-                    android:text="Coba Lagi"/>
+                    android:text="Coba Lagi" />
             </LinearLayout>
 
             <TextView
@@ -61,12 +66,14 @@
                 android:textAlignment="center"
                 android:text="Penyimpanan (Akun Basic) : 0 s.d 10 (nomor)"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <ProgressBar
                 android:id="@+id/progressStorage"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <Button
                 android:id="@+id/btnDeleteAll"
                 android:text="Hapus Semua"
@@ -74,14 +81,15 @@
                 android:textColor="@color/md_white_1000"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
-                android:layout_height="35dp"/>
+                android:layout_height="35dp" />
+
             <ListView
                 android:id="@+id/listKontak"
                 android:dividerHeight="0dp"
                 android:divider="@null"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </LinearLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

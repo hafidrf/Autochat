@@ -1,8 +1,5 @@
 package id.co.kamil.autochat.ui.leadmagnet;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -17,6 +14,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +43,7 @@ public class FormFieldActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipe_refresh;
     private EditText edtCari;
     private ListView listKontak;
-    private String[] arrField = {"nama_depan","nama_belakang","email","telepon","sapaan","telegram","alamat","web","facebook","instagram","linkedin","tokopedia","bukalapak","shopee","id olshop","jenis kelamin","tgl lahir","catatan","kota"};
+    private String[] arrField = {"nama_depan", "nama_belakang", "email", "telepon", "sapaan", "telegram", "alamat", "web", "facebook", "instagram", "linkedin", "tokopedia", "bukalapak", "shopee", "id olshop", "jenis kelamin", "tgl lahir", "catatan", "kota"};
     private AdapterField adapterField;
     private List<ItemField> dataField = new ArrayList<>();
     private String exclude;
@@ -72,10 +72,10 @@ public class FormFieldActivity extends AppCompatActivity {
         chkSemua.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                for (int i = 0; i< adapterField.dataField.size(); i++){
+                for (int i = 0; i < adapterField.dataField.size(); i++) {
                     adapterField.dataField.get(i).setCheckbox(isChecked);
-                    for (int a = 0; a< adapterField.dataField.size(); a++){
-                        if (adapterField.dataField.get(a).getJudul().equals(adapterField.dataField.get(i).getJudul())){
+                    for (int a = 0; a < adapterField.dataField.size(); a++) {
+                        if (adapterField.dataField.get(a).getJudul().equals(adapterField.dataField.get(i).getJudul())) {
                             adapterField.dataField.get(a).setCheckbox(isChecked);
                         }
                     }
@@ -94,7 +94,7 @@ public class FormFieldActivity extends AppCompatActivity {
                 try {
                     adapterField.filter(edtCari.getText().toString().trim());
                     listKontak.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -108,17 +108,17 @@ public class FormFieldActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int chk = 0;
-                for (int i = 0; i< adapterField.arraylist.size(); i++){
-                    if(adapterField.arraylist.get(i).isCheckbox()){
+                for (int i = 0; i < adapterField.arraylist.size(); i++) {
+                    if (adapterField.arraylist.get(i).isCheckbox()) {
                         chk++;
                     }
                 }
-                if(chk==0){
+                if (chk == 0) {
                     new AlertDialog.Builder(FormFieldActivity.this)
                             .setMessage("Tidak ada field yang dipilih")
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
-                }else{
+                } else {
                     new AlertDialog.Builder(FormFieldActivity.this)
                             .setMessage("Apakah anda yakin akan pilih field tersebut?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -127,7 +127,7 @@ public class FormFieldActivity extends AppCompatActivity {
                                     simpan();
                                 }
                             })
-                            .setNegativeButton("Tidak",null)
+                            .setNegativeButton("Tidak", null)
                             .show();
                 }
 
@@ -157,28 +157,27 @@ public class FormFieldActivity extends AppCompatActivity {
 
     private void simpan() {
         JSONArray arrTemp = new JSONArray();
-        for (int i = 0; i< dataField.size(); i++){
-            if (dataField.get(i).isCheckbox()){
+        for (int i = 0; i < dataField.size(); i++) {
+            if (dataField.get(i).isCheckbox()) {
                 arrTemp.put(dataField.get(i).getJudul());
             }
         }
         Intent intent = new Intent();
         intent.putExtra("arrField", arrTemp.toString());
-        setResult(RESULT_OK,intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
-    private void loadField(){
+    private void loadField() {
         swipe_refresh.setRefreshing(true);
         dataField.clear();
-        if (excludeField.length()>0){
+        if (excludeField.length() > 0) {
             boolean ada = false;
-            for (int i =0;i<arrField.length;i++)
-            {
+            for (int i = 0; i < arrField.length; i++) {
                 ada = false;
-                for (int a =0;a<excludeField.length();a++){
+                for (int a = 0; a < excludeField.length(); a++) {
                     try {
-                        if (arrField[i].equals(excludeField.getString(a))){
+                        if (arrField[i].equals(excludeField.getString(a))) {
                             ada = true;
                             break;
                         }
@@ -186,16 +185,15 @@ public class FormFieldActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                if (ada == false){
-                    dataField.add(new ItemField(arrField[i],false,true));
-                }else{
-                    dataField.add(new ItemField(arrField[i],true,true));
+                if (ada == false) {
+                    dataField.add(new ItemField(arrField[i], false, true));
+                } else {
+                    dataField.add(new ItemField(arrField[i], true, true));
                 }
             }
-        }else{
-            for (int i =0;i<arrField.length;i++)
-            {
-                dataField.add(new ItemField(arrField[i],false,true));
+        } else {
+            for (int i = 0; i < arrField.length; i++) {
+                dataField.add(new ItemField(arrField[i], false, true));
             }
         }
         displayField();
@@ -209,12 +207,13 @@ public class FormFieldActivity extends AppCompatActivity {
     }
 
     private void displayField() {
-        adapterField = new AdapterField(dataField,this);
+        adapterField = new AdapterField(dataField, this);
         listKontak.setAdapter(adapterField);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

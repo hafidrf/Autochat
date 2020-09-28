@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,6 +10,7 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:paddingBottom="10dp"
             android:orientation="vertical"
@@ -22,16 +22,19 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="25dp"
-                    android:text="No Whatsapp"/>
+                    android:text="No Whatsapp" />
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <EditText
                         android:id="@+id/edtCode"
                         android:enabled="false"
@@ -46,7 +49,8 @@
                         android:inputType="text"
                         android:text="62"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
+
                     <EditText
                         android:id="@+id/edtPhone"
                         android:singleLine="true"
@@ -61,18 +65,21 @@
                         android:inputType="phone"
                         android:hint="Nomor Whatsapp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="25dp"
-                    android:text="Sub Domain"/>
+                    android:text="Sub Domain" />
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <Spinner
                         android:id="@+id/spinDomain"
                         style="@style/spinner_style"
@@ -81,7 +88,8 @@
                         android:layout_marginLeft="20dp"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
+
                     <EditText
                         android:id="@+id/edtSubdomain"
                         android:layout_weight="1"
@@ -96,7 +104,7 @@
                         android:inputType="text"
                         android:hint="Sub Domain"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <TextView
@@ -105,13 +113,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="25dp"
-                    android:text=""/>
+                    android:text="" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="10dp"
-                    android:text="Redaksi"/>
+                    android:text="Redaksi" />
+
                 <EditText
                     android:id="@+id/edtRedaksi"
                     android:layout_marginTop="5dp"
@@ -125,15 +135,17 @@
                     android:gravity="top"
                     android:hint="Redaksi"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"/>
+                    android:layout_height="200dp" />
 
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_100"/>
+        android:background="@color/md_blue_grey_100" />
+
     <Button
         android:id="@+id/btnSimpan"
         android:layout_marginTop="10dp"
@@ -144,5 +156,5 @@
         android:textColor="@color/md_white_1000"
         android:text="Simpan"
         android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        android:layout_height="40dp" />
 </androidx.appcompat.widget.LinearLayoutCompat>

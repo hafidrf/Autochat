@@ -49,8 +49,9 @@ public final class InputLogic {
 
     /**
      * Create a new instance of the input logic.
+     *
      * @param latinIME the instance of the parent LatinIME. We should remove this when we can.
-     * dictionary.
+     *                 dictionary.
      */
     public InputLogic(final LatinIME latinIME) {
         mLatinIME = latinIME;
@@ -59,7 +60,7 @@ public final class InputLogic {
 
     /**
      * Initializes the input logic for input in an editor.
-     *
+     * <p>
      * Call this when input starts or restarts in some editor (typically, in onStartInputView).
      */
     public void startInput() {
@@ -79,12 +80,12 @@ public final class InputLogic {
 
     /**
      * React to a string input.
-     *
+     * <p>
      * This is triggered by keys that input many characters at once, like the ".com" key or
      * some additional keys for example.
      *
      * @param settingsValues the current values of the settings.
-     * @param event the input event containing the data.
+     * @param event          the input event containing the data.
      * @return the complete transaction object
      */
     public InputTransaction onTextInput(final SettingsValues settingsValues, final Event event) {
@@ -103,8 +104,9 @@ public final class InputLogic {
      * Consider an update to the cursor position. Evaluate whether this update has happened as
      * part of normal typing or whether it was an explicit cursor move by the user. In any case,
      * do the necessary adjustments.
+     *
      * @param newSelStart new selection start
-     * @param newSelEnd new selection end
+     * @param newSelEnd   new selection end
      * @return whether the cursor has moved as a result of user interaction.
      */
     public boolean onUpdateSelection(final int newSelStart, final int newSelEnd) {
@@ -120,12 +122,12 @@ public final class InputLogic {
     /**
      * React to a code input. It may be a code point to insert, or a symbolic value that influences
      * the keyboard behavior.
-     *
+     * <p>
      * Typically, this is called whenever a key is pressed on the software keyboard. This is not
      * the entry point for gesture input; see the onBatchInput* family of functions for this.
      *
      * @param settingsValues the current settings values.
-     * @param event the event to handle.
+     * @param event          the event to handle.
      * @return the complete transaction object
      */
     public InputTransaction onCodeInput(final SettingsValues settingsValues, final Event event) {
@@ -146,13 +148,13 @@ public final class InputLogic {
         if (event.mKeyCode != Constants.CODE_SHIFT
                 && event.mKeyCode != Constants.CODE_CAPSLOCK
                 && event.mKeyCode != Constants.CODE_SWITCH_ALPHA_SYMBOL)
-        mConnection.endBatchEdit();
+            mConnection.endBatchEdit();
         return inputTransaction;
     }
 
     /**
      * Handle a consumed event.
-     *
+     * <p>
      * Consumed events represent events that have already been consumed, typically by the
      * combining chain.
      *
@@ -170,14 +172,14 @@ public final class InputLogic {
 
     /**
      * Handle a functional key event.
-     *
+     * <p>
      * A functional event is a special key, like delete, shift, emoji, or the settings key.
      * Non-special keys are those that generate a single code point.
      * This includes all letters, digits, punctuation, separators, emoji. It excludes keys that
      * manage keyboard-related stuff like shift, language switch, settings, layout switch, or
      * any key that results in multiple code points like the ".com" key.
      *
-     * @param event The event to handle.
+     * @param event            The event to handle.
      * @param inputTransaction The transaction in progress.
      */
     private void handleFunctionalEvent(final Event event, final InputTransaction inputTransaction) {
@@ -232,15 +234,15 @@ public final class InputLogic {
 
     /**
      * Handle an event that is not a functional event.
-     *
+     * <p>
      * These events are generally events that cause input, but in some cases they may do other
      * things like trigger an editor action.
      *
-     * @param event The event to handle.
+     * @param event            The event to handle.
      * @param inputTransaction The transaction in progress.
      */
     private void handleNonFunctionalEvent(final Event event,
-            final InputTransaction inputTransaction) {
+                                          final InputTransaction inputTransaction) {
         switch (event.mCodePoint) {
             case Constants.CODE_ENTER:
                 final EditorInfo editorInfo = getCurrentInputEditorInfo();
@@ -273,17 +275,17 @@ public final class InputLogic {
 
     /**
      * Handle inputting a code point to the editor.
-     *
+     * <p>
      * Non-special keys are those that generate a single code point.
      * This includes all letters, digits, punctuation, separators, emoji. It excludes keys that
      * manage keyboard-related stuff like shift, language switch, settings, layout switch, or
      * any key that results in multiple code points like the ".com" key.
      *
-     * @param event The event to handle.
+     * @param event            The event to handle.
      * @param inputTransaction The transaction in progress.
      */
     private void handleNonSpecialCharacterEvent(final Event event,
-            final InputTransaction inputTransaction) {
+                                                final InputTransaction inputTransaction) {
         final int codePoint = event.mCodePoint;
         if (inputTransaction.mSettingsValues.isWordSeparator(codePoint)
                 || Character.getType(codePoint) == Character.OTHER_SYMBOL) {
@@ -295,6 +297,7 @@ public final class InputLogic {
 
     /**
      * Handle a non-separator.
+     *
      * @param event The event to handle.
      */
     private void handleNonSeparatorEvent(final Event event) {
@@ -303,7 +306,8 @@ public final class InputLogic {
 
     /**
      * Handle input of a separator code point.
-     * @param event The event to handle.
+     *
+     * @param event            The event to handle.
      * @param inputTransaction The transaction in progress.
      */
     private void handleSeparatorEvent(final Event event, final InputTransaction inputTransaction) {
@@ -314,7 +318,8 @@ public final class InputLogic {
 
     /**
      * Handle a press on the backspace key.
-     * @param event The event to handle.
+     *
+     * @param event            The event to handle.
      * @param inputTransaction The transaction in progress.
      */
     private void handleBackspaceEvent(final Event event, final InputTransaction inputTransaction) {
@@ -327,7 +332,7 @@ public final class InputLogic {
         // can't go any further back, so we can update right away even if it's a key repeat.
         final int shiftUpdateKind =
                 event.isKeyRepeat() && mConnection.getExpectedSelectionStart() > 0
-                ? InputTransaction.SHIFT_UPDATE_LATER : InputTransaction.SHIFT_UPDATE_NOW;
+                        ? InputTransaction.SHIFT_UPDATE_LATER : InputTransaction.SHIFT_UPDATE_NOW;
         inputTransaction.requireShiftUpdate(shiftUpdateKind);
 
         // No cancelling of commit/double space/swap: we have a regular backspace.
@@ -344,7 +349,7 @@ public final class InputLogic {
             // There is no selection, just delete one character.
             if (inputTransaction.mSettingsValues.mInputAttributes.isTypeNull()
                     || Constants.NOT_A_CURSOR_POSITION
-                            == mConnection.getExpectedSelectionEnd()) {
+                    == mConnection.getExpectedSelectionEnd()) {
                 // There are three possible reasons to send a key event: either the field has
                 // type TYPE_NULL, in which case the keyboard should send events, or we are
                 // running in backward compatibility mode, or we don't know the cursor position.
@@ -386,6 +391,7 @@ public final class InputLogic {
 
     /**
      * Performs a recapitalization event.
+     *
      * @param settingsValues The current settings values.
      */
     private void performRecapitalization(final SettingsValues settingsValues) {
@@ -423,7 +429,7 @@ public final class InputLogic {
 
     /**
      * Gets the current auto-caps state, factoring in the space state.
-     *
+     * <p>
      * This method tries its best to do this in the most efficient possible manner. It avoids
      * getting text from the editor if possible at all.
      * This is called from the KeyboardSwitcher (through a trampoline in LatinIME) because it
@@ -446,7 +452,7 @@ public final class InputLogic {
     public int getCurrentRecapitalizeState() {
         if (!mRecapitalizeStatus.isStarted()
                 || !mRecapitalizeStatus.isSetAt(mConnection.getExpectedSelectionStart(),
-                        mConnection.getExpectedSelectionEnd())) {
+                mConnection.getExpectedSelectionEnd())) {
             // Not recapitalizing at the moment
             return RecapitalizeStatus.NOT_A_RECAPITALIZE_MODE;
         }
@@ -469,7 +475,7 @@ public final class InputLogic {
 
     /**
      * Perform the processing specific to inputting TLDs.
-     *
+     * <p>
      * Some keys input a TLD (specifically, the ".com" key) and this warrants some specific
      * processing. First, if this is a TLD, we ignore PHANTOM spaces -- this is done by type
      * of character in onCodeInput, but since this gets inputted as a whole string we need to
@@ -503,12 +509,12 @@ public final class InputLogic {
 
     /**
      * Resets the whole input state to the starting state.
-     *
+     * <p>
      * This will clear the composing word, reset the last composed word, clear the suggestion
      * strip and tell the input connection about it so that it can refresh its caches.
      *
      * @param newSelStart the new selection start, in java characters.
-     * @param newSelEnd the new selection end, in java characters.
+     * @param newSelEnd   the new selection end, in java characters.
      */
     // TODO: how is this different from startInput ?!
     private void resetEntireInputState(final int newSelStart, final int newSelEnd) {
@@ -517,7 +523,7 @@ public final class InputLogic {
 
     /**
      * Sends a DOWN key event followed by an UP key event to the editor.
-     *
+     * <p>
      * If possible at all, avoid using this method. It causes all sorts of race conditions with
      * the text view because it goes through a different, asynchronous binder. Also, batch edits
      * are ignored for key events. Use the normal software input methods instead.
@@ -536,7 +542,7 @@ public final class InputLogic {
 
     /**
      * Sends a code point to the editor, using the most appropriate method.
-     *
+     * <p>
      * Normally we send code points with commitText, but there are some cases (where backward
      * compatibility is a concern for example) where we want to use deprecated methods.
      *
@@ -556,17 +562,17 @@ public final class InputLogic {
 
     /**
      * Retry resetting caches in the rich input connection.
-     *
+     * <p>
      * When the editor can't be accessed we can't reset the caches, so we schedule a retry.
      * This method handles the retry, and re-schedules a new retry if we still can't access.
      * We only retry up to 5 times before giving up.
      *
      * @param tryResumeSuggestions Whether we should resume suggestions or not.
-     * @param remainingTries How many times we may try again before giving up.
+     * @param remainingTries       How many times we may try again before giving up.
      * @return whether true if the caches were successfully reset, false otherwise.
      */
     public boolean retryResetCachesAndReturnSuccess(final boolean tryResumeSuggestions,
-            final int remainingTries, final LatinIME.UIHandler handler) {
+                                                    final int remainingTries, final LatinIME.UIHandler handler) {
         if (!mConnection.resetCachesUponCursorMoveAndReturnSuccess(
                 mConnection.getExpectedSelectionStart(), mConnection.getExpectedSelectionEnd())) {
             if (0 < remainingTries) {

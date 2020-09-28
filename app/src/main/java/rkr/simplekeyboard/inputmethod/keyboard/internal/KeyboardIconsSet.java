@@ -58,24 +58,24 @@ public final class KeyboardIconsSet {
     private static final HashMap<String, Integer> sNameToIdsMap = new HashMap<>();
 
     private static final Object[] NAMES_AND_ATTR_IDS = {
-        NAME_UNDEFINED,                   ATTR_UNDEFINED,
-        NAME_SHIFT_KEY,                   R.styleable.Keyboard_iconShiftKey,
-        NAME_DELETE_KEY,                  R.styleable.Keyboard_iconDeleteKey,
-        NAME_SETTINGS_KEY,                R.styleable.Keyboard_iconSettingsKey,
-        NAME_SPACE_KEY,                   R.styleable.Keyboard_iconSpaceKey,
-        NAME_ENTER_KEY,                   R.styleable.Keyboard_iconEnterKey,
-        NAME_GO_KEY,                      R.styleable.Keyboard_iconGoKey,
-        NAME_SEARCH_KEY,                  R.styleable.Keyboard_iconSearchKey,
-        NAME_SEND_KEY,                    R.styleable.Keyboard_iconSendKey,
-        NAME_NEXT_KEY,                    R.styleable.Keyboard_iconNextKey,
-        NAME_DONE_KEY,                    R.styleable.Keyboard_iconDoneKey,
-        NAME_PREVIOUS_KEY,                R.styleable.Keyboard_iconPreviousKey,
-        NAME_TAB_KEY,                     R.styleable.Keyboard_iconTabKey,
-        NAME_SPACE_KEY_FOR_NUMBER_LAYOUT, R.styleable.Keyboard_iconSpaceKeyForNumberLayout,
-        NAME_SHIFT_KEY_SHIFTED,           R.styleable.Keyboard_iconShiftKeyShifted,
-        NAME_LANGUAGE_SWITCH_KEY,         R.styleable.Keyboard_iconLanguageSwitchKey,
-        NAME_ZWNJ_KEY,                    R.styleable.Keyboard_iconZwnjKey,
-        NAME_ZWJ_KEY,                     R.styleable.Keyboard_iconZwjKey,
+            NAME_UNDEFINED, ATTR_UNDEFINED,
+            NAME_SHIFT_KEY, R.styleable.Keyboard_iconShiftKey,
+            NAME_DELETE_KEY, R.styleable.Keyboard_iconDeleteKey,
+            NAME_SETTINGS_KEY, R.styleable.Keyboard_iconSettingsKey,
+            NAME_SPACE_KEY, R.styleable.Keyboard_iconSpaceKey,
+            NAME_ENTER_KEY, R.styleable.Keyboard_iconEnterKey,
+            NAME_GO_KEY, R.styleable.Keyboard_iconGoKey,
+            NAME_SEARCH_KEY, R.styleable.Keyboard_iconSearchKey,
+            NAME_SEND_KEY, R.styleable.Keyboard_iconSendKey,
+            NAME_NEXT_KEY, R.styleable.Keyboard_iconNextKey,
+            NAME_DONE_KEY, R.styleable.Keyboard_iconDoneKey,
+            NAME_PREVIOUS_KEY, R.styleable.Keyboard_iconPreviousKey,
+            NAME_TAB_KEY, R.styleable.Keyboard_iconTabKey,
+            NAME_SPACE_KEY_FOR_NUMBER_LAYOUT, R.styleable.Keyboard_iconSpaceKeyForNumberLayout,
+            NAME_SHIFT_KEY_SHIFTED, R.styleable.Keyboard_iconShiftKeyShifted,
+            NAME_LANGUAGE_SWITCH_KEY, R.styleable.Keyboard_iconLanguageSwitchKey,
+            NAME_ZWNJ_KEY, R.styleable.Keyboard_iconZwnjKey,
+            NAME_ZWJ_KEY, R.styleable.Keyboard_iconZwjKey,
     };
 
     private static int NUM_ICONS = NAMES_AND_ATTR_IDS.length / 2;
@@ -86,8 +86,8 @@ public final class KeyboardIconsSet {
     static {
         int iconId = ICON_UNDEFINED;
         for (int i = 0; i < NAMES_AND_ATTR_IDS.length; i += 2) {
-            final String name = (String)NAMES_AND_ATTR_IDS[i];
-            final Integer attrId = (Integer)NAMES_AND_ATTR_IDS[i + 1];
+            final String name = (String) NAMES_AND_ATTR_IDS[i];
+            final Integer attrId = (Integer) NAMES_AND_ATTR_IDS[i + 1];
             if (attrId != ATTR_UNDEFINED) {
                 ATTR_ID_TO_ICON_ID.put(attrId, iconId);
             }
@@ -138,7 +138,7 @@ public final class KeyboardIconsSet {
         throw new RuntimeException("unknown icon id: " + getIconName(iconId));
     }
 
-    private static void setDefaultBounds(final Drawable icon)  {
+    private static void setDefaultBounds(final Drawable icon) {
         if (icon != null) {
             icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
         }

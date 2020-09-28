@@ -3,9 +3,9 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemTemplateShare {
-    String id,template,totalshare;
+    String id, template, totalshare;
     JSONObject jsonObject;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     public ItemTemplateShare(String id, String template, String totalshare, JSONObject jsonObject, boolean checkbox, boolean chkvisible) {
         this.id = id;

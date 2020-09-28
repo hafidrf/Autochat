@@ -80,8 +80,8 @@ public final class NonDistinctMultitouchHelper {
         if (oldPointerCount == 2 && pointerCount == 1) {
             // Send a down event for the latest pointer if the key is different from the previous
             // key.
-            final int x = (int)me.getX(index);
-            final int y = (int)me.getY(index);
+            final int x = (int) me.getX(index);
+            final int y = (int) me.getY(index);
             final Key newKey = mainTracker.getKeyOn(x, y);
             if (mOldKey != newKey) {
                 // Inject an artifact down event for the new key.
@@ -102,8 +102,8 @@ public final class NonDistinctMultitouchHelper {
     }
 
     private static void injectMotionEvent(final int action, final float x, final float y,
-            final long downTime, final long eventTime, final PointerTracker tracker,
-            final KeyDetector keyDetector) {
+                                          final long downTime, final long eventTime, final PointerTracker tracker,
+                                          final KeyDetector keyDetector) {
         final MotionEvent me = MotionEvent.obtain(
                 downTime, eventTime, action, x, y, 0 /* metaState */);
         try {

@@ -1,12 +1,5 @@
 package id.co.kamil.autochat.ui.leadmagnet;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -34,6 +27,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -55,16 +54,13 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import id.co.kamil.autochat.LoginActivity;
 import id.co.kamil.autochat.R;
-import id.co.kamil.autochat.adapter.ItemGrup;
 import id.co.kamil.autochat.adapter.ItemRecyclerTag;
 import id.co.kamil.autochat.adapter.RecylerTagAdapter;
-import id.co.kamil.autochat.ui.shorten.FormShortenLinkActivity;
 import id.co.kamil.autochat.utils.SessionManager;
 
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
@@ -90,23 +86,23 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private String tipeForm;
     private TextView txtLoading;
-    private EditText edtNama,edtSubdomain,edtSubmitText,edtRespon;
+    private EditText edtNama, edtSubdomain, edtSubmitText, edtRespon;
     private Button btnSimpan;
     private String idShorten;
     private String lastSubdomain;
     private Spinner spinStatus;
     private Spinner spinGroup;
     private String[] arrKodeGrup;
-    private String[] arrStatus = {"tidak aktif","aktif"};
+    private String[] arrStatus = {"tidak aktif", "aktif"};
     private String[] arrNamaGrup;
     private RecylerTagAdapter adapterTag;
     private List<ItemRecyclerTag> listField = new ArrayList<>();
     private RecyclerView recyclerView;
     private String url;
     private ImageButton btnField;
-    private TextView txtSapaan,txtNamaBelakang,txtNamaDepan;
+    private TextView txtSapaan, txtNamaBelakang, txtNamaDepan;
     private ImageView imgPesan;
-    private ImageButton btnBrowse,btnHapus;
+    private ImageButton btnBrowse, btnHapus;
     private boolean imageSelect = false;
     private String imagePath = null;
 
@@ -124,9 +120,9 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         tipeForm = getIntent().getStringExtra("tipe");
 
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             getSupportActionBar().setTitle("Edit Lead Magnet");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Tambah Lead Magnet");
         }
         imgPesan = (ImageView) findViewById(R.id.imgPesan);
@@ -140,20 +136,20 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         txtSapaan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtRespon.getText().insert(edtRespon.getSelectionStart(),"[sapaan] " );
+                edtRespon.getText().insert(edtRespon.getSelectionStart(), "[sapaan] ");
             }
         });
 
         txtNamaDepan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtRespon.getText().insert(edtRespon.getSelectionStart(),"[nama_depan] " );
+                edtRespon.getText().insert(edtRespon.getSelectionStart(), "[nama_depan] ");
             }
         });
         txtNamaBelakang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtRespon.getText().insert(edtRespon.getSelectionStart(),"[nama_belakang] " );
+                edtRespon.getText().insert(edtRespon.getSelectionStart(), "[nama_belakang] ");
             }
         });
         txtLoading = (TextView) findViewById(R.id.loading);
@@ -168,12 +164,12 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 JSONArray exclude = new JSONArray();
-                for (int i = 0;i<listField.size();i++){
+                for (int i = 0; i < listField.size(); i++) {
                     exclude.put(listField.get(i).getId());
                 }
-                Intent i = new Intent(FormLeadMagnetActivity.this,FormFieldActivity.class);
-                i.putExtra("exclude",exclude.toString());
-                startActivityForResult(i,REQUEST_FIELD);
+                Intent i = new Intent(FormLeadMagnetActivity.this, FormFieldActivity.class);
+                i.putExtra("exclude", exclude.toString());
+                startActivityForResult(i, REQUEST_FIELD);
             }
         });
         edtSubdomain.addTextChangedListener(new TextWatcher() {
@@ -189,12 +185,12 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (tipeForm.equals("add")){
+                if (tipeForm.equals("add")) {
                     checkAvailable(edtSubdomain.getText().toString());
-                }else if (lastSubdomain.equals(edtSubdomain.getText().toString())){
+                } else if (lastSubdomain.equals(edtSubdomain.getText().toString())) {
                     txtLoading.setText("Subdomain Tersedia");
                     txtLoading.setTextColor(Color.BLUE);
-                }else{
+                } else {
                     checkAvailable(edtSubdomain.getText().toString());
                 }
             }
@@ -216,15 +212,15 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         });
         btnSimpan = (Button) findViewById(R.id.btnSimpan);
         loadGrup();
-        final ArrayAdapter statusAdapter = new ArrayAdapter(this,R.layout.item_spinner,arrStatus);
+        final ArrayAdapter statusAdapter = new ArrayAdapter(this, R.layout.item_spinner, arrStatus);
         spinStatus.setAdapter(statusAdapter);
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(edtSubmitText.getText().toString().trim())){
+                if (TextUtils.isEmpty(edtSubmitText.getText().toString().trim())) {
                     edtSubmitText.setError("Field ini tidak boleh kosong");
                     edtSubmitText.requestFocus();
-                }else{
+                } else {
                     simpan();
                 }
             }
@@ -234,15 +230,16 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         layoutManager.setFlexWrap(FlexWrap.WRAP);
         layoutManager.setFlexDirection(FlexDirection.ROW);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setMinimumHeight((int) convertDpToPixel(35,this));
+        recyclerView.setMinimumHeight((int) convertDpToPixel(35, this));
         //recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         new LinearSnapHelper().attachToRecyclerView(recyclerView);
-        if (tipeForm.equals("add")){
+        if (tipeForm.equals("add")) {
             displayField();
         }
 
     }
-    public void callGalleryPhoto(){
+
+    public void callGalleryPhoto() {
 
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -261,7 +258,8 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-    private void loadGrup(){
+
+    private void loadGrup() {
         arrKodeGrup = new String[1];
         arrNamaGrup = new String[1];
         arrKodeGrup[0] = "";
@@ -282,21 +280,21 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        arrKodeGrup = new String[data.length()+1];
-                        arrNamaGrup = new String[data.length()+1];
+                        arrKodeGrup = new String[data.length() + 1];
+                        arrNamaGrup = new String[data.length() + 1];
                         arrKodeGrup[0] = "";
                         arrNamaGrup[0] = "Pilih Grup";
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
                             final String description = data.getJSONObject(i).getString("description");
-                            arrKodeGrup[i+1] = id;
-                            arrNamaGrup[i+1] = name;
+                            arrKodeGrup[i + 1] = id;
+                            arrNamaGrup[i + 1] = name;
                         }
 
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormLeadMagnetActivity.this)
                                 .setMessage(message)
                                 .setPositiveButton("OK", null)
@@ -317,12 +315,12 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
                 NetworkResponse response = error.networkResponse;
-                if (response.statusCode==403){
+                if (response.statusCode == 403) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.data.toString());
                         final boolean status = jsonObject.getBoolean("status");
                         final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")){
+                        if (msg.trim().toLowerCase().equals("invalid api key")) {
                             new androidx.appcompat.app.AlertDialog.Builder(FormLeadMagnetActivity.this)
                                     .setMessage("Session telah habias / telah login di perangkat lain.")
                                     .setCancelable(false)
@@ -335,7 +333,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                        }else{
+                        } else {
                             new AlertDialog.Builder(FormLeadMagnetActivity.this)
                                     .setMessage(msg)
                                     .setPositiveButton("OK", null)
@@ -345,7 +343,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
 
                     final String msg = getResources().getString(errorResponse(error));
 
@@ -355,13 +353,13 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                             .show();
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -371,21 +369,21 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
     }
 
     private void displayGrup() {
-        final ArrayAdapter statusAdapter = new ArrayAdapter(this,R.layout.item_spinner,arrNamaGrup);
+        final ArrayAdapter statusAdapter = new ArrayAdapter(this, R.layout.item_spinner, arrNamaGrup);
         spinGroup.setAdapter(statusAdapter);
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             idShorten = getIntent().getStringExtra("id");
-            Log.i(TAG,"idShorten:" + idShorten);
+            Log.i(TAG, "idShorten:" + idShorten);
             getData();
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
-        }else if(tipeForm.equals("edit")){
-            if(item.getItemId()==R.id.actShare){
+        } else if (tipeForm.equals("edit")) {
+            if (item.getItemId() == R.id.actShare) {
                 try {
                     String konten = url;
                     String appId = getPackageName();
@@ -395,18 +393,19 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
         }
         return super.onOptionsItemSelected(item);
     }
-    private void checkAvailable(String subdomain){
+
+    private void checkAvailable(String subdomain) {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("subdomain",subdomain);
+            requestBody.put("subdomain", subdomain);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -416,7 +415,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         txtLoading.setText("Cek ketersediaan subdomain...");
         txtLoading.setTextColor(Color.GREEN);
 
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -424,10 +423,10 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         txtLoading.setTextColor(Color.BLUE);
                         txtLoading.setText(message);
-                    }else{
+                    } else {
                         txtLoading.setTextColor(Color.RED);
                         txtLoading.setText(message);
                     }
@@ -443,12 +442,12 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 NetworkResponse response = error.networkResponse;
-                if (response.statusCode==403){
+                if (response.statusCode == 403) {
                     try {
                         JSONObject jsonObject = new JSONObject(new String(response.data));
                         final boolean status = jsonObject.getBoolean("status");
                         final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")){
+                        if (msg.trim().toLowerCase().equals("invalid api key")) {
                             new AlertDialog.Builder(FormLeadMagnetActivity.this)
                                     .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                     .setCancelable(false)
@@ -461,7 +460,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                        }else{
+                        } else {
                             new AlertDialog.Builder(FormLeadMagnetActivity.this)
                                     .setMessage(msg)
                                     .setCancelable(false)
@@ -472,21 +471,21 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
                     final String msg = getResources().getString(errorResponse(error));
                     txtLoading.setTextColor(Color.RED);
                     txtLoading.setText(msg);
-                    Log.i(TAG,errorResponseString(error));
+                    Log.i(TAG, errorResponseString(error));
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
+                Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","multipart/form-data");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
 
@@ -495,12 +494,13 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void getData(){
+
+    private void getData() {
         listField.clear();
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",idShorten);
+            requestBody.put("id", idShorten);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -510,7 +510,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -519,7 +519,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONObject data = response.getJSONObject("data");
                         final String nama = data.getString("name");
                         final String domain = data.getString("domain");
@@ -530,22 +530,22 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                         final String status_lm = data.getString("status");
                         final String img_hash = data.getString("img_hash");
                         final JSONArray field = data.getJSONArray("field");
-                        for (int i =0;i<field.length();i++){
-                            listField.add(new ItemRecyclerTag(field.get(i).toString(),field.get(i).toString()));
+                        for (int i = 0; i < field.length(); i++) {
+                            listField.add(new ItemRecyclerTag(field.get(i).toString(), field.get(i).toString()));
                         }
-                        if (!(group_contact.equals(null) || group_contact.equals("null") || group_contact == null)){
-                            for(int i = 0;i<arrKodeGrup.length;i++){
-                                if (arrKodeGrup[i].equals(group_contact)){
+                        if (!(group_contact.equals(null) || group_contact.equals("null") || group_contact == null)) {
+                            for (int i = 0; i < arrKodeGrup.length; i++) {
+                                if (arrKodeGrup[i].equals(group_contact)) {
                                     spinGroup.setSelection(i);
                                     break;
                                 }
                             }
                         }
-                        if (!(img_hash.equals(null) || img_hash == null || img_hash.equals("null"))){
+                        if (!(img_hash.equals(null) || img_hash == null || img_hash.equals("null"))) {
                             try {
                                 imgPesan.setImageURI(Uri.parse(img_hash));
                                 imagePath = img_hash;
-                            }catch (Exception e){
+                            } catch (Exception e) {
 
                             }
                         }
@@ -557,7 +557,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                         edtRespon.setText(respon);
                         url = domain + subdomain;
 
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormLeadMagnetActivity.this)
                                 .setMessage(message)
                                 .setCancelable(false)
@@ -588,7 +588,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(FormLeadMagnetActivity.this)
                         .setMessage(msg)
@@ -602,12 +602,12 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                         .show();
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
+                Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","multipart/form-data");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
 
@@ -618,11 +618,11 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
     }
 
     private void displayField() {
-        adapterTag = new RecylerTagAdapter(listField, this,new RecylerTagAdapter.OnItemClickListener() {
+        adapterTag = new RecylerTagAdapter(listField, this, new RecylerTagAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ItemRecyclerTag item) {
-                for(int i=0;i<listField.size();i++){
-                    if (listField.get(i).getId().equals(item.getId())){
+                for (int i = 0; i < listField.size(); i++) {
+                    if (listField.get(i).getId().equals(item.getId())) {
                         listField.remove(i);
                         adapterTag.notifyDataSetChanged();
                         break;
@@ -633,39 +633,39 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapterTag);
     }
 
-    private void simpan(){
+    private void simpan() {
         JSONArray arrField = new JSONArray();
-        if (listField.size()<=0){
+        if (listField.size() <= 0) {
             Toast.makeText(this, "Belum ada field yang dipilih", Toast.LENGTH_SHORT).show();
-        }else{
-            for (int i = 0;i<listField.size();i++){
+        } else {
+            for (int i = 0; i < listField.size(); i++) {
                 arrField.put(listField.get(i).getId());
             }
         }
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("name",edtNama.getText().toString());
-            requestBody.put("sub_domain",edtSubdomain.getText().toString());
-            requestBody.put("respon_msg",edtRespon.getText().toString());
-            requestBody.put("submit_text",edtSubmitText.getText().toString());
-            requestBody.put("status",spinStatus.getSelectedItemPosition());
-            requestBody.put("field",arrField);
-            requestBody.put("img_hash",imagePath);
-            requestBody.put("group_contact",arrKodeGrup[spinGroup.getSelectedItemPosition()]);
+            requestBody.put("name", edtNama.getText().toString());
+            requestBody.put("sub_domain", edtSubdomain.getText().toString());
+            requestBody.put("respon_msg", edtRespon.getText().toString());
+            requestBody.put("submit_text", edtSubmitText.getText().toString());
+            requestBody.put("status", spinStatus.getSelectedItemPosition());
+            requestBody.put("field", arrField);
+            requestBody.put("img_hash", imagePath);
+            requestBody.put("group_contact", arrKodeGrup[spinGroup.getSelectedItemPosition()]);
 
-            if (tipeForm.equals("edit")){
-                requestBody.put("id",idShorten);
+            if (tipeForm.equals("edit")) {
+                requestBody.put("id", idShorten);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         String uri = "";
-        if (tipeForm.equals("add")){
+        if (tipeForm.equals("add")) {
             uri = Uri.parse(URL_POST_CREATE_LEAD_MAGNET)
                     .buildUpon()
                     .toString();
-        }else{
+        } else {
             uri = Uri.parse(URL_POST_EDIT_LEAD_MAGNET)
                     .buildUpon()
                     .toString();
@@ -674,7 +674,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -683,14 +683,14 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         setResult(RESULT_OK);
                         Toast.makeText(FormLeadMagnetActivity.this, message, Toast.LENGTH_SHORT).show();
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormLeadMagnetActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
 
@@ -698,7 +698,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormLeadMagnetActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -706,20 +706,20 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(FormLeadMagnetActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .show();
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
+                Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","multipart/form-data");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
 
@@ -736,8 +736,8 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (tipeForm.equals("edit")){
-            getMenuInflater().inflate(R.menu.lead_magnet,menu);
+        if (tipeForm.equals("edit")) {
+            getMenuInflater().inflate(R.menu.lead_magnet, menu);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -745,14 +745,14 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_FIELD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_FIELD) {
+            if (resultCode == RESULT_OK) {
                 String arr = data.getStringExtra("arrField");
                 try {
                     JSONArray jsonArr = new JSONArray(arr);
                     listField.clear();
-                    for (int i = 0;i<jsonArr.length();i++){
-                        listField.add(new ItemRecyclerTag(jsonArr.getString(i),jsonArr.getString(i)));
+                    for (int i = 0; i < jsonArr.length(); i++) {
+                        listField.add(new ItemRecyclerTag(jsonArr.getString(i), jsonArr.getString(i)));
                     }
                     displayField();
                 } catch (JSONException e) {
@@ -760,8 +760,8 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                 }
 
             }
-        }else if(requestCode== LOAD_IMAGE_RESULT){
-            if (resultCode == RESULT_OK){
+        } else if (requestCode == LOAD_IMAGE_RESULT) {
+            if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
                 Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -778,7 +778,7 @@ public class FormLeadMagnetActivity extends AppCompatActivity {
                     imgPesan.setImageURI(Uri.parse(filePath));
                     imageSelect = true;
                     imagePath = filePath;
-                }else{
+                } else {
                     Toast.makeText(this, "Maaf, Tipe File tidak diizinkan", Toast.LENGTH_SHORT).show();
                 }
             }

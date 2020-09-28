@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2012, The Android Open Source Project
@@ -69,32 +68,24 @@
         </case>
         <default>
             <!-- U+044F: "я" CYRILLIC SMALL LETTER YA -->
-            <Key
-                latin:keySpec="&#x044F;"/>
+            <Key latin:keySpec="&#x044F;" />
             <!-- U+0447: "ч" CYRILLIC SMALL LETTER CHE -->
-            <Key
-                latin:keySpec="&#x0447;" />
+            <Key latin:keySpec="&#x0447;" />
             <!-- U+0441: "с" CYRILLIC SMALL LETTER ES -->
-            <Key
-                latin:keySpec="&#x0441;" />
+            <Key latin:keySpec="&#x0441;" />
             <!-- U+043C: "м" CYRILLIC SMALL LETTER EM -->
-            <Key
-                latin:keySpec="&#x043C;" />
-            <Key
-                latin:keySpec="!text/keyspec_east_slavic_row3_5" />
+            <Key latin:keySpec="&#x043C;" />
+            <Key latin:keySpec="!text/keyspec_east_slavic_row3_5" />
             <!-- U+0442: "т" CYRILLIC SMALL LETTER TE -->
-            <Key
-                latin:keySpec="&#x0442;" />
+            <Key latin:keySpec="&#x0442;" />
             <!-- U+044C: "ь" CYRILLIC SMALL LETTER SOFT SIGN -->
             <Key
                 latin:keySpec="&#x044C;"
                 latin:moreKeys="!text/morekeys_cyrillic_soft_sign" />
             <!-- U+0431: "б" CYRILLIC SMALL LETTER BE -->
-            <Key
-                latin:keySpec="&#x0431;" />
+            <Key latin:keySpec="&#x0431;" />
             <!-- U+044E: "ю" CYRILLIC SMALL LETTER YU -->
-            <Key
-                latin:keySpec="&#x044E;" />
+            <Key latin:keySpec="&#x044E;" />
         </default>
     </switch>
 </merge>

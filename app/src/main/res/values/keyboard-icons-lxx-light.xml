@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2014, The Android Open Source Project
@@ -19,6 +18,7 @@
 -->
 
 <resources>
+
     <style name="KeyboardIcons.LXX_Light">
         <!-- Keyboard icons -->
         <item name="iconShiftKey">@drawable/sym_keyboard_shift_lxx_light</item>

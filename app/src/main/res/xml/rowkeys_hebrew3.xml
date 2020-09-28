@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2012, The Android Open Source Project
@@ -18,29 +17,22 @@
 */
 -->
 
-<merge
-    xmlns:latin="http://schemas.android.com/apk/res-auto"
->
+<merge xmlns:latin="http://schemas.android.com/apk/res-auto">
     <!-- U+05D6: "ז" HEBREW LETTER ZAYIN
          U+05D6 U+05F3: "ז׳" HEBREW LETTER ZAYIN + HEBREW PUNCTUATION GERESH -->
     <Key
         latin:keySpec="&#x05D6;"
         latin:moreKeys="&#x05D6;&#x05F3;" />
     <!-- U+05E1: "ס" HEBREW LETTER SAMEKH -->
-    <Key
-        latin:keySpec="&#x05E1;" />
+    <Key latin:keySpec="&#x05E1;" />
     <!-- U+05D1: "ב" HEBREW LETTER BET -->
-    <Key
-        latin:keySpec="&#x05D1;" />
+    <Key latin:keySpec="&#x05D1;" />
     <!-- U+05D4: "ה" HEBREW LETTER HE -->
-    <Key
-        latin:keySpec="&#x05D4;" />
+    <Key latin:keySpec="&#x05D4;" />
     <!-- U+05E0: "נ" HEBREW LETTER NUN -->
-    <Key
-        latin:keySpec="&#x05E0;" />
+    <Key latin:keySpec="&#x05E0;" />
     <!-- U+05DE: "מ" HEBREW LETTER MEM -->
-    <Key
-        latin:keySpec="&#x05DE;" />
+    <Key latin:keySpec="&#x05DE;" />
     <!-- U+05E6: "צ" HEBREW LETTER TSADI
          U+05E6 U+05F3: "צ׳" HEBREW LETTER TSADI + HEBREW PUNCTUATION GERESH -->
     <Key

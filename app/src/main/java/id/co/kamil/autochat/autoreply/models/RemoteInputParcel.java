@@ -36,7 +36,7 @@ public class RemoteInputParcel implements Parcelable {
     }
 
     public void charSequenceToStringArray(CharSequence[] charSequence) {
-        if(charSequence != null) {
+        if (charSequence != null) {
             int size = charSequence.length;
             choices = new String[charSequence.length];
             for (int i = 0; i < size; i++)
@@ -82,6 +82,7 @@ public class RemoteInputParcel implements Parcelable {
         public RemoteInputParcel createFromParcel(Parcel in) {
             return new RemoteInputParcel(in);
         }
+
         public RemoteInputParcel[] newArray(int size) {
             return new RemoteInputParcel[size];
         }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2012, The Android Open Source Project
@@ -78,31 +77,24 @@
                 latin:keySpec="&#x03B1;"
                 latin:moreKeys="&#x03AC;" />
             <!-- U+03C3: "σ" GREEK SMALL LETTER SIGMA -->
-            <Key
-                latin:keySpec="&#x03C3;" />
+            <Key latin:keySpec="&#x03C3;" />
             <!-- U+03B4: "δ" GREEK SMALL LETTER DELTA -->
-            <Key
-                latin:keySpec="&#x03B4;" />
+            <Key latin:keySpec="&#x03B4;" />
             <!-- U+03C6: "φ" GREEK SMALL LETTER PHI -->
-            <Key
-                latin:keySpec="&#x03C6;" />
+            <Key latin:keySpec="&#x03C6;" />
             <!-- U+03B3: "γ" GREEK SMALL LETTER GAMMA -->
-            <Key
-                latin:keySpec="&#x03B3;" />
+            <Key latin:keySpec="&#x03B3;" />
             <!-- U+03B7: "η" GREEK SMALL LETTER ETA
                  U+03AE: "ή" GREEK SMALL LETTER ETA WITH TONOS -->
             <Key
                 latin:keySpec="&#x03B7;"
                 latin:moreKeys="&#x03AE;" />
             <!-- U+03BE: "ξ" GREEK SMALL LETTER XI -->
-            <Key
-                latin:keySpec="&#x03BE;" />
+            <Key latin:keySpec="&#x03BE;" />
             <!-- U+03BA: "κ" GREEK SMALL LETTER KAPPA -->
-            <Key
-                latin:keySpec="&#x03BA;" />
+            <Key latin:keySpec="&#x03BA;" />
             <!-- U+03BB: "λ" GREEK SMALL LETTER LAMDA -->
-            <Key
-                latin:keySpec="&#x03BB;" />
+            <Key latin:keySpec="&#x03BB;" />
         </default>
     </switch>
 </merge>

@@ -45,9 +45,13 @@ final class CustomInputStylePreference extends DialogPreference
 
     interface Listener {
         void onRemoveCustomInputStyle(CustomInputStylePreference stylePref);
+
         void onSaveCustomInputStyle(CustomInputStylePreference stylePref);
+
         void onAddCustomInputStyle(CustomInputStylePreference stylePref);
+
         SubtypeLocaleAdapter getSubtypeLocaleAdapter();
+
         KeyboardLayoutSetAdapter getKeyboardLayoutSetAdapter();
     }
 
@@ -67,7 +71,7 @@ final class CustomInputStylePreference extends DialogPreference
     }
 
     public CustomInputStylePreference(final Context context, final InputMethodSubtype subtype,
-            final Listener proxy) {
+                                      final Listener proxy) {
         super(context, null);
         setDialogLayoutResource(R.layout.additional_subtype_dialog);
         setPersistent(false);
@@ -143,7 +147,7 @@ final class CustomInputStylePreference extends DialogPreference
         final SpinnerAdapter adapter = spinner.getAdapter();
         final int count = adapter.getCount();
         for (int i = 0; i < count; i++) {
-            final SubtypeLocaleItem item = (SubtypeLocaleItem)spinner.getItemAtPosition(i);
+            final SubtypeLocaleItem item = (SubtypeLocaleItem) spinner.getItemAtPosition(i);
             if (item.mLocaleString.equals(itemToSelect.mLocaleString)) {
                 spinner.setSelection(i);
                 return;
@@ -155,7 +159,7 @@ final class CustomInputStylePreference extends DialogPreference
         final SpinnerAdapter adapter = spinner.getAdapter();
         final int count = adapter.getCount();
         for (int i = 0; i < count; i++) {
-            final KeyboardLayoutSetItem item = (KeyboardLayoutSetItem)spinner.getItemAtPosition(i);
+            final KeyboardLayoutSetItem item = (KeyboardLayoutSetItem) spinner.getItemAtPosition(i);
             if (item.mLayoutName.equals(itemToSelect.mLayoutName)) {
                 spinner.setSelection(i);
                 return;

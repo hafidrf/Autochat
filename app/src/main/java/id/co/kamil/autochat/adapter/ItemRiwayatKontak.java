@@ -1,7 +1,7 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemRiwayatKontak {
-    private String id,komentar,action,status; // status = pending,sukses,batal ; action = delete, add
+    private String id, komentar, action, status; // status = pending,sukses,batal ; action = delete, add
 
     @Override
     public String toString() {

@@ -58,13 +58,13 @@ public final class AdditionalSubtypeUtils {
         InputMethodSubtype.InputMethodSubtypeBuilder builder = new InputMethodSubtype.InputMethodSubtypeBuilder();
 
         builder.setSubtypeNameResId(nameId)
-            .setSubtypeIconResId(R.drawable.ic_ime_switcher_dark)
-            .setSubtypeLocale(localeString)
-            .setSubtypeMode(KEYBOARD_MODE)
-            .setSubtypeExtraValue(platformVersionDependentExtraValues)
-            .setOverridesImplicitlyEnabledSubtype(false)
-            .setIsAuxiliary(false)
-            .setSubtypeId(platformVersionIndependentSubtypeId);
+                .setSubtypeIconResId(R.drawable.ic_ime_switcher_dark)
+                .setSubtypeLocale(localeString)
+                .setSubtypeMode(KEYBOARD_MODE)
+                .setSubtypeExtraValue(platformVersionDependentExtraValues)
+                .setOverridesImplicitlyEnabledSubtype(false)
+                .setIsAuxiliary(false)
+                .setSubtypeId(platformVersionIndependentSubtypeId);
         return builder.build();
     }
 
@@ -152,6 +152,7 @@ public final class AdditionalSubtypeUtils {
      * assume that the extra values stored in a persistent storage are always valid. We need to
      * regenerate the extra value on the fly instead.
      * </p>
+     *
      * @param keyboardLayoutSetName the keyboard layout set name (e.g., "dvorak").
      * @return extra value that is optimized for the running OS.
      * @see #getPlatformVersionIndependentSubtypeId(String, String)
@@ -179,12 +180,13 @@ public final class AdditionalSubtypeUtils {
      * method even when we need to add some new extra values for the actual instance of
      * {@link InputMethodSubtype}.
      * </p>
-     * @param localeString the locale string (e.g., "en_US").
+     *
+     * @param localeString          the locale string (e.g., "en_US").
      * @param keyboardLayoutSetName the keyboard layout set name (e.g., "dvorak").
      * @return a platform-version independent subtype ID.
      */
     private static int getPlatformVersionIndependentSubtypeId(final String localeString,
-            final String keyboardLayoutSetName) {
+                                                              final String keyboardLayoutSetName) {
         // For compatibility reasons, we concatenate the extra values in the following order.
         // - KeyboardLayoutSet
         // - AsciiCapable
@@ -199,11 +201,11 @@ public final class AdditionalSubtypeUtils {
         }
         compatibilityExtraValueItems.add(IS_ADDITIONAL_SUBTYPE);
         final String compatibilityExtraValues = TextUtils.join(",", compatibilityExtraValueItems);
-        return Arrays.hashCode(new Object[] {
+        return Arrays.hashCode(new Object[]{
                 localeString,
                 KEYBOARD_MODE,
                 compatibilityExtraValues,
                 false /* isAuxiliary */,
-                false /* overrideImplicitlyEnabledSubtype */ });
+                false /* overrideImplicitlyEnabledSubtype */});
     }
 }

@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -50,7 +49,7 @@ public class FormGrupActivity extends AppCompatActivity {
 
     private static final String TAG = "FormGrupActivity";
     private String tipeForm;
-    private EditText edtName,edtDesc;
+    private EditText edtName, edtDesc;
     private Button btnSimpan;
     private String idGrup;
     private ProgressDialog pDialog;
@@ -72,7 +71,7 @@ public class FormGrupActivity extends AppCompatActivity {
         session = new SessionManager(this);
         userDetail = session.getUserDetails();
         token = userDetail.get(KEY_TOKEN);
-        Log.i(TAG,token);
+        Log.i(TAG, token);
         pDialog = new ProgressDialog(this);
         edtName = (EditText) findViewById(R.id.edtNama);
         edtDesc = (EditText) findViewById(R.id.edtDeskripsi);
@@ -80,15 +79,15 @@ public class FormGrupActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     simpan();
                 }
             }
         });
         tipeForm = getIntent().getStringExtra("tipe");
-        if (tipeForm.equals("add")){
+        if (tipeForm.equals("add")) {
             getSupportActionBar().setTitle("Tambah Grup");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Edit Grup");
             idGrup = getIntent().getStringExtra("id");
             final String tmpData = getIntent().getStringExtra("data");
@@ -106,12 +105,12 @@ public class FormGrupActivity extends AppCompatActivity {
     }
 
     private boolean isRequired() {
-        if (TextUtils.isEmpty(edtName.getText())){
+        if (TextUtils.isEmpty(edtName.getText())) {
             edtName.setError("Field ini tidak boleh kosong");
             edtName.requestFocus();
             return false;
         }
-        if (TextUtils.isEmpty(edtDesc.getText())){
+        if (TextUtils.isEmpty(edtDesc.getText())) {
             edtDesc.setError("Field ini tidak boleh kosong");
             edtDesc.requestFocus();
             return false;
@@ -119,31 +118,31 @@ public class FormGrupActivity extends AppCompatActivity {
         return true;
     }
 
-    private void simpan(){
+    private void simpan() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         try {
-            if (tipeForm.equals("edit")){
-                requestBody.put("id",idGrup);
+            if (tipeForm.equals("edit")) {
+                requestBody.put("id", idGrup);
             }
-            requestBody.put("name",edtName.getText().toString());
-            requestBody.put("description",edtDesc.getText().toString());
+            requestBody.put("name", edtName.getText().toString());
+            requestBody.put("description", edtDesc.getText().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         String uri = "";
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             uri = Uri.parse(URL_POST_EDIT_GROUP)
                     .buildUpon()
                     .toString();
-        }else{
+        } else {
             uri = Uri.parse(URL_POST_CREATE_GROUP)
                     .buildUpon()
                     .toString();
         }
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -154,21 +153,21 @@ public class FormGrupActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(FormGrupActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormGrupActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormGrupActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -176,17 +175,17 @@ public class FormGrupActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormGrupActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormGrupActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormGrupActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -199,7 +198,7 @@ public class FormGrupActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormGrupActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -215,7 +214,7 @@ public class FormGrupActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormGrupActivity.this)
@@ -228,13 +227,13 @@ public class FormGrupActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -244,9 +243,10 @@ public class FormGrupActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

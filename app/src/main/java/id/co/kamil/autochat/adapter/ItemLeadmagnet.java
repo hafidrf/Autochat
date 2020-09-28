@@ -3,9 +3,9 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemLeadmagnet {
-    String id,name,field,domain,sub_domain,message,group_contact,status,klik,submit,url_qrcode,url_download;
+    String id, name, field, domain, sub_domain, message, group_contact, status, klik, submit, url_qrcode, url_download;
     JSONObject json;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     public String getUrl_download() {
         return url_download;

@@ -3,9 +3,6 @@ package id.co.kamil.autochat.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.HashMap;
-import java.util.Set;
-
 public class SharPref {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -52,53 +49,63 @@ public class SharPref {
     public static final String KEY_LIMIT_SHORTEN = "KEY_LIMIT_SHORTEN";
     public static final String KEY_LIMIT_AUTO_REPLY = "KEY_LIMIT_AUTO_REPLY";
     public static final String KEY_LIMIT_LEAD_MAGNET_BASIC = "KEY_LIMIT_LEAD_MAGNET_BASIC";
-    public static final String KEY_LIMIT_LEAD_MAGNET_PREMIUM= "KEY_LIMIT_LEAD_MAGNET_PREMIUM";
+    public static final String KEY_LIMIT_LEAD_MAGNET_PREMIUM = "KEY_LIMIT_LEAD_MAGNET_PREMIUM";
 
     public static final String REFERRER_URL = "REFERRER_URL";
+
     // Constructor
-    public SharPref(Context context){
+    public SharPref(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
-    public void createSession(String key,String value){
-        editor.putString(key,value);
+
+    public void createSession(String key, String value) {
+        editor.putString(key, value);
         editor.commit();
-    }
-    public void createSession(String key,boolean value){
-        editor.putBoolean(key,value);
-        editor.commit();
-    }
-    public void createSession(String key,int value){
-        editor.putInt(key,value);
-        editor.commit();
-    }
-    public void createSession(String key,long value){
-        editor.putLong(key,value);
-        editor.commit();
-    }
-    public void createSession(String key,float value){
-        editor.putFloat(key,value);
-        editor.commit();
-    }
-    public boolean getSessionBool(String key){
-        return pref.getBoolean(key,false);
     }
 
-    public String getSessionStr(String key){
-        return pref.getString(key,"");
-    }
-    public int getSessionInt(String key){
-        return pref.getInt(key,0);
-    }
-    public long getSessionLong(String key){
-        return pref.getLong(key,0);
-    }
-    public float getSessionFloat(String key){
-        return pref.getFloat(key,0);
+    public void createSession(String key, boolean value) {
+        editor.putBoolean(key, value);
+        editor.commit();
     }
 
-    public void clearSession(){
+    public void createSession(String key, int value) {
+        editor.putInt(key, value);
+        editor.commit();
+    }
+
+    public void createSession(String key, long value) {
+        editor.putLong(key, value);
+        editor.commit();
+    }
+
+    public void createSession(String key, float value) {
+        editor.putFloat(key, value);
+        editor.commit();
+    }
+
+    public boolean getSessionBool(String key) {
+        return pref.getBoolean(key, false);
+    }
+
+    public String getSessionStr(String key) {
+        return pref.getString(key, "");
+    }
+
+    public int getSessionInt(String key) {
+        return pref.getInt(key, 0);
+    }
+
+    public long getSessionLong(String key) {
+        return pref.getLong(key, 0);
+    }
+
+    public float getSessionFloat(String key) {
+        return pref.getFloat(key, 0);
+    }
+
+    public void clearSession() {
         editor.clear();
         editor.commit();
     }

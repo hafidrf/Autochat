@@ -22,18 +22,24 @@ import rkr.simplekeyboard.inputmethod.keyboard.Key;
 
 public abstract class UniqueKeysCache {
     public abstract void setEnabled(boolean enabled);
+
     public abstract void clear();
+
     public abstract Key getUniqueKey(Key key);
 
     public static final UniqueKeysCache NO_CACHE = new UniqueKeysCache() {
         @Override
-        public void setEnabled(boolean enabled) {}
+        public void setEnabled(boolean enabled) {
+        }
 
         @Override
-        public void clear() {}
+        public void clear() {
+        }
 
         @Override
-        public Key getUniqueKey(Key key) { return key; }
+        public Key getUniqueKey(Key key) {
+            return key;
+        }
     };
 
     public static UniqueKeysCache newInstance() {

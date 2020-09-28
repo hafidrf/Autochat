@@ -3,9 +3,9 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemTemplateDictionary {
-    String id,keyword,nilai;
+    String id, keyword, nilai;
     JSONObject jsonObject;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     public ItemTemplateDictionary(String id, String keyword, String nilai, JSONObject jsonObject, boolean checkbox, boolean chkvisible) {
         this.id = id;

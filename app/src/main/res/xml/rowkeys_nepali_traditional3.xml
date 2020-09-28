@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2013, The Android Open Source Project
@@ -76,8 +75,7 @@
             <!-- Because the font rendering system prior to API version 16 can't automatically
                  render dotted circle for incomplete combining letter of some scripts, different
                  set of Key definitions are needed based on the API version. -->
-            <include
-                latin:keyboardLayout="@xml/keystyle_devanagari_sign_virama" />
+            <include latin:keyboardLayout="@xml/keystyle_devanagari_sign_virama" />
             <Key latin:keyStyle="baseKeyDevanagariSignVirama" />
             <!-- U+0930: "र" DEVANAGARI LETTER RA
                  U+0930/U+0941: "रु" DEVANAGARI LETTER RA/DEVANAGARI VOWEL SIGN U -->

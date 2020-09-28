@@ -23,9 +23,9 @@ public interface KeyboardActionListener {
      * Called when the user presses a key. This is sent before the {@link #onCodeInput} is called.
      * For keys that repeat, this is only called once.
      *
-     * @param primaryCode the unicode of the key being pressed. If the touch is not on a valid key,
-     *            the value will be zero.
-     * @param repeatCount how many times the key was repeated. Zero if it is the first press.
+     * @param primaryCode     the unicode of the key being pressed. If the touch is not on a valid key,
+     *                        the value will be zero.
+     * @param repeatCount     how many times the key was repeated. Zero if it is the first press.
      * @param isSinglePointer true if pressing has occurred while no other key is being pressed.
      */
     void onPressKey(int primaryCode, int repeatCount, boolean isSinglePointer);
@@ -36,7 +36,7 @@ public interface KeyboardActionListener {
      *
      * @param primaryCode the code of the key that was released
      * @param withSliding true if releasing has occurred because the user slid finger from the key
-     *             to other key without releasing the finger.
+     *                    to other key without releasing the finger.
      */
     void onReleaseKey(int primaryCode, boolean withSliding);
 
@@ -44,14 +44,14 @@ public interface KeyboardActionListener {
      * Send a key code to the listener.
      *
      * @param primaryCode this is the code of the key that was pressed
-     * @param x x-coordinate pixel of touched event. If {@link #onCodeInput} is not called by
-     *            {@link PointerTracker} or so, the value should be
-     *            {@link Constants#NOT_A_COORDINATE}. If it's called on insertion from the
-     *            suggestion strip, it should be {@link Constants#SUGGESTION_STRIP_COORDINATE}.
-     * @param y y-coordinate pixel of touched event. If {@link #onCodeInput} is not called by
-     *            {@link PointerTracker} or so, the value should be
-     *            {@link Constants#NOT_A_COORDINATE}.If it's called on insertion from the
-     *            suggestion strip, it should be {@link Constants#SUGGESTION_STRIP_COORDINATE}.
+     * @param x           x-coordinate pixel of touched event. If {@link #onCodeInput} is not called by
+     *                    {@link PointerTracker} or so, the value should be
+     *                    {@link Constants#NOT_A_COORDINATE}. If it's called on insertion from the
+     *                    suggestion strip, it should be {@link Constants#SUGGESTION_STRIP_COORDINATE}.
+     * @param y           y-coordinate pixel of touched event. If {@link #onCodeInput} is not called by
+     *                    {@link PointerTracker} or so, the value should be
+     *                    {@link Constants#NOT_A_COORDINATE}.If it's called on insertion from the
+     *                    suggestion strip, it should be {@link Constants#SUGGESTION_STRIP_COORDINATE}.
      * @param isKeyRepeat true if this is a key repeat, false otherwise
      */
     // TODO: change this to send an Event object instead
@@ -71,35 +71,55 @@ public interface KeyboardActionListener {
 
     /**
      * Send a non-"code input" custom request to the listener.
+     *
      * @return true if the request has been consumed, false otherwise.
      */
     boolean onCustomRequest(int requestCode);
+
     void onMovePointer(int steps);
+
     void onMoveDeletePointer(int steps);
+
     void onUpWithDeletePointerActive();
 
     KeyboardActionListener EMPTY_LISTENER = new Adapter();
 
     class Adapter implements KeyboardActionListener {
         @Override
-        public void onPressKey(int primaryCode, int repeatCount, boolean isSinglePointer) {}
+        public void onPressKey(int primaryCode, int repeatCount, boolean isSinglePointer) {
+        }
+
         @Override
-        public void onReleaseKey(int primaryCode, boolean withSliding) {}
+        public void onReleaseKey(int primaryCode, boolean withSliding) {
+        }
+
         @Override
-        public void onCodeInput(int primaryCode, int x, int y, boolean isKeyRepeat) {}
+        public void onCodeInput(int primaryCode, int x, int y, boolean isKeyRepeat) {
+        }
+
         @Override
-        public void onTextInput(String text) {}
+        public void onTextInput(String text) {
+        }
+
         @Override
-        public void onFinishSlidingInput() {}
+        public void onFinishSlidingInput() {
+        }
+
         @Override
         public boolean onCustomRequest(int requestCode) {
             return false;
         }
+
         @Override
-        public void onMovePointer(int steps) {}
+        public void onMovePointer(int steps) {
+        }
+
         @Override
-        public void onMoveDeletePointer(int steps) {}
+        public void onMoveDeletePointer(int steps) {
+        }
+
         @Override
-        public void onUpWithDeletePointerActive() {}
+        public void onUpWithDeletePointerActive() {
+        }
     }
 }

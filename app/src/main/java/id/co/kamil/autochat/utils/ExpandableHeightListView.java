@@ -9,37 +9,30 @@ import android.widget.ListView;
  * Created by irhammusthofa on 03/06/18.
  */
 
-public class ExpandableHeightListView extends ListView
-{
+public class ExpandableHeightListView extends ListView {
 
     boolean expanded = false;
 
-    public ExpandableHeightListView(Context context)
-    {
+    public ExpandableHeightListView(Context context) {
         super(context);
     }
 
-    public ExpandableHeightListView(Context context, AttributeSet attrs)
-    {
+    public ExpandableHeightListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ExpandableHeightListView(Context context, AttributeSet attrs, int defStyle)
-    {
+    public ExpandableHeightListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public boolean isExpanded()
-    {
+    public boolean isExpanded() {
         return expanded;
     }
 
     @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-    {
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // HACK! TAKE THAT ANDROID!
-        if (isExpanded())
-        {
+        if (isExpanded()) {
             // Calculate entire height by providing a very large height hint.
             // But do not use the highest 2 bits of this integer; those are
             // reserved for the MeasureSpec mode.
@@ -48,15 +41,12 @@ public class ExpandableHeightListView extends ListView
 
             ViewGroup.LayoutParams params = getLayoutParams();
             params.height = getMeasuredHeight();
-        }
-        else
-        {
+        } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 
-    public void setExpanded(boolean expanded)
-    {
+    public void setExpanded(boolean expanded) {
         this.expanded = expanded;
     }
 }

@@ -1,17 +1,10 @@
 package id.co.kamil.autochat.ui.grup;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -89,7 +87,7 @@ public class GrupAutoReplyFragment extends Fragment {
     private LinearLayout layMessage;
     private TextView lblMessage;
     private Button btnCobaLagi;
-    private boolean adapterInstance=false;
+    private boolean adapterInstance = false;
     private SwipeRefreshLayout swipe_refresh;
 
     public GrupAutoReplyFragment() {
@@ -125,9 +123,9 @@ public class GrupAutoReplyFragment extends Fragment {
 
         pDialog = new ProgressDialog(getContext());
         swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-        layMessage = (LinearLayout)  view.findViewById(R.id.layMessage);
-        lblMessage = (TextView)  view.findViewById(R.id.lblMessage);
-        btnCobaLagi = (Button)  view.findViewById(R.id.btnCobaLagi);
+        layMessage = (LinearLayout) view.findViewById(R.id.layMessage);
+        lblMessage = (TextView) view.findViewById(R.id.lblMessage);
+        btnCobaLagi = (Button) view.findViewById(R.id.btnCobaLagi);
         btnCobaLagi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,11 +137,11 @@ public class GrupAutoReplyFragment extends Fragment {
         listGrup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getContext(),FormGrupAutoReplyActivity.class);
-                intent.putExtra("id",dataGrup.get(i).getId());
-                intent.putExtra("tipe","edit");
-                intent.putExtra("data",dataGrup.get(i).getJsonObject().toString());
-                startActivityForResult(intent,REQUEST_ADD);
+                Intent intent = new Intent(getContext(), FormGrupAutoReplyActivity.class);
+                intent.putExtra("id", dataGrup.get(i).getId());
+                intent.putExtra("tipe", "edit");
+                intent.putExtra("data", dataGrup.get(i).getJsonObject().toString());
+                startActivityForResult(intent, REQUEST_ADD);
 
             }
         });
@@ -158,7 +156,7 @@ public class GrupAutoReplyFragment extends Fragment {
                 try {
                     grupAdapter.filter(edtCari.getText().toString().trim());
                     listGrup.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -199,12 +197,13 @@ public class GrupAutoReplyFragment extends Fragment {
         setHasOptionsMenu(true);
         return view;
     }
-    private void loadGrup(){
+
+    private void loadGrup() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final String uri = Uri.parse(URL_POST_LIST_GRUP_AUTO_REPLY)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataGrup.clear();
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, null, new Response.Listener<JSONObject>() {
@@ -216,21 +215,21 @@ public class GrupAutoReplyFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
                             final String description = data.getJSONObject(i).getString("description");
-                            dataGrup.add(new ItemGrup(id,name,description,data.getJSONObject(i)));
+                            dataGrup.add(new ItemGrup(id, name, description, data.getJSONObject(i)));
                         }
-                    }else{
-                        showError(true,message,false);
+                    } else {
+                        showError(true, message, false);
                     }
                     displayGrup();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -239,15 +238,15 @@ public class GrupAutoReplyFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -260,29 +259,29 @@ public class GrupAutoReplyFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -290,56 +289,59 @@ public class GrupAutoReplyFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listGrup.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listGrup.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayGrup() {
-        grupAdapter = new AdapterGrup(dataGrup,getContext());
+        grupAdapter = new AdapterGrup(dataGrup, getContext());
         listGrup.setAdapter(grupAdapter);
         adapterInstance = true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
+        if (item.getItemId() == R.id.actTambah) {
             Intent i = new Intent(getContext(), FormGrupAutoReplyActivity.class);
-            i.putExtra("tipe","add");
-            startActivityForResult(i,REQUEST_ADD);
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataGrup.size()>0){
+            i.putExtra("tipe", "add");
+            startActivityForResult(i, REQUEST_ADD);
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataGrup.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0 ; i < dataGrup.size();i++){
+                for (int i = 0; i < dataGrup.size(); i++) {
                     ItemGrup ikontak = dataGrup.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataGrup.set(i,ikontak);
+                    dataGrup.set(i, ikontak);
                 }
                 grupAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data Grup tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(true);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(getContext())
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -348,28 +350,29 @@ public class GrupAutoReplyFragment extends Fragment {
                             hapusGrup();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0 ; i < dataGrup.size();i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataGrup.size(); i++) {
                 ItemGrup ikontak = dataGrup.get(i);
                 ikontak.setCheckbox(true);
-                dataGrup.set(i,ikontak);
+                dataGrup.set(i, ikontak);
             }
             grupAdapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }
-    private void listDefault(){
-        for (int i = 0 ; i < dataGrup.size();i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataGrup.size(); i++) {
             ItemGrup ikontak = dataGrup.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataGrup.set(i,ikontak);
+            dataGrup.set(i, ikontak);
         }
         grupAdapter.notifyDataSetChanged();
-        if(dataGrup.size()==0){
+        if (dataGrup.size() == 0) {
             loadGrup();
         }
     }
@@ -381,7 +384,7 @@ public class GrupAutoReplyFragment extends Fragment {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
         super.onPrepareOptionsMenu(menu);
@@ -397,14 +400,14 @@ public class GrupAutoReplyFragment extends Fragment {
     private void hapusGrup() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JSONArray idHapus = new JSONArray();
-        for (int i = 0 ; i < dataGrup.size();i++){
-            if (dataGrup.get(i).isCheckbox()){
+        for (int i = 0; i < dataGrup.size(); i++) {
+            if (dataGrup.get(i).isCheckbox()) {
                 idHapus.put(Integer.parseInt(dataGrup.get(i).getId()));
             }
         }
         final JSONObject param = new JSONObject();
         try {
-            param.put("id",idHapus);
+            param.put("id", idHapus);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -414,7 +417,7 @@ public class GrupAutoReplyFragment extends Fragment {
         pDialog.setMessage("Sedang menghapus data...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.i(TAG,"hapusKontak:" + param.toString());
+        Log.i(TAG, "hapusKontak:" + param.toString());
 
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, param, new Response.Listener<JSONObject>() {
             @Override
@@ -425,9 +428,9 @@ public class GrupAutoReplyFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
-                        for (int i = 0 ; i < dataGrup.size();i++){
-                            if (dataGrup.get(i).isCheckbox()){
+                    if (status) {
+                        for (int i = 0; i < dataGrup.size(); i++) {
+                            if (dataGrup.get(i).isCheckbox()) {
                                 dataGrup.remove(i);
                                 i = i - 1;
                             }
@@ -439,17 +442,17 @@ public class GrupAutoReplyFragment extends Fragment {
                         menuTop.findItem(R.id.actEdit).setVisible(true);
                         menuTop.findItem(R.id.actTambah).setVisible(true);
                         listDefault();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -458,17 +461,17 @@ public class GrupAutoReplyFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -481,36 +484,36 @@ public class GrupAutoReplyFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
                                         .setCancelable(false)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
                                 .setMessage(msg)
                                 .setCancelable(false)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -520,7 +523,7 @@ public class GrupAutoReplyFragment extends Fragment {
     }
 
     private void hidePdialog() {
-        if(pDialog.isShowing())
+        if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
@@ -528,8 +531,8 @@ public class GrupAutoReplyFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadGrup();
             }
         }

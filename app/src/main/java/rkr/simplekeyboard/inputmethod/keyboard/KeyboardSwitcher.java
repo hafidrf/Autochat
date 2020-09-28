@@ -82,7 +82,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
 
     private static final KeyboardSwitcher sInstance = new KeyboardSwitcher();
     private InputConnection currentInputConnection;
-    private int selStart,selEnd;
+    private int selStart, selEnd;
     private List<String[]> mSuggestions = new ArrayList<>();
     private SuggestionsAdapter adapterSuggestion;
     private DBHelper dbHelper;
@@ -284,7 +284,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     private void setMainKeyboardFrame(
             final SettingsValues settingsValues,
             final KeyboardSwitchState toggleState) {
-        final int visibility =  isImeSuppressedByHardwareKeyboard(settingsValues, toggleState)
+        final int visibility = isImeSuppressedByHardwareKeyboard(settingsValues, toggleState)
                 ? View.GONE : View.VISIBLE;
         mKeyboardView.setVisibility(visibility);
         // The visibility of {@link #mKeyboardView} must be aligned with {@link #MainKeyboardFrame}.
@@ -401,24 +401,25 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
             mKeyboardView.deallocateMemory();
         }
     }
-    public void setSuggestions(List<String> suggestions, int start, int end, InputConnection inputConnection){
+
+    public void setSuggestions(List<String> suggestions, int start, int end, InputConnection inputConnection) {
         mSuggestions.clear();
-        if (suggestions != null){
+        if (suggestions != null) {
 
             int limit = 0;
-            if (suggestions.size()==1){
+            if (suggestions.size() == 1) {
                 limit = 0;
-            }else if(suggestions.size()>1){
+            } else if (suggestions.size() > 1) {
                 limit = 10;
             }
-            for (int i = 0; i<suggestions.size();i++){
+            for (int i = 0; i < suggestions.size(); i++) {
                 String str_limit = suggestions.get(i);
-                if(limit>0){
-                    if(str_limit.length()>limit){
-                        str_limit = str_limit.substring(0,limit) + "...";
+                if (limit > 0) {
+                    if (str_limit.length() > limit) {
+                        str_limit = str_limit.substring(0, limit) + "...";
                     }
                 }
-                mSuggestions.add(new String[]{suggestions.get(i),str_limit});
+                mSuggestions.add(new String[]{suggestions.get(i), str_limit});
             }
         }
         adapterSuggestion.notifyDataSetChanged();
@@ -427,6 +428,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         selEnd = end;
 
     }
+
     public View onCreateInputView() {
         if (mKeyboardView != null) {
             mKeyboardView.closing();
@@ -434,7 +436,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         updateKeyboardThemeAndContextThemeWrapper(
                 mLatinIME, KeyboardTheme.getKeyboardTheme(mLatinIME /* context */));
 
-        mCurrentInputView = (InputView) LayoutInflater.from(mThemeContext).inflate(R.layout.input_view,null);
+        mCurrentInputView = (InputView) LayoutInflater.from(mThemeContext).inflate(R.layout.input_view, null);
         mMainKeyboardFrame = mCurrentInputView.findViewById(R.id.main_keyboard_frame);
 
         dbHelper = new DBHelper(mThemeContext);
@@ -457,12 +459,12 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         adapterSuggestion.setClickListener(new SuggestionsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (currentInputConnection!=null){
-                    try{
-                        currentInputConnection.setComposingRegion(selStart,selEnd);
-                        currentInputConnection.setComposingText(mSuggestions.get(position)[0],selStart + mSuggestions.get(position)[0].length());
+                if (currentInputConnection != null) {
+                    try {
+                        currentInputConnection.setComposingRegion(selStart, selEnd);
+                        currentInputConnection.setComposingText(mSuggestions.get(position)[0], selStart + mSuggestions.get(position)[0].length());
                         currentInputConnection.finishComposingText();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -471,15 +473,15 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         });
 
         final List<String[]> dataMenu = new ArrayList<>();
-        dataMenu.add(new String[]{"Bulk Sender",String.valueOf(R.drawable.ic_add_contact_white),"switch"});
-        dataMenu.add(new String[]{"Tambah Kontak",String.valueOf(R.drawable.ic_add_contact_white),"text"});
-        dataMenu.add(new String[]{"Kontak",String.valueOf(R.drawable.ic_contact_white),"text"});
-        dataMenu.add(new String[]{"Template Promosi",String.valueOf(R.drawable.ic_marketing_kit_dark),"text"});
-        dataMenu.add(new String[]{"Broadcast",String.valueOf(R.drawable.ic_menu_send_dark),"text"});
-        dataMenu.add(new String[]{"Follow Up",String.valueOf(R.drawable.ic_followup_dark),"text"});
-        dataMenu.add(new String[]{"Auto Text",String.valueOf(R.drawable.ic_menu_autotext_dark),"text"});
-        dataMenu.add(new String[]{"Pengaturan",String.valueOf(R.drawable.ic_pengaturan_dark),"text"});
-        dataMenu.add(new String[]{"Dashboard",String.valueOf(R.drawable.ic_home_dark),"text"});
+        dataMenu.add(new String[]{"Bulk Sender", String.valueOf(R.drawable.ic_add_contact_white), "switch"});
+        dataMenu.add(new String[]{"Tambah Kontak", String.valueOf(R.drawable.ic_add_contact_white), "text"});
+        dataMenu.add(new String[]{"Kontak", String.valueOf(R.drawable.ic_contact_white), "text"});
+        dataMenu.add(new String[]{"Template Promosi", String.valueOf(R.drawable.ic_marketing_kit_dark), "text"});
+        dataMenu.add(new String[]{"Broadcast", String.valueOf(R.drawable.ic_menu_send_dark), "text"});
+        dataMenu.add(new String[]{"Follow Up", String.valueOf(R.drawable.ic_followup_dark), "text"});
+        dataMenu.add(new String[]{"Auto Text", String.valueOf(R.drawable.ic_menu_autotext_dark), "text"});
+        dataMenu.add(new String[]{"Pengaturan", String.valueOf(R.drawable.ic_pengaturan_dark), "text"});
+        dataMenu.add(new String[]{"Dashboard", String.valueOf(R.drawable.ic_home_dark), "text"});
 
         RecyclerView recyclerMenu = (RecyclerView) mCurrentInputView.findViewById(R.id.recyclerMenu);
         LinearLayoutManager horizontalLayoutManagerMenu
@@ -494,26 +496,26 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
                     Intent intent = new Intent();
                     String mPackage = "id.co.kamil.autochat";
                     String mClass = ".ui.kontak.FormKontakActivity";
-                    intent.setComponent(new ComponentName(mPackage,mPackage+mClass));
-                    intent.putExtra("tipe","add");
+                    intent.setComponent(new ComponentName(mPackage, mPackage + mClass));
+                    intent.putExtra("tipe", "add");
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mThemeContext.startActivity(intent);
                 }
                 if (position == 2) {
                     Intent intent = new Intent(mThemeContext, MainActivity.class);
-                    intent.putExtra("fragment","kontak");
+                    intent.putExtra("fragment", "kontak");
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mThemeContext.startActivity(intent);
                 }
                 if (position == 3) {
                     Intent intent = new Intent(mThemeContext, MainActivity.class);
-                    intent.putExtra("fragment","templatepromosi");
+                    intent.putExtra("fragment", "templatepromosi");
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mThemeContext.startActivity(intent);
                 }
                 if (position == 4) {
                     Intent intent = new Intent(mThemeContext, MainActivity.class);
-                    intent.putExtra("fragment","broadcast");
+                    intent.putExtra("fragment", "broadcast");
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mThemeContext.startActivity(intent);
                 }
@@ -525,7 +527,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
                 if (position == 6) {
                     Intent intent = new Intent(mThemeContext, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("fragment","autotext");
+                    intent.putExtra("fragment", "autotext");
                     mThemeContext.startActivity(intent);
                 }
                 if (position == 7) {
@@ -538,7 +540,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
                     String mPackage = "id.co.kamil.autochat";
                     String mClass = ".MainActivity";
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setComponent(new ComponentName(mPackage,mPackage+mClass));
+                    intent.setComponent(new ComponentName(mPackage, mPackage + mClass));
                     mThemeContext.startActivity(intent);
                 }
             }
@@ -565,6 +567,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         mKeyboardView.setKeyboardActionListener(mLatinIME);
         return mCurrentInputView;
     }
+
     static class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
         private List<String[]> mData;
@@ -602,13 +605,13 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
             holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    sharePref.createSession(STATUS_BULK_SENDER,isChecked);
+                    sharePref.createSession(STATUS_BULK_SENDER, isChecked);
                 }
-           });
+            });
             if (suggestion[2] == "switch") {
                 holder.aSwitch.setVisibility(View.VISIBLE);
                 holder.imgIcon.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.aSwitch.setVisibility(View.GONE);
                 holder.imgIcon.setVisibility(View.VISIBLE);
             }
@@ -621,7 +624,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         }
 
         // stores and recycles views as they are scrolled off screen
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,CompoundButton.OnCheckedChangeListener {
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
             TextView txtTitle;
             ImageView imgIcon;
             Switch aSwitch;
@@ -653,17 +656,21 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         public void setClickListener(ItemClickListener itemClickListener) {
             this.mClickListener = itemClickListener;
         }
+
         public void setCheckedListener(ItemCheckedListener itemCheckedListener) {
             this.mCheckedListener = itemCheckedListener;
         }
+
         // parent activity will implement this method to respond to click events
         public interface ItemClickListener {
             void onItemClick(View view, int position);
         }
+
         public interface ItemCheckedListener {
             void onItemClick(CompoundButton buttonView, boolean isChecked);
         }
     }
+
     static class SuggestionsAdapter extends RecyclerView.Adapter<SuggestionsAdapter.ViewHolder> {
 
         private List<String[]> mSuggestions;

@@ -43,6 +43,7 @@ public class InputTransaction {
 
     /**
      * Indicate that this transaction requires some type of shift update.
+     *
      * @param updateType What type of shift update this requires.
      */
     public void requireShiftUpdate(final int updateType) {
@@ -51,6 +52,7 @@ public class InputTransaction {
 
     /**
      * Gets what type of shift update this transaction requires.
+     *
      * @return The shift update type.
      */
     public int getRequiredShiftUpdate() {

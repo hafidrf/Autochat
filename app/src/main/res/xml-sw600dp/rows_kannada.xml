@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2014, The Android Open Source Project
@@ -21,8 +20,7 @@
 <merge xmlns:latin="http://schemas.android.com/apk/res-auto">
     <Row
         latin:keyWidth="8.182%p"
-        latin:keyLabelFlags="fontNormal|autoXScale"
-    >
+        latin:keyLabelFlags="fontNormal|autoXScale">
         <include latin:keyboardLayout="@xml/rowkeys_kannada1" />
         <Key
             latin:keyStyle="deleteKeyStyle"
@@ -30,8 +28,7 @@
     </Row>
     <Row
         latin:keyWidth="8.182%p"
-        latin:keyLabelFlags="fontNormal|autoXScale"
-    >
+        latin:keyLabelFlags="fontNormal|autoXScale">
         <include latin:keyboardLayout="@xml/rowkeys_kannada2" />
         <Key
             latin:keyStyle="enterKeyStyle"
@@ -39,8 +36,7 @@
     </Row>
     <Row
         latin:keyWidth="8.182%p"
-        latin:keyLabelFlags="fontNormal|autoXScale"
-    >
+        latin:keyLabelFlags="fontNormal|autoXScale">
         <include latin:keyboardLayout="@xml/rowkeys_kannada3" />
         <include latin:keyboardLayout="@xml/keys_exclamation_question" />
     </Row>

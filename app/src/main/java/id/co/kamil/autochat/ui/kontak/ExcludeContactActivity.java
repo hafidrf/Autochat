@@ -1,9 +1,5 @@
 package id.co.kamil.autochat.ui.kontak;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -14,17 +10,18 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -133,7 +130,7 @@ public class ExcludeContactActivity extends AppCompatActivity {
                 try {
                     kontakAdapter.filter(edtCari.getText().toString().trim());
                     listKontak.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -157,19 +154,20 @@ public class ExcludeContactActivity extends AppCompatActivity {
             }
         });
     }
-    private void loadKontak(){
+
+    private void loadKontak() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject parameter = new JSONObject();
         try {
-            parameter.put("contact_id",contact_id);
+            parameter.put("contact_id", contact_id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         final String uri = Uri.parse(URL_POST_LIST_CONTACT_ID)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"parameter:" + parameter);
-        showError(false,"",true);
+        Log.i(TAG, "parameter:" + parameter);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataKontak.clear();
         //dataKontak.add(new ItemKontak("grupku","Grup Kontak","",false));
@@ -182,29 +180,29 @@ public class ExcludeContactActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String first_name = data.getJSONObject(i).getString("first_name");
                             final String last_name = data.getJSONObject(i).getString("last_name");
                             String name;
-                            if (last_name.isEmpty() || last_name.equals(null) || last_name.equals("null") || last_name == null){
+                            if (last_name.isEmpty() || last_name.equals(null) || last_name.equals("null") || last_name == null) {
                                 name = first_name;
-                            }else{
+                            } else {
                                 name = first_name + " " + last_name;
                             }
                             final String phone = data.getJSONObject(i).getString("phone");
-                            dataKontak.add(new ItemKontak(id,name,phone,false,data.getJSONObject(i)));
+                            dataKontak.add(new ItemKontak(id, name, phone, false, data.getJSONObject(i)));
                         }
-                        Log.i(TAG,"data:" + data.toString());
-                    }else{
-                        showError(true,message,false);
+                        Log.i(TAG, "data:" + data.toString());
+                    } else {
+                        showError(true, message, false);
                     }
                     displayKontak();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -213,15 +211,15 @@ public class ExcludeContactActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(ExcludeContactActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(ExcludeContactActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new androidx.appcompat.app.AlertDialog.Builder(ExcludeContactActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -234,28 +232,28 @@ public class ExcludeContactActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("X-API-KEY",token);
+                header.put("X-API-KEY", token);
                 return header;
             }
 
@@ -264,23 +262,25 @@ public class ExcludeContactActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listKontak.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listKontak.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayKontak() {
-        kontakAdapter = new AdapterKontak(dataKontak,this);
+        kontakAdapter = new AdapterKontak(dataKontak, this);
         listKontak.setAdapter(kontakAdapter);
         adapterInstance = true;
     }
@@ -292,21 +292,21 @@ public class ExcludeContactActivity extends AppCompatActivity {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void listDefault(){
-        for (int i = 0 ; i < dataKontak.size();i++){
+    private void listDefault() {
+        for (int i = 0; i < dataKontak.size(); i++) {
             ItemKontak ikontak = dataKontak.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataKontak.set(i,ikontak);
+            dataKontak.set(i, ikontak);
         }
         kontakAdapter.notifyDataSetChanged();
-        if (dataKontak.size()==0){
+        if (dataKontak.size() == 0) {
             loadKontak();
         }
     }
@@ -320,34 +320,34 @@ public class ExcludeContactActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
+        if (item.getItemId() == R.id.actTambah) {
             Intent i = new Intent(this, FormKontakActivity.class);
-            i.putExtra("tipe","add");
-            startActivityForResult(i,REQUEST_ADD);
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataKontak.size()>0){
+            i.putExtra("tipe", "add");
+            startActivityForResult(i, REQUEST_ADD);
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataKontak.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0 ; i < dataKontak.size();i++){
+                for (int i = 0; i < dataKontak.size(); i++) {
                     ItemKontak ikontak = dataKontak.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataKontak.set(i,ikontak);
+                    dataKontak.set(i, ikontak);
                 }
                 kontakAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(this, "Data Kontak tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(false);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(this)
                     .setMessage("Apakah anda yakin akan menghapus item berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -356,25 +356,25 @@ public class ExcludeContactActivity extends AppCompatActivity {
                             hapusKontak();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0 ; i < dataKontak.size();i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataKontak.size(); i++) {
                 ItemKontak ikontak = dataKontak.get(i);
                 ikontak.setCheckbox(true);
-                dataKontak.set(i,ikontak);
+                dataKontak.set(i, ikontak);
             }
             kontakAdapter.notifyDataSetChanged();
-        }else if(item.getItemId()==android.R.id.home){
+        } else if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void hapusKontak() {
-        for (int i = 0 ; i < dataKontak.size();i++){
-            if (dataKontak.get(i).isCheckbox() ){
+        for (int i = 0; i < dataKontak.size(); i++) {
+            if (dataKontak.get(i).isCheckbox()) {
                 dataKontak.remove(i);
                 i = i - 1;
             }
@@ -396,8 +396,8 @@ public class ExcludeContactActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadKontak();
             }
         }

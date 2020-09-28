@@ -1,9 +1,5 @@
 package id.co.kamil.autochat.ui.template;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -24,6 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -98,9 +98,9 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
 
         pDialog = new ProgressDialog(this);
         swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        layMessage = (LinearLayout)  findViewById(R.id.layMessage);
-        lblMessage = (TextView)  findViewById(R.id.lblMessage);
-        btnCobaLagi = (Button)  findViewById(R.id.btnCobaLagi);
+        layMessage = (LinearLayout) findViewById(R.id.layMessage);
+        lblMessage = (TextView) findViewById(R.id.lblMessage);
+        btnCobaLagi = (Button) findViewById(R.id.btnCobaLagi);
         btnCobaLagi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +128,7 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
                 try {
                     templateAdapter.filter(edtCari.getText().toString().trim());
                     listTemplate.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -167,17 +167,18 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
             }
         });
     }
-    private void loadShareDetail(){
+
+    private void loadShareDetail() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final String uri = Uri.parse(URL_POST_DETAIL_TEMPLATE_SHARE)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataShareDetail.clear();
         JSONObject parameters = new JSONObject();
         try {
-            parameters.put("id",idTemplate);
+            parameters.put("id", idTemplate);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -191,20 +192,20 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String email = data.getJSONObject(i).getString("email");
-                            dataShareDetail.add(new ItemTemplateShareDetail(id,email,data.getJSONObject(i),false,false));
+                            dataShareDetail.add(new ItemTemplateShareDetail(id, email, data.getJSONObject(i), false, false));
                         }
-                    }else{
-                        showError(true,message,false);
+                    } else {
+                        showError(true, message, false);
                     }
                     displayGrup();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -213,15 +214,15 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(TemplateShareDetailActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(TemplateShareDetailActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(TemplateShareDetailActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -234,28 +235,28 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -263,52 +264,55 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listTemplate.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listTemplate.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayGrup() {
-        templateAdapter = new AdapterTemplateShareDetail(dataShareDetail,this);
+        templateAdapter = new AdapterTemplateShareDetail(dataShareDetail, this);
         listTemplate.setAdapter(templateAdapter);
         adapterInstance = true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actEdit) {
-            if (dataShareDetail.size()>0){
+        if (item.getItemId() == R.id.actEdit) {
+            if (dataShareDetail.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0; i < dataShareDetail.size(); i++){
+                for (int i = 0; i < dataShareDetail.size(); i++) {
                     ItemTemplateShareDetail ikontak = dataShareDetail.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataShareDetail.set(i,ikontak);
+                    dataShareDetail.set(i, ikontak);
                 }
                 templateAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(this, "Data Template tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(false);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(this)
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -317,30 +321,31 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
                             hapusTemplate();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0; i < dataShareDetail.size(); i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataShareDetail.size(); i++) {
                 ItemTemplateShareDetail ikontak = dataShareDetail.get(i);
                 ikontak.setCheckbox(true);
-                dataShareDetail.set(i,ikontak);
+                dataShareDetail.set(i, ikontak);
             }
             templateAdapter.notifyDataSetChanged();
-        }else if(item.getItemId()==android.R.id.home){
+        } else if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
-    private void listDefault(){
-        for (int i = 0; i < dataShareDetail.size(); i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataShareDetail.size(); i++) {
             ItemTemplateShareDetail ikontak = dataShareDetail.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataShareDetail.set(i,ikontak);
+            dataShareDetail.set(i, ikontak);
         }
         templateAdapter.notifyDataSetChanged();
-        if(dataShareDetail.size()==0){
+        if (dataShareDetail.size() == 0) {
             loadShareDetail();
         }
     }
@@ -353,7 +358,7 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
         return true;
@@ -369,14 +374,14 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
     private void hapusTemplate() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONArray idHapus = new JSONArray();
-        for (int i = 0; i < dataShareDetail.size(); i++){
-            if (dataShareDetail.get(i).isCheckbox()){
+        for (int i = 0; i < dataShareDetail.size(); i++) {
+            if (dataShareDetail.get(i).isCheckbox()) {
                 idHapus.put(Integer.parseInt(dataShareDetail.get(i).getId()));
             }
         }
         final JSONObject param = new JSONObject();
         try {
-            param.put("id",idHapus);
+            param.put("id", idHapus);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -396,9 +401,9 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
-                        for (int i = 0; i < dataShareDetail.size(); i++){
-                            if (dataShareDetail.get(i).isCheckbox()){
+                    if (status) {
+                        for (int i = 0; i < dataShareDetail.size(); i++) {
+                            if (dataShareDetail.get(i).isCheckbox()) {
                                 dataShareDetail.remove(i);
                                 i = i - 1;
                             }
@@ -410,17 +415,17 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
                         menuTop.findItem(R.id.actEdit).setVisible(true);
                         menuTop.findItem(R.id.actTambah).setVisible(false);
                         listDefault();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(TemplateShareDetailActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(TemplateShareDetailActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -429,17 +434,17 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(TemplateShareDetailActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(TemplateShareDetailActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(TemplateShareDetailActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -452,35 +457,35 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(TemplateShareDetailActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(TemplateShareDetailActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -490,7 +495,7 @@ public class TemplateShareDetailActivity extends AppCompatActivity {
     }
 
     private void hidePdialog() {
-        if(pDialog.isShowing())
+        if (pDialog.isShowing())
             pDialog.dismiss();
     }
 

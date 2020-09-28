@@ -27,6 +27,7 @@ import rkr.simplekeyboard.inputmethod.latin.settings.ThemeSettingsFragment;
 
 public class FragmentUtils {
     private static final HashSet<String> sLatinImeFragments = new HashSet<>();
+
     static {
         sLatinImeFragments.add(PreferencesSettingsFragment.class.getName());
         sLatinImeFragments.add(AppearanceSettingsFragment.class.getName());

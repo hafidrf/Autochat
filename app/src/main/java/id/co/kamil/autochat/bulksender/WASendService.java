@@ -1,20 +1,14 @@
 package id.co.kamil.autochat.bulksender;
 
 import android.accessibilityservice.AccessibilityService;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,7 +22,6 @@ import static id.co.kamil.autochat.ServiceSync.ID_SERVICE_WA;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
-import static id.co.kamil.autochat.utils.SharPref.TRY_AGAIN_BULKSENDER;
 
 public class WASendService extends AccessibilityService {
     private static String typeApp;
@@ -71,8 +64,8 @@ public class WASendService extends AccessibilityService {
 
             // recycle the nodeInfo object
             nodeInfo.recycle();
-        }catch(Exception e){
-            Log.i(TAG,"NullPointerException Caught");
+        } catch (Exception e) {
+            Log.i(TAG, "NullPointerException Caught");
         }
 
     }
@@ -96,7 +89,7 @@ public class WASendService extends AccessibilityService {
             fOutboxRef.keepSynced(true);
             boolean statusWASender = sharePref.getSessionBool(STATUS_BULK_SENDER);
             boolean statusSending = sharePref.getSessionBool(STATUS_BULK_SENDING);
-            if (statusWASender == false){
+            if (statusWASender == false) {
                 return;
             }
 
@@ -106,20 +99,20 @@ public class WASendService extends AccessibilityService {
             buttonSend = getNodeInfo(rootNode, waButtonSendID);
             backButton = getNodeInfo(rootNode, waBackButtonID);
 
-            if (buttonSend==null || buttonSend.equals(null) || buttonSend.equals("null")){
-                if (backButton == null || backButton.equals(null) || backButton.equals("null")){
-                    dbHelper.insertLog(created,ID_SERVICE_WA,"ID Button Send : " + buttonSend  + " dan ID Button Back : " + backButton,"warning",user_id);
-                    Log.e(TAG,"button Send : " + buttonSend);
+            if (buttonSend == null || buttonSend.equals(null) || buttonSend.equals("null")) {
+                if (backButton == null || backButton.equals(null) || backButton.equals("null")) {
+                    dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + buttonSend + " dan ID Button Back : " + backButton, "warning", user_id);
+                    Log.e(TAG, "button Send : " + buttonSend);
                     return;
-                }else if (statusSending){
+                } else if (statusSending) {
                     backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     return;
-                }else{
-                    dbHelper.insertLog(created,ID_SERVICE_WA,"ID Button Send : " + buttonSend,"warning",user_id);
+                } else {
+                    dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + buttonSend, "warning", user_id);
                 }
             }
-            if (idMessage==null){
-                dbHelper.insertLog(created,ID_SERVICE_WA,"Tidak ada pesan yang akan dikirim","warning",user_id);
+            if (idMessage == null) {
+                dbHelper.insertLog(created, ID_SERVICE_WA, "Tidak ada pesan yang akan dikirim", "warning", user_id);
                 return;
             }
 
@@ -133,17 +126,17 @@ public class WASendService extends AccessibilityService {
 
             fOutboxRef.child(idMessage).child("sent").setValue(tglSent);
             //dbHelper.updateSent(idMessage, "1", tglSent, "0");
-            dbHelper.insertLog(tglSent,ID_SERVICE_WA,"Berhasil dikirim","success",user_id);
+            dbHelper.insertLog(tglSent, ID_SERVICE_WA, "Berhasil dikirim", "success", user_id);
 
             setID(null);
             try_again = 0;
 
             backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             String stackTrace = Log.getStackTraceString(e);
-            dbHelper.insertLog(created,ID_SERVICE_WA,stackTrace,"danger",user_id);
+            dbHelper.insertLog(created, ID_SERVICE_WA, stackTrace, "danger", user_id);
 
         }
     }
@@ -161,9 +154,9 @@ public class WASendService extends AccessibilityService {
 
             if (nodes.size() > 0)
                 node = nodes.get(0);
-        }catch (Exception e){
+        } catch (Exception e) {
             String stackTrace = Log.getStackTraceString(e);
-            dbHelper.insertLog(created,ID_SERVICE_WA,stackTrace,"danger",user_id);
+            dbHelper.insertLog(created, ID_SERVICE_WA, stackTrace, "danger", user_id);
         }
 
 

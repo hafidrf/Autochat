@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import id.co.kamil.autochat.R;
@@ -28,7 +27,7 @@ public class AdapterPeringkat extends ArrayAdapter<ItemPeringkat> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View view = layoutInflater.inflate(R.layout.item_list_peringkat,parent,false);
+        final View view = layoutInflater.inflate(R.layout.item_list_peringkat, parent, false);
 
         final TextView txtPeringkat = (TextView) view.findViewById(R.id.itemNo);
         final TextView txtNama = (TextView) view.findViewById(R.id.itemNama);

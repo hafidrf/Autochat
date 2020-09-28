@@ -1,9 +1,5 @@
 package id.co.kamil.autochat.ui.notification;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,15 +7,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -40,7 +38,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 
 import id.co.kamil.autochat.LoginActivity;
 import id.co.kamil.autochat.R;
@@ -94,7 +91,7 @@ public class ListUserActivity extends AppCompatActivity {
         chkSelectAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0;i<dataKontak.size();i++){
+                for (int i = 0; i < dataKontak.size(); i++) {
                     dataKontak.get(i).setCheckbox(chkSelectAll.isChecked());
                 }
                 kontakAdapter.notifyDataSetChanged();
@@ -109,15 +106,15 @@ public class ListUserActivity extends AppCompatActivity {
                 final JSONArray jsonFirebase = new JSONArray();
 
                 int checked = 0;
-                for (int i = 0;i<kontakAdapter.arraylist.size();i++){
-                    if (kontakAdapter.arraylist.get(i).isCheckbox()){
+                for (int i = 0; i < kontakAdapter.arraylist.size(); i++) {
+                    if (kontakAdapter.arraylist.get(i).isCheckbox()) {
                         jsonId.put(kontakAdapter.arraylist.get(i).getId());
                         jsonTitle.put(kontakAdapter.arraylist.get(i).getJudul());
                         jsonFirebase.put(kontakAdapter.arraylist.get(i).getNomorhp());
                         checked++;
                     }
                 }
-                if (checked<=0){
+                if (checked <= 0) {
                     Toast.makeText(ListUserActivity.this, "Belum ada user yang dipilih", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -127,10 +124,10 @@ public class ListUserActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent();
-                                intent.putExtra("id",jsonId.toString());
-                                intent.putExtra("title",jsonTitle.toString());
-                                intent.putExtra("firebase",jsonFirebase.toString());
-                                setResult(RESULT_OK,intent);
+                                intent.putExtra("id", jsonId.toString());
+                                intent.putExtra("title", jsonTitle.toString());
+                                intent.putExtra("firebase", jsonFirebase.toString());
+                                setResult(RESULT_OK, intent);
                                 finish();
                             }
                         })
@@ -151,7 +148,7 @@ public class ListUserActivity extends AppCompatActivity {
                 try {
                     kontakAdapter.filter(edtCari.getText().toString().trim());
                     listUser.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -176,7 +173,8 @@ public class ListUserActivity extends AppCompatActivity {
         });
 
     }
-    private void loadKontak(){
+
+    private void loadKontak() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final String uri = Uri.parse(URL_POST_LIST_USER_FIREBASE)
                 .buildUpon()
@@ -191,27 +189,27 @@ public class ListUserActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("user_id");
                             final String name = data.getJSONObject(i).getString("u_name");
                             final String firebase = data.getJSONObject(i).getString("firebase");
                             boolean exist = false;
-                            for(int a=0;a<excludeContact.length();a++){
-                                if (id.equals(excludeContact.get(a))){
+                            for (int a = 0; a < excludeContact.length(); a++) {
+                                if (id.equals(excludeContact.get(a))) {
                                     exist = true;
                                     break;
                                 }
                             }
-                            if (exist==false){
-                                dataKontak.add(new ItemKontak(id,name,firebase,false,true,data.getJSONObject(i)));
+                            if (exist == false) {
+                                dataKontak.add(new ItemKontak(id, name, firebase, false, true, data.getJSONObject(i)));
                             }
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(ListUserActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
 
                     }
@@ -220,7 +218,7 @@ public class ListUserActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(ListUserActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -230,15 +228,15 @@ public class ListUserActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(ListUserActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(ListUserActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(ListUserActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -251,33 +249,33 @@ public class ListUserActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(ListUserActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(ListUserActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -292,12 +290,13 @@ public class ListUserActivity extends AppCompatActivity {
     }
 
     private void displayKontak() {
-        kontakAdapter = new AdapterKontak(dataKontak,this);
+        kontakAdapter = new AdapterKontak(dataKontak, this);
         listUser.setAdapter(kontakAdapter);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2012, The Android Open Source Project
@@ -18,43 +17,32 @@
 */
 -->
 
-<merge
-    xmlns:latin="http://schemas.android.com/apk/res-auto"
->
+<merge xmlns:latin="http://schemas.android.com/apk/res-auto">
     <switch>
         <case latin:showNumberRow="true">
             <!-- U+0443: "у" CYRILLIC SMALL LETTER U -->
-            <Key
-                latin:keySpec="&#x0443;" />
+            <Key latin:keySpec="&#x0443;" />
             <!-- U+0435: "е" CYRILLIC SMALL LETTER IE -->
-            <Key
-                latin:keySpec="&#x0435;" />
+            <Key latin:keySpec="&#x0435;" />
             <!-- U+0438: "и" CYRILLIC SMALL LETTER I
                  U+045D: "ѝ" CYRILLIC SMALL LETTER I WITH GRAVE -->
             <Key
                 latin:keySpec="&#x0438;"
                 latin:moreKeys="&#x045D;" />
             <!-- U+0448: "ш" CYRILLIC SMALL LETTER SHA -->
-            <Key
-                latin:keySpec="&#x0448;" />
+            <Key latin:keySpec="&#x0448;" />
             <!-- U+0449: "щ" CYRILLIC SMALL LETTER SHCHA -->
-            <Key
-                latin:keySpec="&#x0449;" />
+            <Key latin:keySpec="&#x0449;" />
             <!-- U+043A: "к" CYRILLIC SMALL LETTER KA -->
-            <Key
-                latin:keySpec="&#x043A;" />
+            <Key latin:keySpec="&#x043A;" />
             <!-- U+0441: "с" CYRILLIC SMALL LETTER ES -->
-            <Key
-                latin:keySpec="&#x0441;" />
+            <Key latin:keySpec="&#x0441;" />
             <!-- U+0434: "д" CYRILLIC SMALL LETTER DE -->
-            <Key
-                latin:keySpec="&#x0434;" />
+            <Key latin:keySpec="&#x0434;" />
             <!-- U+0437: "з" CYRILLIC SMALL LETTER ZE -->
-            <Key
-                latin:keySpec="&#x0437;" />
+            <Key latin:keySpec="&#x0437;" />
             <!-- U+0446: "ц" CYRILLIC SMALL LETTER TSE -->
-            <Key
-                latin:keySpec="&#x0446;" />
+            <Key latin:keySpec="&#x0446;" />
         </case>
         <default>
             <!-- U+0443: "у" CYRILLIC SMALL LETTER U -->
@@ -112,6 +100,5 @@
         </default>
     </switch>
     <!-- U+0431: "б" CYRILLIC SMALL LETTER BE -->
-    <Key
-        latin:keySpec="&#x0431;" />
+    <Key latin:keySpec="&#x0431;" />
 </merge>

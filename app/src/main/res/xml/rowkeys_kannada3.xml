@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2014, The Android Open Source Project
@@ -33,7 +32,8 @@
     <Key latin:keySpec="&#x0CAE;" />
     <!-- U+0CA8: "ನ" KANNADA LETTER NA
          U+0CA3: "ಣ" KANNADA LETTER NNA -->
-    <Key latin:keySpec="&#x0CA8;"
+    <Key
+        latin:keySpec="&#x0CA8;"
         latin:moreKeys="&#x0CA3;" />
     <!-- U+0CB5: "ವ" KANNADA LETTER VA -->
     <Key latin:keySpec="&#x0CB5;" />

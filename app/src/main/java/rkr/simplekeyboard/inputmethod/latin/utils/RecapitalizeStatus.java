@@ -31,10 +31,10 @@ public class RecapitalizeStatus {
     public static final int CAPS_MODE_ALL_UPPER = 3;
 
     private static final int[] ROTATION_STYLE = {
-        CAPS_MODE_ORIGINAL_MIXED_CASE,
-        CAPS_MODE_ALL_LOWER,
-        CAPS_MODE_FIRST_WORD_UPPER,
-        CAPS_MODE_ALL_UPPER
+            CAPS_MODE_ORIGINAL_MIXED_CASE,
+            CAPS_MODE_ALL_LOWER,
+            CAPS_MODE_FIRST_WORD_UPPER,
+            CAPS_MODE_ALL_UPPER
     };
 
     private static final int getStringMode(final String string, final int[] sortedSeparators) {
@@ -51,12 +51,18 @@ public class RecapitalizeStatus {
 
     public static String modeToString(final int recapitalizeMode) {
         switch (recapitalizeMode) {
-        case NOT_A_RECAPITALIZE_MODE: return "undefined";
-        case CAPS_MODE_ORIGINAL_MIXED_CASE: return "mixedCase";
-        case CAPS_MODE_ALL_LOWER: return "allLower";
-        case CAPS_MODE_FIRST_WORD_UPPER: return "firstWordUpper";
-        case CAPS_MODE_ALL_UPPER: return "allUpper";
-        default: return "unknown<" + recapitalizeMode + ">";
+            case NOT_A_RECAPITALIZE_MODE:
+                return "undefined";
+            case CAPS_MODE_ORIGINAL_MIXED_CASE:
+                return "mixedCase";
+            case CAPS_MODE_ALL_LOWER:
+                return "allLower";
+            case CAPS_MODE_FIRST_WORD_UPPER:
+                return "firstWordUpper";
+            case CAPS_MODE_ALL_UPPER:
+                return "allUpper";
+            default:
+                return "unknown<" + recapitalizeMode + ">";
         }
     }
 
@@ -85,7 +91,7 @@ public class RecapitalizeStatus {
     }
 
     public void start(final int cursorStart, final int cursorEnd, final String string,
-            final Locale locale, final int[] sortedSeparators) {
+                      final Locale locale, final int[] sortedSeparators) {
         if (!mIsEnabled) {
             return;
         }
@@ -153,21 +159,21 @@ public class RecapitalizeStatus {
             }
             ++count;
             switch (ROTATION_STYLE[mRotationStyleCurrentIndex]) {
-            case CAPS_MODE_ORIGINAL_MIXED_CASE:
-                mStringAfter = mStringBefore;
-                break;
-            case CAPS_MODE_ALL_LOWER:
-                mStringAfter = mStringBefore.toLowerCase(mLocale);
-                break;
-            case CAPS_MODE_FIRST_WORD_UPPER:
-                mStringAfter = StringUtils.capitalizeEachWord(mStringBefore, mSortedSeparators,
-                        mLocale);
-                break;
-            case CAPS_MODE_ALL_UPPER:
-                mStringAfter = mStringBefore.toUpperCase(mLocale);
-                break;
-            default:
-                mStringAfter = mStringBefore;
+                case CAPS_MODE_ORIGINAL_MIXED_CASE:
+                    mStringAfter = mStringBefore;
+                    break;
+                case CAPS_MODE_ALL_LOWER:
+                    mStringAfter = mStringBefore.toLowerCase(mLocale);
+                    break;
+                case CAPS_MODE_FIRST_WORD_UPPER:
+                    mStringAfter = StringUtils.capitalizeEachWord(mStringBefore, mSortedSeparators,
+                            mLocale);
+                    break;
+                case CAPS_MODE_ALL_UPPER:
+                    mStringAfter = mStringBefore.toUpperCase(mLocale);
+                    break;
+                default:
+                    mStringAfter = mStringBefore;
             }
         } while (mStringAfter.equals(oldResult) && count < ROTATION_STYLE.length + 1);
         mCursorEndAfter = mCursorStartAfter + mStringAfter.length();
@@ -180,13 +186,13 @@ public class RecapitalizeStatus {
         final int len = mStringBefore.length();
         int nonWhitespaceStart = 0;
         for (; nonWhitespaceStart < len;
-                nonWhitespaceStart = mStringBefore.offsetByCodePoints(nonWhitespaceStart, 1)) {
+             nonWhitespaceStart = mStringBefore.offsetByCodePoints(nonWhitespaceStart, 1)) {
             final int codePoint = mStringBefore.codePointAt(nonWhitespaceStart);
             if (!Character.isWhitespace(codePoint)) break;
         }
         int nonWhitespaceEnd = len;
         for (; nonWhitespaceEnd > 0;
-                nonWhitespaceEnd = mStringBefore.offsetByCodePoints(nonWhitespaceEnd, -1)) {
+             nonWhitespaceEnd = mStringBefore.offsetByCodePoints(nonWhitespaceEnd, -1)) {
             final int codePoint = mStringBefore.codePointBefore(nonWhitespaceEnd);
             if (!Character.isWhitespace(codePoint)) break;
         }

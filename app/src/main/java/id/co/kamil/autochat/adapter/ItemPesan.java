@@ -1,8 +1,9 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemPesan {
-    String id,nomor,nama,tglpesan,jadwalkirim,pesan,status,error_again;
-    boolean checkbox,chkvisible;
+    String id, nomor, nama, tglpesan, jadwalkirim, pesan, status, error_again;
+    boolean checkbox, chkvisible;
+
     @Override
     public String toString() {
         return "ItemPesan{" +

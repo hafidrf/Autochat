@@ -31,7 +31,7 @@ public final class CapsModeUtils {
 
     /**
      * Helper method to find out if a code point is starting punctuation.
-     *
+     * <p>
      * This include the Unicode START_PUNCTUATION category, but also some other symbols that are
      * starting, like the inverted question mark or the double quote.
      *
@@ -50,23 +50,22 @@ public final class CapsModeUtils {
      * the text. Only the mode bits set in <var>reqModes</var> will be
      * checked. Note that the caps mode flags here are explicitly defined
      * to match those in {@link InputType}.
-     *
+     * <p>
      * This code is a straight copy of TextUtils.getCapsMode (modulo namespace and formatting
      * issues). This will change in the future as we simplify the code for our use and fix bugs.
      *
-     * @param cs The text that should be checked for caps modes.
-     * @param reqModes The modes to be checked: may be any combination of
-     * {@link TextUtils#CAP_MODE_CHARACTERS}, {@link TextUtils#CAP_MODE_WORDS}, and
-     * {@link TextUtils#CAP_MODE_SENTENCES}.
+     * @param cs                     The text that should be checked for caps modes.
+     * @param reqModes               The modes to be checked: may be any combination of
+     *                               {@link TextUtils#CAP_MODE_CHARACTERS}, {@link TextUtils#CAP_MODE_WORDS}, and
+     *                               {@link TextUtils#CAP_MODE_SENTENCES}.
      * @param spacingAndPunctuations The current spacing and punctuations settings.
-     *
      * @return Returns the actual capitalization modes that can be in effect
      * at the current position, which is any combination of
      * {@link TextUtils#CAP_MODE_CHARACTERS}, {@link TextUtils#CAP_MODE_WORDS}, and
      * {@link TextUtils#CAP_MODE_SENTENCES}.
      */
     public static int getCapsMode(final CharSequence cs, final int reqModes,
-            final SpacingAndPunctuations spacingAndPunctuations) {
+                                  final SpacingAndPunctuations spacingAndPunctuations) {
         // Quick description of what we want to do:
         // CAP_MODE_CHARACTERS is always on.
         // CAP_MODE_WORDS is on if there is some whitespace before the cursor.
@@ -238,50 +237,50 @@ public final class CapsModeUtils {
         while (j > 0) {
             c = cs.charAt(--j);
             switch (state) {
-            case START:
-                if (Character.isLetter(c)) {
-                    state = WORD;
-                } else if (Character.isWhitespace(c)) {
-                    return noCaps;
-                } else if (Character.isDigit(c) && spacingAndPunctuations.mUsesGermanRules) {
-                    state = NUMBER;
-                } else {
-                    return caps;
-                }
-                break;
-            case WORD:
-                if (Character.isLetter(c)) {
-                    state = WORD;
-                } else if (spacingAndPunctuations.isSentenceSeparator(c)) {
-                    state = PERIOD;
-                } else {
-                    return caps;
-                }
-                break;
-            case PERIOD:
-                if (Character.isLetter(c)) {
-                    state = LETTER;
-                } else {
-                    return caps;
-                }
-                break;
-            case LETTER:
-                if (Character.isLetter(c)) {
-                    state = LETTER;
-                } else if (spacingAndPunctuations.isSentenceSeparator(c)) {
-                    state = PERIOD;
-                } else {
-                    return noCaps;
-                }
-                break;
-            case NUMBER:
-                if (Character.isLetter(c)) {
-                    state = WORD;
-                } else if (Character.isDigit(c)) {
-                    state = NUMBER;
-                } else {
-                    return noCaps;
-                }
+                case START:
+                    if (Character.isLetter(c)) {
+                        state = WORD;
+                    } else if (Character.isWhitespace(c)) {
+                        return noCaps;
+                    } else if (Character.isDigit(c) && spacingAndPunctuations.mUsesGermanRules) {
+                        state = NUMBER;
+                    } else {
+                        return caps;
+                    }
+                    break;
+                case WORD:
+                    if (Character.isLetter(c)) {
+                        state = WORD;
+                    } else if (spacingAndPunctuations.isSentenceSeparator(c)) {
+                        state = PERIOD;
+                    } else {
+                        return caps;
+                    }
+                    break;
+                case PERIOD:
+                    if (Character.isLetter(c)) {
+                        state = LETTER;
+                    } else {
+                        return caps;
+                    }
+                    break;
+                case LETTER:
+                    if (Character.isLetter(c)) {
+                        state = LETTER;
+                    } else if (spacingAndPunctuations.isSentenceSeparator(c)) {
+                        state = PERIOD;
+                    } else {
+                        return noCaps;
+                    }
+                    break;
+                case NUMBER:
+                    if (Character.isLetter(c)) {
+                        state = WORD;
+                    } else if (Character.isDigit(c)) {
+                        state = NUMBER;
+                    } else {
+                        return noCaps;
+                    }
             }
         }
         // Here we arrived at the start of the line. This should behave exactly like whitespace.
@@ -292,8 +291,8 @@ public final class CapsModeUtils {
      * Convert capitalize mode flags into human readable text.
      *
      * @param capsFlags The modes flags to be converted. It may be any combination of
-     * {@link TextUtils#CAP_MODE_CHARACTERS}, {@link TextUtils#CAP_MODE_WORDS}, and
-     * {@link TextUtils#CAP_MODE_SENTENCES}.
+     *                  {@link TextUtils#CAP_MODE_CHARACTERS}, {@link TextUtils#CAP_MODE_WORDS}, and
+     *                  {@link TextUtils#CAP_MODE_SENTENCES}.
      * @return the text that describe the <code>capsMode</code>.
      */
     public static String flagsToString(final int capsFlags) {

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layMaster"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.pesan.FormKirimPesanActivity">
+
     <ScrollView
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/layUmum"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/txtWarningWhatsApp"
                 android:text="WhatsApp tidak terinstall"
@@ -25,7 +27,8 @@
                 android:textColor="@color/md_white_1000"
                 android:background="@color/md_deep_orange_300"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/labelNomorTujuan"
                 android:fontFamily="@font/font"
@@ -33,11 +36,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="25dp"
-                android:text="Pengguna Tujuan"/>
+                android:text="Pengguna Tujuan" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/gridUser"
                     android:layout_weight="1"
@@ -48,14 +53,15 @@
                     android:paddingRight="5dp"
                     android:background="@drawable/rectangle_white_slim"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <ImageButton
                     android:id="@+id/btnUser"
                     android:background="@drawable/btn_rect_primary"
                     android:src="@drawable/ic_contact_white"
                     android:layout_marginRight="15dp"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"/>
+                    android:layout_height="50dp" />
             </LinearLayout>
 
             <TextView
@@ -64,7 +70,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="10dp"
-                android:text="Judul"/>
+                android:text="Judul" />
+
             <EditText
                 android:id="@+id/edtJudul"
                 android:layout_marginTop="5dp"
@@ -80,13 +87,15 @@
                 android:layout_marginBottom="20dp"
                 android:hint="Judul Pesan"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:fontFamily="@font/font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
-                android:text="URL"/>
+                android:text="URL" />
+
             <EditText
                 android:id="@+id/edtUrl"
                 android:layout_marginTop="5dp"
@@ -102,13 +111,15 @@
                 android:layout_marginBottom="20dp"
                 android:hint="URL"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:fontFamily="@font/font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
-                android:text="Pesan"/>
+                android:text="Pesan" />
+
             <EditText
                 android:id="@+id/edtPesan"
                 android:layout_marginTop="5dp"
@@ -124,14 +135,16 @@
                 android:layout_marginBottom="20dp"
                 android:hint="Isi Pesan"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"/>
+                android:layout_height="300dp" />
 
         </LinearLayout>
     </ScrollView>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_100"/>
+        android:background="@color/md_blue_grey_100" />
+
     <Button
         android:id="@+id/btnSimpan"
         android:layout_marginTop="10dp"
@@ -143,5 +156,5 @@
         android:textColor="@color/md_white_1000"
         android:text="Kirim"
         android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        android:layout_height="40dp" />
 </androidx.appcompat.widget.LinearLayoutCompat>

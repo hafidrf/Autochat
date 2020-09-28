@@ -32,10 +32,15 @@ public final class SeekBarDialogPreference extends DialogPreference
         implements SeekBar.OnSeekBarChangeListener {
     public interface ValueProxy {
         int readValue(final String key);
+
         int readDefaultValue(final String key);
+
         void writeValue(final int value, final String key);
+
         void writeDefaultValue(final String key);
+
         String getValueText(final int value);
+
         void feedbackValue(final int value);
     }
 
@@ -68,10 +73,10 @@ public final class SeekBarDialogPreference extends DialogPreference
     @Override
     protected View onCreateDialogView() {
         final View view = super.onCreateDialogView();
-        mSeekBar = (SeekBar)view.findViewById(R.id.seek_bar_dialog_bar);
+        mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar_dialog_bar);
         mSeekBar.setMax(mMaxValue - mMinValue);
         mSeekBar.setOnSeekBarChangeListener(this);
-        mValueView = (TextView)view.findViewById(R.id.seek_bar_dialog_value);
+        mValueView = (TextView) view.findViewById(R.id.seek_bar_dialog_value);
         return view;
     }
 
@@ -105,8 +110,8 @@ public final class SeekBarDialogPreference extends DialogPreference
     @Override
     protected void onPrepareDialogBuilder(final AlertDialog.Builder builder) {
         builder.setPositiveButton(android.R.string.ok, this)
-            .setNegativeButton(android.R.string.cancel, this)
-            .setNeutralButton(R.string.button_default, this);
+                .setNegativeButton(android.R.string.cancel, this)
+                .setNeutralButton(R.string.button_default, this);
     }
 
     @Override
@@ -129,7 +134,7 @@ public final class SeekBarDialogPreference extends DialogPreference
 
     @Override
     public void onProgressChanged(final SeekBar seekBar, final int progress,
-            final boolean fromUser) {
+                                  final boolean fromUser) {
         final int value = getClippedValueFromProgress(progress);
         mValueView.setText(mValueProxy.getValueText(value));
         if (!fromUser) {
@@ -138,7 +143,8 @@ public final class SeekBarDialogPreference extends DialogPreference
     }
 
     @Override
-    public void onStartTrackingTouch(final SeekBar seekBar) {}
+    public void onStartTrackingTouch(final SeekBar seekBar) {
+    }
 
     @Override
     public void onStopTrackingTouch(final SeekBar seekBar) {

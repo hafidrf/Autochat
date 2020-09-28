@@ -1,11 +1,5 @@
 package id.co.kamil.autochat.ui.kontak;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -27,7 +21,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -57,7 +56,6 @@ import id.co.kamil.autochat.utils.SessionManager;
 
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_POST_IMPORT_CONTACT;
-import static id.co.kamil.autochat.utils.API.URL_POST_LIST_CONTACT;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_GROUP;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
@@ -76,7 +74,7 @@ public class ImporKontakActivity extends AppCompatActivity {
     private ListView listKontak;
     private AdapterKontak kontakAdapter;
     private List<ItemKontak> dataKontak = new ArrayList<>();
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Phone.NUMBER
@@ -115,10 +113,10 @@ public class ImporKontakActivity extends AppCompatActivity {
         chkSemua.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                for (int i = 0 ;i<kontakAdapter.listKontak.size();i++){
+                for (int i = 0; i < kontakAdapter.listKontak.size(); i++) {
                     kontakAdapter.listKontak.get(i).setCheckbox(isChecked);
-                    for (int a = 0;a<kontakAdapter.arraylist.size();a++){
-                        if (kontakAdapter.arraylist.get(a).getId().equals(kontakAdapter.listKontak.get(i).getId())){
+                    for (int a = 0; a < kontakAdapter.arraylist.size(); a++) {
+                        if (kontakAdapter.arraylist.get(a).getId().equals(kontakAdapter.listKontak.get(i).getId())) {
                             kontakAdapter.arraylist.get(a).setCheckbox(isChecked);
                         }
                     }
@@ -137,7 +135,7 @@ public class ImporKontakActivity extends AppCompatActivity {
                 try {
                     kontakAdapter.filter(edtCari.getText().toString().trim());
                     listKontak.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -151,26 +149,26 @@ public class ImporKontakActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int chk = 0;
-                for (int i = 0 ;i<kontakAdapter.arraylist.size();i++){
-                    if(kontakAdapter.arraylist.get(i).isCheckbox()){
+                for (int i = 0; i < kontakAdapter.arraylist.size(); i++) {
+                    if (kontakAdapter.arraylist.get(i).isCheckbox()) {
                         chk++;
                     }
                 }
-                if(chk==0){
+                if (chk == 0) {
                     new AlertDialog.Builder(ImporKontakActivity.this)
                             .setMessage("Tidak ada kontak yang dipilih")
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
-                }else{
+                } else {
                     new AlertDialog.Builder(ImporKontakActivity.this)
-                            .setMessage("Apakah anda yakin akan impor "+ chk +" kontak ke Database Wabot?")
+                            .setMessage("Apakah anda yakin akan impor " + chk + " kontak ke Database Wabot?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     simpan();
                                 }
                             })
-                            .setNegativeButton("Tidak",null)
+                            .setNegativeButton("Tidak", null)
                             .show();
                 }
 
@@ -190,7 +188,8 @@ public class ImporKontakActivity extends AppCompatActivity {
             }
         });
     }
-    private void loadKontak(){
+
+    private void loadKontak() {
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CONTACTS)
@@ -230,7 +229,7 @@ public class ImporKontakActivity extends AppCompatActivity {
                     while (cursor.moveToNext()) {
                         name = cursor.getString(nameIndex);
                         number = cursor.getString(numberIndex);
-                        dataKontak.add(new ItemKontak(String.valueOf(i),name,number,false,true,null));
+                        dataKontak.add(new ItemKontak(String.valueOf(i), name, number, false, true, null));
                         i++;
                     }
                 } finally {
@@ -244,11 +243,12 @@ public class ImporKontakActivity extends AppCompatActivity {
         }
 
     }
-    private void simpan(){
+
+    private void simpan() {
         final JSONArray jsonPhone = new JSONArray();
         final JSONArray jsonName = new JSONArray();
-        for (int i=0;i<kontakAdapter.arraylist.size();i++){
-            if (kontakAdapter.arraylist.get(i).isCheckbox()){
+        for (int i = 0; i < kontakAdapter.arraylist.size(); i++) {
+            if (kontakAdapter.arraylist.get(i).isCheckbox()) {
                 final String phone = kontakAdapter.arraylist.get(i).getNomorhp();
                 final String name = kontakAdapter.arraylist.get(i).getJudul();
                 jsonPhone.put(phone);
@@ -281,7 +281,7 @@ public class ImporKontakActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         new AlertDialog.Builder(ImporKontakActivity.this)
                                 .setMessage(message)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -293,10 +293,10 @@ public class ImporKontakActivity extends AppCompatActivity {
                                 })
                                 .setCancelable(false)
                                 .show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(ImporKontakActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
 
@@ -304,7 +304,7 @@ public class ImporKontakActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(ImporKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -312,17 +312,17 @@ public class ImporKontakActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
-                    errorResponse(ImporKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                    errorResponse(ImporKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new androidx.appcompat.app.AlertDialog.Builder(ImporKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -335,28 +335,28 @@ public class ImporKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(ImporKontakActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(ImporKontakActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> header = new HashMap<>();
@@ -370,18 +370,20 @@ public class ImporKontakActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
+
     private void hidePdialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
     private void displayKontak() {
-        kontakAdapter = new AdapterKontak(dataKontak,this);
+        kontakAdapter = new AdapterKontak(dataKontak, this);
         listKontak.setAdapter(kontakAdapter);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

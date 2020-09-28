@@ -1,13 +1,5 @@
 package id.co.kamil.autochat.ui.template;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -16,23 +8,28 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -53,7 +50,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,7 +95,7 @@ public class FormTemplateActivity extends AppCompatActivity {
     private List<ItemRecyclerTag> listKeyword = new ArrayList<>();
     private int id_tag = 0;
     private JSONArray dataTags = new JSONArray();
-    private ImageButton btnBrowse,btnHapus;
+    private ImageButton btnBrowse, btnHapus;
     private ImageView imgPesan;
     private boolean imageSelect = false;
     private String imagePath;
@@ -114,10 +110,10 @@ public class FormTemplateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_form_template);
 
         tipeForm = getIntent().getStringExtra("tipe");
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             getSupportActionBar().setTitle("Edit Template");
             templateId = getIntent().getStringExtra("id");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Tambah Template");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -139,15 +135,15 @@ public class FormTemplateActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listKeyword.size()<=0){
+                if (listKeyword.size() <= 0) {
                     Toast.makeText(FormTemplateActivity.this, "Tags tidak boleh kosong", Toast.LENGTH_SHORT).show();
-                }else if(TextUtils.isEmpty(edtName.getText().toString())){
+                } else if (TextUtils.isEmpty(edtName.getText().toString())) {
                     edtName.setError("Field ini tidak boleh kosong");
                     edtName.requestFocus();
-                }else if(TextUtils.isEmpty(edtKonten.getText().toString())){
+                } else if (TextUtils.isEmpty(edtKonten.getText().toString())) {
                     edtKonten.setError("Field ini tidak boleh kosong");
                     edtKonten.requestFocus();
-                }else{
+                } else {
                     simpanTemplate();
                 }
             }
@@ -164,11 +160,11 @@ public class FormTemplateActivity extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gridKeyword);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         new LinearSnapHelper().attachToRecyclerView(recyclerView);
-        adapterTag = new RecylerTagAdapter(listKeyword, this,new RecylerTagAdapter.OnItemClickListener() {
+        adapterTag = new RecylerTagAdapter(listKeyword, this, new RecylerTagAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ItemRecyclerTag item) {
-                for(int i = 0; i< listKeyword.size(); i++){
-                    if (listKeyword.get(i).getId().equals(item.getId())){
+                for (int i = 0; i < listKeyword.size(); i++) {
+                    if (listKeyword.get(i).getId().equals(item.getId())) {
                         listKeyword.remove(i);
                         adapterTag.notifyDataSetChanged();
                         break;
@@ -178,7 +174,7 @@ public class FormTemplateActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapterTag);
 
-        recyclerView.setMinimumHeight((int) convertDpToPixel(35,this));
+        recyclerView.setMinimumHeight((int) convertDpToPixel(35, this));
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager();
         layoutManager.setFlexWrap(FlexWrap.WRAP);
         layoutManager.setFlexDirection(FlexDirection.ROW);
@@ -200,12 +196,12 @@ public class FormTemplateActivity extends AppCompatActivity {
             }
         });
 
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             loadData();
         }
     }
 
-    public void callGalleryPhoto(){
+    public void callGalleryPhoto() {
 
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -224,12 +220,13 @@ public class FormTemplateActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
     private void loadData() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",templateId);
+            requestBody.put("id", templateId);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -248,18 +245,18 @@ public class FormTemplateActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final JSONObject data = response.getJSONObject("data");
                         final JSONArray tags = data.getJSONArray("tags");
                         final String name = data.getString("name");
                         final String content = data.getString("content");
                         final String picture = data.getString("picture");
-                        for (int a = 0 ;a<tags.length();a++){
+                        for (int a = 0; a < tags.length(); a++) {
                             id_tag++;
                             String tmptag = String.valueOf(id_tag);
-                            listKeyword.add(new ItemRecyclerTag(tmptag,tags.getString(a)));
+                            listKeyword.add(new ItemRecyclerTag(tmptag, tags.getString(a)));
                         }
-                        if (!(picture.isEmpty() || picture == null)){
+                        if (!(picture.isEmpty() || picture == null)) {
                             Picasso.with(FormTemplateActivity.this).load(picture)
                                     .error(R.drawable.ic_image)
                                     .placeholder(R.drawable.ic_image)
@@ -268,7 +265,7 @@ public class FormTemplateActivity extends AppCompatActivity {
                         adapterTag.notifyDataSetChanged();
                         edtName.setText(name);
                         edtKonten.setText(content);
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormTemplateActivity.this)
                                 .setMessage(message)
                                 .setCancelable(false)
@@ -298,17 +295,17 @@ public class FormTemplateActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getApplicationContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getApplicationContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormTemplateActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -321,7 +318,7 @@ public class FormTemplateActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormTemplateActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -337,7 +334,7 @@ public class FormTemplateActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormTemplateActivity.this)
@@ -355,12 +352,12 @@ public class FormTemplateActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -379,7 +376,7 @@ public class FormTemplateActivity extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setTitle("Form Tags");
 
-        final EditText edtKeyword    = (EditText) dialogView.findViewById(R.id.edtKeyword);
+        final EditText edtKeyword = (EditText) dialogView.findViewById(R.id.edtKeyword);
         edtKeyword.setHint("Tags");
         edtKeyword.setText("");
 
@@ -389,7 +386,7 @@ public class FormTemplateActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 id_tag++;
                 String tmpid = String.valueOf(id_tag);
-                listKeyword.add(new ItemRecyclerTag(tmpid,edtKeyword.getText().toString()));
+                listKeyword.add(new ItemRecyclerTag(tmpid, edtKeyword.getText().toString()));
                 adapterTag.notifyDataSetChanged();
                 dialog.dismiss();
             }
@@ -406,22 +403,22 @@ public class FormTemplateActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void simpanTemplate(){
+    private void simpanTemplate() {
         Bitmap compressedImageBitmap = null;
         dataTags = new JSONArray();
-        for (int i=0;i<listKeyword.size();i++){
+        for (int i = 0; i < listKeyword.size(); i++) {
             dataTags.put(listKeyword.get(i).getTitle());
         }
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         String base64_picture = "";
-        if (tipeForm.equals("edit") && editPicture || tipeForm.equals("add")){
-            if (imageSelect){
+        if (tipeForm.equals("edit") && editPicture || tipeForm.equals("add")) {
+            if (imageSelect) {
                 compressedImageBitmap = new Compressor.Builder(this).setQuality(75).build().compressToBitmap(fileImage);
                 base64_picture = ConvertBitmapToString(compressedImageBitmap);
-            }else{
+            } else {
                 base64_picture = "";
             }
-        }else if(tipeForm.equals("edit") && editPicture == false){
+        } else if (tipeForm.equals("edit") && editPicture == false) {
             base64_picture = null;
         }
 
@@ -429,14 +426,14 @@ public class FormTemplateActivity extends AppCompatActivity {
         final JSONObject requestBody = new JSONObject();
         String url = "";
         try {
-            requestBody.put("tags",dataTags);
-            requestBody.put("name",edtName.getText().toString());
-            requestBody.put("content",edtKonten.getText().toString());
-            requestBody.put("picture",base64_picture);
-            if (tipeForm.equals("edit")){
+            requestBody.put("tags", dataTags);
+            requestBody.put("name", edtName.getText().toString());
+            requestBody.put("content", edtKonten.getText().toString());
+            requestBody.put("picture", base64_picture);
+            if (tipeForm.equals("edit")) {
                 url = URL_POST_EDIT_TEMPLATE;
-                requestBody.put("id",templateId);
-            }else{
+                requestBody.put("id", templateId);
+            } else {
                 url = URL_POST_CREATE_TEMPLATE;
             }
         } catch (JSONException e) {
@@ -446,7 +443,7 @@ public class FormTemplateActivity extends AppCompatActivity {
         String uri = Uri.parse(url)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -458,15 +455,15 @@ public class FormTemplateActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
-                        if (response.isNull("picture_hash") == false){
+                    if (status) {
+                        if (response.isNull("picture_hash") == false) {
                             final String picture_hash = response.getString("picture_hash");
 
-                            if (picture_hash.isEmpty() == false){
-                                if (fileExist(getApplicationContext(), getDirWabot("template_promosi") + "/" + picture_hash) == false){
-                                    SaveImage(finalCompressedImageBitmap,"template_promosi",picture_hash);
+                            if (picture_hash.isEmpty() == false) {
+                                if (fileExist(getApplicationContext(), getDirWabot("template_promosi") + "/" + picture_hash) == false) {
+                                    SaveImage(finalCompressedImageBitmap, "template_promosi", picture_hash);
                                     int versionDB = dbHelper.getVersionCodeDB2("ver_template");
-                                    dbHelper.updateDBVersion2(String.valueOf(versionDB+1),"ver_template");
+                                    dbHelper.updateDBVersion2(String.valueOf(versionDB + 1), "ver_template");
                                 }
                             }
                         }
@@ -475,17 +472,17 @@ public class FormTemplateActivity extends AppCompatActivity {
                         Toast.makeText(FormTemplateActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormTemplateActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormTemplateActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -493,15 +490,15 @@ public class FormTemplateActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response !=null){
-                    if (response.statusCode==403){
+                if (response != null) {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormTemplateActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -514,18 +511,18 @@ public class FormTemplateActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormTemplateActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormTemplateActivity.this)
@@ -534,16 +531,16 @@ public class FormTemplateActivity extends AppCompatActivity {
                                 .setPositiveButton("OK", null)
                                 .show();
                     }
-                }else {
+                } else {
                     errorResponse(getApplicationContext(), error);
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -559,7 +556,7 @@ public class FormTemplateActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -568,8 +565,8 @@ public class FormTemplateActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode== LOAD_IMAGE_RESULT){
-            if (resultCode == RESULT_OK){
+        if (requestCode == LOAD_IMAGE_RESULT) {
+            if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
                 Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -587,7 +584,7 @@ public class FormTemplateActivity extends AppCompatActivity {
                     imageSelect = true;
                     imagePath = filePath;
                     editPicture = true;
-                }else{
+                } else {
                     Toast.makeText(this, "Maaf, Tipe File tidak diizinkan", Toast.LENGTH_SHORT).show();
                 }
             }

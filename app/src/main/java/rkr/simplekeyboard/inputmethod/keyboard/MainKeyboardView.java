@@ -94,7 +94,9 @@ import rkr.simplekeyboard.inputmethod.latin.utils.TypefaceUtils;
 public final class MainKeyboardView extends KeyboardView implements MoreKeysPanel.Controller, DrawingProxy {
     private static final String TAG = MainKeyboardView.class.getSimpleName();
 
-    /** Listener for {@link KeyboardActionListener}. */
+    /**
+     * Listener for {@link KeyboardActionListener}.
+     */
     private KeyboardActionListener mKeyboardActionListener;
 
     /* Space key and its icon and background. */
@@ -209,7 +211,7 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
 
         mKeyboardActionListener = KeyboardActionListener.EMPTY_LISTENER;
 
-        mLanguageOnSpacebarHorizontalMargin = (int)getResources().getDimension(
+        mLanguageOnSpacebarHorizontalMargin = (int) getResources().getDimension(
                 R.dimen.config_language_on_spacebar_horizontal_margin);
     }
 
@@ -218,7 +220,7 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
             // TODO: Stop returning null.
             return null;
         }
-        final ObjectAnimator animator = (ObjectAnimator)AnimatorInflater.loadAnimator(
+        final ObjectAnimator animator = (ObjectAnimator) AnimatorInflater.loadAnimator(
                 getContext(), resId);
         if (animator != null) {
             animator.setTarget(target);
@@ -227,7 +229,7 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
     }
 
     private static void cancelAndStartAnimators(final ObjectAnimator animatorToCancel,
-            final ObjectAnimator animatorToStart) {
+                                                final ObjectAnimator animatorToStart) {
         if (animatorToCancel == null || animatorToStart == null) {
             // TODO: Stop using null as a no-operation animator.
             return;
@@ -237,28 +239,30 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
             animatorToCancel.cancel();
             startFraction = 1.0f - animatorToCancel.getAnimatedFraction();
         }
-        final long startTime = (long)(animatorToStart.getDuration() * startFraction);
+        final long startTime = (long) (animatorToStart.getDuration() * startFraction);
         animatorToStart.start();
         animatorToStart.setCurrentPlayTime(startTime);
     }
 
     // Implements {@link DrawingProxy#startWhileTypingAnimation(int)}.
+
     /**
      * Called when a while-typing-animation should be started.
+     *
      * @param fadeInOrOut {@link DrawingProxy#FADE_IN} starts while-typing-fade-in animation.
-     * {@link DrawingProxy#FADE_OUT} starts while-typing-fade-out animation.
+     *                    {@link DrawingProxy#FADE_OUT} starts while-typing-fade-out animation.
      */
     @Override
     public void startWhileTypingAnimation(final int fadeInOrOut) {
         switch (fadeInOrOut) {
-        case DrawingProxy.FADE_IN:
-            cancelAndStartAnimators(
-                    mAltCodeKeyWhileTypingFadeoutAnimator, mAltCodeKeyWhileTypingFadeinAnimator);
-            break;
-        case DrawingProxy.FADE_OUT:
-            cancelAndStartAnimators(
-                    mAltCodeKeyWhileTypingFadeinAnimator, mAltCodeKeyWhileTypingFadeoutAnimator);
-            break;
+            case DrawingProxy.FADE_IN:
+                cancelAndStartAnimators(
+                        mAltCodeKeyWhileTypingFadeoutAnimator, mAltCodeKeyWhileTypingFadeinAnimator);
+                break;
+            case DrawingProxy.FADE_OUT:
+                cancelAndStartAnimators(
+                        mAltCodeKeyWhileTypingFadeinAnimator, mAltCodeKeyWhileTypingFadeoutAnimator);
+                break;
         }
     }
 
@@ -287,9 +291,10 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
     /**
      * Attaches a keyboard to this view. The keyboard can be switched at any time and the
      * view will re-layout itself to accommodate the keyboard.
+     *
+     * @param keyboard the keyboard to display in this view
      * @see Keyboard
      * @see #getKeyboard()
-     * @param keyboard the keyboard to display in this view
      */
     @Override
     public void setKeyboard(final Keyboard keyboard) {
@@ -309,8 +314,9 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
     /**
      * Enables or disables the key preview popup. This is a popup that shows a magnified
      * version of the depressed key. By default the preview is enabled.
+     *
      * @param previewEnabled whether or not to enable the key feedback preview
-     * @param delay the delay after which the preview is dismissed
+     * @param delay          the delay after which the preview is dismissed
      */
     public void setKeyPreviewPopupEnabled(final boolean previewEnabled, final int delay) {
         mKeyPreviewDrawParams.setPopupEnabled(previewEnabled, delay);
@@ -327,7 +333,7 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
             Log.w(TAG, "Cannot find root view");
             return;
         }
-        final ViewGroup windowContentView = (ViewGroup)rootView.findViewById(android.R.id.content);
+        final ViewGroup windowContentView = (ViewGroup) rootView.findViewById(android.R.id.content);
         // Note: It'd be very weird if we get null by android.R.id.content.
         if (windowContentView == null) {
             Log.w(TAG, "Cannot find android.R.id.content view to add DrawingPreviewPlacerView");
@@ -406,7 +412,7 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
     // Implements {@link DrawingProxy@showMoreKeysKeyboard(Key,PointerTracker)}.
     //@Override
     public MoreKeysPanel showMoreKeysKeyboard(final Key key,
-            final PointerTracker tracker) {
+                                              final PointerTracker tracker) {
         final MoreKeySpec[] moreKeys = key.getMoreKeys();
         if (moreKeys == null) {
             return null;
@@ -563,7 +569,7 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
     }
 
     public void startDisplayLanguageOnSpacebar(final boolean subtypeChanged,
-            final int languageOnSpacebarFormatType) {
+                                               final int languageOnSpacebarFormatType) {
         if (subtypeChanged) {
             KeyPreviewView.clearTextCache();
         }
@@ -590,7 +596,7 @@ public final class MainKeyboardView extends KeyboardView implements MoreKeysPane
 
     @Override
     protected void onDrawKeyTopVisuals(final Key key, final Canvas canvas, final Paint paint,
-            final KeyDrawParams params) {
+                                       final KeyDrawParams params) {
         if (key.altCodeWhileTyping() && key.isEnabled()) {
             params.mAnimAlpha = mAltCodeKeyWhileTypingAnimAlpha;
         }

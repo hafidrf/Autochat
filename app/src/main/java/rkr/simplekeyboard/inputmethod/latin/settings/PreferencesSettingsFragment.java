@@ -27,7 +27,7 @@ import rkr.simplekeyboard.inputmethod.latin.RichInputMethodManager;
 
 /**
  * "Preferences" settings sub screen.
- *
+ * <p>
  * This settings sub screen handles the following input preferences.
  * - Auto-capitalization
  * - Double-space period

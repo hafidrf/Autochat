@@ -1,8 +1,5 @@
 package id.co.kamil.autochat.ui.followup;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
@@ -23,6 +20,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -42,13 +42,13 @@ public class FormAddFollowupActivity extends AppCompatActivity {
     private EditText edtIsiPesan;
     private String tipeForm;
     private int positionList = 0;
-    private String followup,schedule;
-    private TextView txtSapaan,txtNamaBelakang,txtNamaDepan;
+    private String followup, schedule;
+    private TextView txtSapaan, txtNamaBelakang, txtNamaDepan;
     private Spinner spinTipeJadwal;
     private EditText edtInterval;
     private LinearLayout layInterval;
     private LinearLayout layJadwal;
-    private String[] arrTipe = {"Tanggal","Interval Hari"};
+    private String[] arrTipe = {"Tanggal", "Interval Hari"};
     private String interval;
 
     @Override
@@ -60,7 +60,7 @@ public class FormAddFollowupActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tipeForm = getIntent().getStringExtra("tipe");
-        positionList = getIntent().getIntExtra("positionList",0);
+        positionList = getIntent().getIntExtra("positionList", 0);
         followup = getIntent().getStringExtra("followup");
         schedule = getIntent().getStringExtra("schedule");
         interval = getIntent().getStringExtra("interval_val");
@@ -82,20 +82,20 @@ public class FormAddFollowupActivity extends AppCompatActivity {
         txtSapaan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[sapaan] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[sapaan] ");
             }
         });
 
         txtNamaDepan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[nama_depan] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_depan] ");
             }
         });
         txtNamaBelakang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[nama_belakang] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_belakang] ");
             }
         });
         edtIsiPesan = (EditText) findViewById(R.id.edtPesan);
@@ -112,7 +112,7 @@ public class FormAddFollowupActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                tempSelectDate[0] = year + "-" +  (monthOfYear + 1) + "-" + dayOfMonth;
+                                tempSelectDate[0] = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                                 Calendar mcurrentTime = Calendar.getInstance();
                                 final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                                 final int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -120,7 +120,7 @@ public class FormAddFollowupActivity extends AppCompatActivity {
                                 mTimePicker = new TimePickerDialog(FormAddFollowupActivity.this, new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                        tempSelectDate[0] = tempSelectDate[0] + " "+ selectedHour + ":" + selectedMinute;
+                                        tempSelectDate[0] = tempSelectDate[0] + " " + selectedHour + ":" + selectedMinute;
                                         edtJadwalKirim.setText(tempSelectDate[0]);
                                     }
                                 }, hour, minute, true);//Yes 24 hour time
@@ -142,53 +142,53 @@ public class FormAddFollowupActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     String val_interval = "0";
-                    if(spinTipeJadwal.getSelectedItemPosition()==0){
+                    if (spinTipeJadwal.getSelectedItemPosition() == 0) {
                         val_interval = "0";
-                    }else{
+                    } else {
                         val_interval = edtInterval.getText().toString();
-                        if (val_interval.equals(null) || val_interval.equals("null") || val_interval == null  || val_interval.equals("") || val_interval.isEmpty() || TextUtils.isEmpty(val_interval)){
+                        if (val_interval.equals(null) || val_interval.equals("null") || val_interval == null || val_interval.equals("") || val_interval.isEmpty() || TextUtils.isEmpty(val_interval)) {
                             Toast.makeText(FormAddFollowupActivity.this, "Interval minimal 1 hari", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if (Integer.parseInt(val_interval)<=0){
+                        if (Integer.parseInt(val_interval) <= 0) {
                             Toast.makeText(FormAddFollowupActivity.this, "Interval minimal 1 hari", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
 
                     Intent intent = new Intent();
-                    intent.putExtra("schedule",edtJadwalKirim.getText().toString());
-                    intent.putExtra("followup",edtIsiPesan.getText().toString());
-                    intent.putExtra("tipe",tipeForm);
-                    intent.putExtra("interval",val_interval);
-                    intent.putExtra("positionList",positionList);
-                    setResult(RESULT_OK,intent);
-                    if (tipeForm.equals("edit")){
-                        Toast.makeText(FormAddFollowupActivity.this,"Berhasil diupdate",Toast.LENGTH_SHORT);
-                    }else{
-                        Toast.makeText(FormAddFollowupActivity.this,"Berhasil disimpan",Toast.LENGTH_SHORT);
+                    intent.putExtra("schedule", edtJadwalKirim.getText().toString());
+                    intent.putExtra("followup", edtIsiPesan.getText().toString());
+                    intent.putExtra("tipe", tipeForm);
+                    intent.putExtra("interval", val_interval);
+                    intent.putExtra("positionList", positionList);
+                    setResult(RESULT_OK, intent);
+                    if (tipeForm.equals("edit")) {
+                        Toast.makeText(FormAddFollowupActivity.this, "Berhasil diupdate", Toast.LENGTH_SHORT);
+                    } else {
+                        Toast.makeText(FormAddFollowupActivity.this, "Berhasil disimpan", Toast.LENGTH_SHORT);
                     }
                     finish();
                 }
 
             }
         });
-        if(tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             edtJadwalKirim.setText(schedule);
             edtIsiPesan.setText(followup);
             edtInterval.setText(interval);
         }
-        final ArrayAdapter statusAdapter = new ArrayAdapter(this,R.layout.item_spinner,arrTipe);
+        final ArrayAdapter statusAdapter = new ArrayAdapter(this, R.layout.item_spinner, arrTipe);
         spinTipeJadwal.setAdapter(statusAdapter);
         spinTipeJadwal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position==0){
+                if (position == 0) {
                     layInterval.setVisibility(View.GONE);
                     layJadwal.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layInterval.setVisibility(View.VISIBLE);
                     layJadwal.setVisibility(View.GONE);
                 }
@@ -199,13 +199,13 @@ public class FormAddFollowupActivity extends AppCompatActivity {
 
             }
         });
-        if (isInterval){
+        if (isInterval) {
             spinTipeJadwal.setEnabled(true);
-            if (Integer.parseInt(interval)>0){
+            if (Integer.parseInt(interval) > 0) {
                 spinTipeJadwal.setSelection(1);
                 spinTipeJadwal.callOnClick();
             }
-        }else{
+        } else {
             spinTipeJadwal.setEnabled(false);
             spinTipeJadwal.setSelection(0);
             spinTipeJadwal.callOnClick();
@@ -213,11 +213,11 @@ public class FormAddFollowupActivity extends AppCompatActivity {
     }
 
     private boolean isRequired() {
-        if (TextUtils.isEmpty(edtJadwalKirim.getText()) && spinTipeJadwal.getSelectedItemPosition()==0){
+        if (TextUtils.isEmpty(edtJadwalKirim.getText()) && spinTipeJadwal.getSelectedItemPosition() == 0) {
             edtJadwalKirim.setError("Field ini tidak boleh kosong");
             edtJadwalKirim.requestFocus();
             return false;
-        }else if (TextUtils.isEmpty(edtIsiPesan.getText())){
+        } else if (TextUtils.isEmpty(edtIsiPesan.getText())) {
             edtIsiPesan.setError("Field ini tidak boleh kosong");
             edtIsiPesan.requestFocus();
             return false;
@@ -227,7 +227,7 @@ public class FormAddFollowupActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

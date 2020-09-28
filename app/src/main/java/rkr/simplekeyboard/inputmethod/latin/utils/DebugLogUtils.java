@@ -29,6 +29,7 @@ public final class DebugLogUtils {
 
     /**
      * Calls .toString() on its non-null argument or returns "null"
+     *
      * @param o the object to convert to a string
      * @return the result of .toString() or null
      */
@@ -38,6 +39,7 @@ public final class DebugLogUtils {
 
     /**
      * Get the string representation of the current stack trace, for debugging purposes.
+     *
      * @return a readable, carriage-return-separated string for the current stack trace.
      */
     public static String getStackTrace() {
@@ -46,6 +48,7 @@ public final class DebugLogUtils {
 
     /**
      * Get the string representation of the current stack trace, for debugging purposes.
+     *
      * @param limit the maximum number of stack frames to be returned.
      * @return a readable, carriage-return-separated string for the current stack trace.
      */
@@ -65,7 +68,7 @@ public final class DebugLogUtils {
 
     /**
      * Helper log method to ease null-checks and adding spaces.
-     *
+     * <p>
      * This sends all arguments to the log, separated by spaces. Any null argument is converted
      * to the "null" string. It uses a very visible tag and log level for debugging purposes.
      *
@@ -75,7 +78,7 @@ public final class DebugLogUtils {
         if (!sDBG) return;
         final StringBuilder sb = new StringBuilder();
         for (final Object o : args) {
-            sb.append(s(o).toString());
+            sb.append(s(o));
             sb.append(" ");
         }
         Log.e(TAG, sb.toString());
@@ -83,7 +86,7 @@ public final class DebugLogUtils {
 
     /**
      * Helper log method to put stuff in red.
-     *
+     * <p>
      * This does the same as #l but prints in red
      *
      * @param args the stuff to send to the log
@@ -92,7 +95,7 @@ public final class DebugLogUtils {
         if (!sDBG) return;
         final StringBuilder sb = new StringBuilder("\u001B[31m");
         for (final Object o : args) {
-            sb.append(s(o).toString());
+            sb.append(s(o));
             sb.append(" ");
         }
         sb.append("\u001B[0m");

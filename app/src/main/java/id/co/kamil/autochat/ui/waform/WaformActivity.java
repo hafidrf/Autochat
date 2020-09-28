@@ -1,9 +1,5 @@
 package id.co.kamil.autochat.ui.waform;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -22,6 +18,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -75,7 +75,7 @@ public class WaformActivity extends AppCompatActivity {
     private AdapterWaformData adapterWaformData;
     private List<ItemWaformData> dataField = new ArrayList<>();
     private String idWaform;
-    private EditText edtRedaksi,edtDomain,edtSubmitText,edtDestNumber,edtDestName;
+    private EditText edtRedaksi, edtDomain, edtSubmitText, edtDestNumber, edtDestName;
     private String lastSubdomain = "";
     private TextView txtLoading;
 
@@ -110,7 +110,7 @@ public class WaformActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     simpanWaform();
                 }
             }
@@ -130,12 +130,12 @@ public class WaformActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (tipeForm.equals("add")){
+                if (tipeForm.equals("add")) {
                     checkAvailable(edtDomain.getText().toString());
-                }else if (lastSubdomain.equals(edtDomain.getText().toString())){
+                } else if (lastSubdomain.equals(edtDomain.getText().toString())) {
                     txtLoading.setText("Subdomain Tersedia");
                     txtLoading.setTextColor(Color.BLUE);
-                }else{
+                } else {
                     checkAvailable(edtDomain.getText().toString());
                 }
             }
@@ -145,25 +145,25 @@ public class WaformActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean exist = true;
                 int id = 0;
-                do{
+                do {
                     id++;
-                    if (dataField.size()<=0){
+                    if (dataField.size() <= 0) {
                         exist = false;
-                    }else{
-                        for (int x = 0 ;x <dataField.size();x++){
+                    } else {
+                        for (int x = 0; x < dataField.size(); x++) {
                             //Log.e(TAG,dataField.get(x).getId() + "=" + id + " ? " + dataField.get(x).getId().equals(String.valueOf(id)));
-                            if (dataField.get(x).getId().equals(String.valueOf(id))){
+                            if (dataField.get(x).getId().equals(String.valueOf(id))) {
                                 exist = true;
                                 break;
-                            }else{
+                            } else {
                                 exist = false;
                             }
                         }
                     }
-                }while(exist==true);
-                Intent i = new Intent(WaformActivity.this,WaformAddFieldActivity.class);
-                i.putExtra("tipe","add");
-                i.putExtra("id",String.valueOf(id));
+                } while (exist == true);
+                Intent i = new Intent(WaformActivity.this, WaformAddFieldActivity.class);
+                i.putExtra("tipe", "add");
+                i.putExtra("id", String.valueOf(id));
                 startActivityForResult(i, REQUEST_ADD_FIELD);
 
             }
@@ -171,7 +171,7 @@ public class WaformActivity extends AppCompatActivity {
         listWaform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if (view.getId() == R.id.btnHapus){
+                if (view.getId() == R.id.btnHapus) {
                     new AlertDialog.Builder(WaformActivity.this)
                             .setMessage("Apakah anda yakin akan menghapus item tersebut?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -182,10 +182,10 @@ public class WaformActivity extends AppCompatActivity {
                                     Toast.makeText(WaformActivity.this, "Item berhasil dihapus", Toast.LENGTH_SHORT).show();
                                 }
                             })
-                            .setNegativeButton("Tidak",null)
+                            .setNegativeButton("Tidak", null)
                             .show();
 
-                }else if (view.getId() == R.id.btnEdit){
+                } else if (view.getId() == R.id.btnEdit) {
                     String placeholder = "";
                     String typeField = "";
                     boolean required = false;
@@ -193,48 +193,49 @@ public class WaformActivity extends AppCompatActivity {
                     JSONArray list = new JSONArray();
                     try {
                         String t_required = attr.getString("required");
-                        if (t_required.isEmpty()){
+                        if (t_required.isEmpty()) {
                             required = false;
-                        }else if(Integer.parseInt(t_required) == 1){
+                        } else if (Integer.parseInt(t_required) == 1) {
                             required = true;
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    if (dataField.get(position).getType().equals("input")){
+                    if (dataField.get(position).getType().equals("input")) {
                         try {
                             placeholder = attr.getString("placeholder");
                             typeField = attr.getString("type");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                    }else if(dataField.get(position).getList() != null){
+                    } else if (dataField.get(position).getList() != null) {
                         list = dataField.get(position).getList();
                     }
-                    Intent i = new Intent(WaformActivity.this,WaformAddFieldActivity.class);
-                    i.putExtra("tipe","edit");
-                    i.putExtra("type",dataField.get(position).getType());
-                    i.putExtra("label",dataField.get(position).getLabel());
-                    i.putExtra("id",dataField.get(position).getId());
-                    i.putExtra("placeholderField",placeholder);
-                    i.putExtra("requiredField",required);
-                    i.putExtra("inputTypeField",typeField);
-                    i.putExtra("positionList",position);
-                    i.putExtra("listCombo",list.toString());
+                    Intent i = new Intent(WaformActivity.this, WaformAddFieldActivity.class);
+                    i.putExtra("tipe", "edit");
+                    i.putExtra("type", dataField.get(position).getType());
+                    i.putExtra("label", dataField.get(position).getLabel());
+                    i.putExtra("id", dataField.get(position).getId());
+                    i.putExtra("placeholderField", placeholder);
+                    i.putExtra("requiredField", required);
+                    i.putExtra("inputTypeField", typeField);
+                    i.putExtra("positionList", position);
+                    i.putExtra("listCombo", list.toString());
                     startActivityForResult(i, REQUEST_ADD_FIELD);
                 }
 
             }
         });
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             getData();
         }
     }
-    private void checkAvailable(String subdomain){
+
+    private void checkAvailable(String subdomain) {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("domain",subdomain);
+            requestBody.put("domain", subdomain);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -244,7 +245,7 @@ public class WaformActivity extends AppCompatActivity {
         txtLoading.setText("Cek ketersediaan subdomain...");
         txtLoading.setTextColor(Color.GREEN);
 
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -252,10 +253,10 @@ public class WaformActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         txtLoading.setTextColor(Color.BLUE);
                         txtLoading.setText(message);
-                    }else{
+                    } else {
                         txtLoading.setTextColor(Color.RED);
                         txtLoading.setText(message);
                     }
@@ -273,13 +274,13 @@ public class WaformActivity extends AppCompatActivity {
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
                     errorResponse(WaformActivity.this, error);
-                }else {
-                    if (response.statusCode==403){
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(WaformActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -292,7 +293,7 @@ public class WaformActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(WaformActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -303,23 +304,23 @@ public class WaformActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
                         final String msg = getResources().getString(errorResponse(error));
                         txtLoading.setTextColor(Color.RED);
                         txtLoading.setText(msg);
-                        Log.i(TAG,errorResponseString(error));
+                        Log.i(TAG, errorResponseString(error));
                     }
 
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
+                Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","multipart/form-data");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
 
@@ -328,7 +329,8 @@ public class WaformActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void getData(){
+
+    private void getData() {
         dataField.clear();
 
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -344,7 +346,7 @@ public class WaformActivity extends AppCompatActivity {
                 .buildUpon()
                 .toString();
 
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -355,7 +357,7 @@ public class WaformActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final JSONObject data = response.getJSONObject("data");
                         final String judul = data.getString("title");
                         final String redaksi = data.getString("redaksi");
@@ -372,34 +374,34 @@ public class WaformActivity extends AppCompatActivity {
                         edtDestNumber.setText(dest_number);
                         edtDestName.setText(dest_name);
                         edtDomain.setText(domain);
-                        for (int i=0;i<field.length();i++){
+                        for (int i = 0; i < field.length(); i++) {
                             final String id = field.getJSONObject(i).getString("id");
                             final String type = field.getJSONObject(i).getString("type");
                             final String label = field.getJSONObject(i).getString("label");
                             JSONObject attr = new JSONObject();
-                            if (field.getJSONObject(i).getJSONObject("attr") != null){
+                            if (field.getJSONObject(i).getJSONObject("attr") != null) {
                                 attr = field.getJSONObject(i).getJSONObject("attr");
                             }
                             JSONArray list = new JSONArray();
-                            if (field.getJSONObject(i).getJSONArray("list") != null){
+                            if (field.getJSONObject(i).getJSONArray("list") != null) {
                                 list = field.getJSONObject(i).getJSONArray("list");
                             }
 
-                            dataField.add(new ItemWaformData(id,type,label,attr,list));
+                            dataField.add(new ItemWaformData(id, type, label, attr, list));
 
                         }
                         displayDataField();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(WaformActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(WaformActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -407,17 +409,17 @@ public class WaformActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(WaformActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(WaformActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(WaformActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -430,7 +432,7 @@ public class WaformActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(WaformActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -446,7 +448,7 @@ public class WaformActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(WaformActivity.this)
@@ -459,13 +461,13 @@ public class WaformActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -473,12 +475,13 @@ public class WaformActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
+
     private void simpanWaform() {
         JSONArray field = new JSONArray();
-        for (int i = 0; i< dataField.size(); i++){
+        for (int i = 0; i < dataField.size(); i++) {
             JSONObject obj = new JSONObject();
             try {
-                obj.put("id", i+1);
+                obj.put("id", i + 1);
                 obj.put("label", dataField.get(i).getLabel());
                 obj.put("type", dataField.get(i).getType());
                 obj.put("attr", dataField.get(i).getAttr());
@@ -492,31 +495,31 @@ public class WaformActivity extends AppCompatActivity {
 
         final JSONObject requestBody = new JSONObject();
         try {
-            if (tipeForm.equals("edit")){
+            if (tipeForm.equals("edit")) {
                 requestBody.put("id", idWaform);
             }
-            requestBody.put("title",edtNama.getText().toString());
-            requestBody.put("redaksi",edtRedaksi.getText().toString());
-            requestBody.put("dest_number",edtDestNumber.getText().toString());
-            requestBody.put("dest_name",edtDestName.getText().toString());
-            requestBody.put("submit_text",edtSubmitText.getText().toString());
-            requestBody.put("domain",edtDomain.getText().toString());
-            requestBody.put("field",field);
+            requestBody.put("title", edtNama.getText().toString());
+            requestBody.put("redaksi", edtRedaksi.getText().toString());
+            requestBody.put("dest_number", edtDestNumber.getText().toString());
+            requestBody.put("dest_name", edtDestName.getText().toString());
+            requestBody.put("submit_text", edtSubmitText.getText().toString());
+            requestBody.put("domain", edtDomain.getText().toString());
+            requestBody.put("field", field);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         String uri = "";
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             uri = Uri.parse(URL_POST_EDIT_WAFORM)
                     .buildUpon()
                     .toString();
-        }else{
+        } else {
             uri = Uri.parse(URL_POST_CREATE_WAFORM)
                     .buildUpon()
                     .toString();
         }
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -527,21 +530,21 @@ public class WaformActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(WaformActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(WaformActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(WaformActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -549,17 +552,17 @@ public class WaformActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(WaformActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(WaformActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(WaformActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -572,7 +575,7 @@ public class WaformActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(WaformActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -588,7 +591,7 @@ public class WaformActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(WaformActivity.this)
@@ -601,13 +604,13 @@ public class WaformActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -618,7 +621,7 @@ public class WaformActivity extends AppCompatActivity {
     }
 
     private void hidePdialog() {
-        if(pDialog.isShowing())
+        if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
@@ -627,27 +630,27 @@ public class WaformActivity extends AppCompatActivity {
             edtNama.setError("Field ini tidak boleh kosong");
             edtNama.requestFocus();
             return false;
-        }else if (TextUtils.isEmpty(edtRedaksi.getText())){
+        } else if (TextUtils.isEmpty(edtRedaksi.getText())) {
             edtRedaksi.setError("Field ini tidak boleh kosong");
             edtRedaksi.requestFocus();
             return false;
-        }else if (TextUtils.isEmpty(edtDestNumber.getText())){
+        } else if (TextUtils.isEmpty(edtDestNumber.getText())) {
             edtDestNumber.setError("Field ini tidak boleh kosong");
             edtDestNumber.requestFocus();
             return false;
-        }else if (TextUtils.isEmpty(edtDestName.getText())){
+        } else if (TextUtils.isEmpty(edtDestName.getText())) {
             edtDestName.setError("Field ini tidak boleh kosong");
             edtDestName.requestFocus();
             return false;
-        }else if (TextUtils.isEmpty(edtSubmitText.getText())){
+        } else if (TextUtils.isEmpty(edtSubmitText.getText())) {
             edtSubmitText.setError("Field ini tidak boleh kosong");
             edtSubmitText.requestFocus();
             return false;
-        }else if (TextUtils.isEmpty(edtDomain.getText())){
+        } else if (TextUtils.isEmpty(edtDomain.getText())) {
             edtDomain.setError("Field ini tidak boleh kosong");
             edtDomain.requestFocus();
             return false;
-        }else if(dataField.size()<=0){
+        } else if (dataField.size() <= 0) {
             Toast.makeText(this, "Field WA Form tidak boleh kosong", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -657,18 +660,18 @@ public class WaformActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode== REQUEST_ADD_FIELD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD_FIELD) {
+            if (resultCode == RESULT_OK) {
                 String tipeForm = data.getStringExtra("tipeForm");
                 String tipeField = data.getStringExtra("type");
                 String id = data.getStringExtra("id");
                 String label = data.getStringExtra("label");
                 String t_attr = data.getStringExtra("attr");
                 String t_list = data.getStringExtra("list");
-                int positionList = data.getIntExtra("positionList",0);
+                int positionList = data.getIntExtra("positionList", 0);
                 JSONObject attr = new JSONObject();
                 try {
-                    if (t_attr.isEmpty() == false && t_attr != null){
+                    if (t_attr.isEmpty() == false && t_attr != null) {
                         attr = new JSONObject(t_attr);
                     }
                 } catch (JSONException e) {
@@ -676,23 +679,23 @@ public class WaformActivity extends AppCompatActivity {
                 }
                 JSONArray list = new JSONArray();
                 try {
-                    if (t_list.isEmpty() == false && t_list !=null){
+                    if (t_list.isEmpty() == false && t_list != null) {
                         list = new JSONArray(t_list);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                if (tipeForm.equals("add")){
+                if (tipeForm.equals("add")) {
 
-                    ItemWaformData itemFormField = new ItemWaformData(id,tipeField,label,attr,list);
-                    Log.e(TAG,"item: " + itemFormField);
+                    ItemWaformData itemFormField = new ItemWaformData(id, tipeField, label, attr, list);
+                    Log.e(TAG, "item: " + itemFormField);
                     dataField.add(itemFormField);
-                }else{
-                    ItemWaformData itemFormField = new ItemWaformData(id,tipeField,label,attr,list);
-                    Log.e(TAG,"item: " + itemFormField);
+                } else {
+                    ItemWaformData itemFormField = new ItemWaformData(id, tipeField, label, attr, list);
+                    Log.e(TAG, "item: " + itemFormField);
                     dataField.remove(positionList);
-                    dataField.add(positionList,itemFormField);
+                    dataField.add(positionList, itemFormField);
                 }
                 displayDataField();
             }
@@ -707,7 +710,7 @@ public class WaformActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

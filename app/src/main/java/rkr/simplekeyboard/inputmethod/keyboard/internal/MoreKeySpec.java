@@ -30,7 +30,7 @@ import rkr.simplekeyboard.inputmethod.latin.common.StringUtils;
 
 /**
  * The more key specification object. The more keys are an array of {@link MoreKeySpec}.
- *
+ * <p>
  * The more keys specification is comma separated "key specification" each of which represents one
  * "more key".
  * The key specification might have label or string resource reference in it. These references are
@@ -47,7 +47,7 @@ public final class MoreKeySpec {
     public final int mIconId;
 
     public MoreKeySpec(final String moreKeySpec, boolean needsToUpperCase,
-            final Locale locale) {
+                       final Locale locale) {
         if (moreKeySpec.isEmpty()) {
             throw new KeySpecParser.KeySpecParserError("Empty more key spec");
         }
@@ -71,7 +71,7 @@ public final class MoreKeySpec {
     }
 
     public Key buildKey(final int x, final int y, final int labelFlags,
-            final KeyboardParams params) {
+                        final KeyboardParams params) {
         return new Key(mLabel, mIconId, mCode, mOutputText, null /* hintLabel */, labelFlags,
                 Key.BACKGROUND_TYPE_NORMAL, x, y, params.mDefaultKeyWidth, params.mDefaultRowHeight,
                 params.mHorizontalGap, params.mVerticalGap);
@@ -94,7 +94,7 @@ public final class MoreKeySpec {
             return true;
         }
         if (o instanceof MoreKeySpec) {
-            final MoreKeySpec other = (MoreKeySpec)o;
+            final MoreKeySpec other = (MoreKeySpec) o;
             return mCode == other.mCode
                     && mIconId == other.mIconId
                     && TextUtils.equals(mLabel, other.mLabel)
@@ -132,15 +132,12 @@ public final class MoreKeySpec {
             final int code = moreKey.mCode;
             if (Character.isAlphabetic(code) && mCodes.indexOfKey(code) >= 0) {
                 return true;
-            } else if (code == Constants.CODE_OUTPUT_TEXT && mTexts.contains(moreKey.mOutputText)) {
-                return true;
-            }
-            return false;
+            } else return code == Constants.CODE_OUTPUT_TEXT && mTexts.contains(moreKey.mOutputText);
         }
     }
 
     public static MoreKeySpec[] removeRedundantMoreKeys(final MoreKeySpec[] moreKeys,
-            final LettersOnBaseLayout lettersOnBaseLayout) {
+                                                        final LettersOnBaseLayout lettersOnBaseLayout) {
         if (moreKeys == null) {
             return null;
         }
@@ -184,7 +181,7 @@ public final class MoreKeySpec {
         final int size = text.length();
         // Optimization for one-letter key specification.
         if (size == 1) {
-            return text.charAt(0) == COMMA ? null : new String[] { text };
+            return text.charAt(0) == COMMA ? null : new String[]{text};
         }
 
         ArrayList<String> list = null;
@@ -211,7 +208,7 @@ public final class MoreKeySpec {
         }
         final String remain = (size - start > 0) ? text.substring(start) : null;
         if (list == null) {
-            return remain != null ? new String[] { remain } : null;
+            return remain != null ? new String[]{remain} : null;
         }
         if (remain != null) {
             list.add(remain);
@@ -243,7 +240,7 @@ public final class MoreKeySpec {
     }
 
     public static String[] insertAdditionalMoreKeys(final String[] moreKeySpecs,
-            final String[] additionalMoreKeySpecs) {
+                                                    final String[] additionalMoreKeySpecs) {
         final String[] moreKeys = filterOutEmptyString(moreKeySpecs);
         final String[] additionalMoreKeys = filterOutEmptyString(additionalMoreKeySpecs);
         final int moreKeysCount = moreKeys.length;
@@ -299,7 +296,7 @@ public final class MoreKeySpec {
     }
 
     public static int getIntValue(final String[] moreKeys, final String key,
-            final int defaultValue) {
+                                  final int defaultValue) {
         if (moreKeys == null) {
             return defaultValue;
         }

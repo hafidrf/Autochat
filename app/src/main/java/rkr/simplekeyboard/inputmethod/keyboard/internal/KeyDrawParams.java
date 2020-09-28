@@ -47,7 +47,8 @@ public final class KeyDrawParams {
 
     public int mAnimAlpha;
 
-    public KeyDrawParams() {}
+    public KeyDrawParams() {
+    }
 
     private KeyDrawParams(final KeyDrawParams copyFrom) {
         mTypeface = copyFrom.mTypeface;
@@ -118,7 +119,7 @@ public final class KeyDrawParams {
     }
 
     public KeyDrawParams mayCloneAndUpdateParams(final int keyHeight,
-            final KeyVisualAttributes attr) {
+                                                 final KeyVisualAttributes attr) {
         if (attr == null) {
             return this;
         }
@@ -128,20 +129,20 @@ public final class KeyDrawParams {
     }
 
     private static int selectTextSizeFromDimensionOrRatio(final int keyHeight,
-            final int dimens, final float ratio, final int defaultDimens) {
+                                                          final int dimens, final float ratio, final int defaultDimens) {
         if (ResourceUtils.isValidDimensionPixelSize(dimens)) {
             return dimens;
         }
         if (ResourceUtils.isValidFraction(ratio)) {
-            return (int)(keyHeight * ratio);
+            return (int) (keyHeight * ratio);
         }
         return defaultDimens;
     }
 
     private static int selectTextSize(final int keyHeight, final float ratio,
-            final int defaultSize) {
+                                      final int defaultSize) {
         if (ResourceUtils.isValidFraction(ratio)) {
-            return (int)(keyHeight * ratio);
+            return (int) (keyHeight * ratio);
         }
         return defaultSize;
     }

@@ -25,7 +25,7 @@ public class SessionManager {
     public static final String KEY_CUST_GROUP = "username"; //username
     public static final String KEY_FIRSTNAME = "name"; //username
     public static final String KEY_LASTNAME = "nick_name"; //username
-    public static final String KEY_EMAIL= "email"; //username
+    public static final String KEY_EMAIL = "email"; //username
     public static final String KEY_PHONE = "phone"; //username
     public static final String KEY_TOKEN = "token"; // Token User
     public static final String KEY_CHILD = "child"; // is Child
@@ -33,7 +33,7 @@ public class SessionManager {
     public static final String KEY_PARENT_ID = "key_parent_id";
 
     // Constructor
-    public SessionManager(Context context){
+    public SessionManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
@@ -41,8 +41,8 @@ public class SessionManager {
 
     /**
      * Create login session
-     * */
-    public void createLoginSession(String cust_id, String token, String firstname, String lastname, String email, String phone, String cust_group,boolean is_child, String parent_id){
+     */
+    public void createLoginSession(String cust_id, String token, String firstname, String lastname, String email, String phone, String cust_group, boolean is_child, String parent_id) {
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_CUST_ID, cust_id);
         editor.putString(KEY_TOKEN, token);
@@ -56,20 +56,20 @@ public class SessionManager {
         editor.commit();
     }
 
-    public void setToken(String token){
+    public void setToken(String token) {
         editor.putString(KEY_TOKEN, token);
         editor.commit();
     }
 
-    public void setKeyCustGroup(String id){
+    public void setKeyCustGroup(String id) {
         editor.putString(KEY_CUST_GROUP, id);
         editor.commit();
     }
 
     /**
      * Get stored session data
-     * */
-    public HashMap<String, String> getUserDetails(){
+     */
+    public HashMap<String, String> getUserDetails() {
 
         HashMap<String, String> user = new HashMap<String, String>();
 
@@ -84,17 +84,20 @@ public class SessionManager {
         user.put(KEY_PARENT_ID, String.valueOf(pref.getString(KEY_PARENT_ID, "")));
         return user;
     }
-    public String getValue(String key){
-        return pref.getString(key,"");
+
+    public String getValue(String key) {
+        return pref.getString(key, "");
     }
-    public void setValue(String key,String val){
-        editor.putString(key,val);
+
+    public void setValue(String key, String val) {
+        editor.putString(key, val);
         editor.commit();
     }
-    public void clearData(){
+
+    public void clearData() {
         editor.clear();
         editor.commit();
-        String affiliation = pref.getString(KEY_AFFILIATION,"");
+        String affiliation = pref.getString(KEY_AFFILIATION, "");
         editor.putBoolean(IS_LOGIN, false);
         editor.putString(KEY_CUST_ID, "");
         editor.putString(KEY_TOKEN, "");
@@ -102,7 +105,7 @@ public class SessionManager {
         editor.commit();
     }
 
-    public boolean isLoggedIn(){
+    public boolean isLoggedIn() {
         return pref.getBoolean(IS_LOGIN, false);
     }
 

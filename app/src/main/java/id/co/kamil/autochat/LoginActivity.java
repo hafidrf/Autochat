@@ -1,18 +1,9 @@
 package id.co.kamil.autochat;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -41,8 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import id.co.kamil.autochat.database.DBHelper;
-import id.co.kamil.autochat.installreferrer.Application;
-import id.co.kamil.autochat.installreferrer.ReferrerReceiver;
 import id.co.kamil.autochat.utils.PermissionManagement;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
@@ -50,7 +44,6 @@ import id.co.kamil.autochat.utils.SharPref;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_LUPA_PASSWORD;
 import static id.co.kamil.autochat.utils.API.URL_POST_LOGIN;
-import static id.co.kamil.autochat.utils.SessionManager.KEY_AFFILIATION;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
 import static id.co.kamil.autochat.utils.Utils.errorResponseString;
 
@@ -81,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         session = new SessionManager(this);
         userDetail = session.getUserDetails();
-        if (session.isLoggedIn()){
+        if (session.isLoggedIn()) {
             goToMain();
         }
         txtLupaPassword = (TextView) findViewById(R.id.txtLupaPassword);
@@ -93,13 +86,13 @@ public class LoginActivity extends AppCompatActivity {
         btnDaftar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,SignupActivity.class));
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
             }
         });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     doLogin();
                 }
             }
@@ -116,24 +109,25 @@ public class LoginActivity extends AppCompatActivity {
         cekPermission();
     }
 
-    private boolean isRequired(){
-        if (TextUtils.isEmpty(edtEmail.getText())){
+    private boolean isRequired() {
+        if (TextUtils.isEmpty(edtEmail.getText())) {
             edtEmail.setError("Field ini tidak boleh kosong");
             edtEmail.requestFocus();
             return false;
         }
-        if (TextUtils.isEmpty(edtPassword.getText())){
+        if (TextUtils.isEmpty(edtPassword.getText())) {
             edtPassword.setError("Field ini tidak boleh kosong");
             edtPassword.requestFocus();
             return false;
         }
         return true;
     }
+
     private void doLogin() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final HashMap<String,String> body = new HashMap<>();
+        final HashMap<String, String> body = new HashMap<>();
         body.put("username", edtEmail.getText().toString());
-        body.put("password",edtPassword.getText().toString());
+        body.put("password", edtPassword.getText().toString());
 
         final JSONObject param = new JSONObject(body);
         final String uri = Uri.parse(URL_POST_LOGIN)
@@ -155,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONObject data = response.getJSONObject("customer_info");
                         final String auth_token = response.getString("access_token");
                         final String customer_id = data.getString("customer_id");
@@ -167,23 +161,23 @@ public class LoginActivity extends AppCompatActivity {
                         final String customer_group_id = data.getString("customer_group_id");
                         final boolean child = response.getBoolean("is_child");
 
-                        Log.i(TAG,"token:" + auth_token);
-                        Log.e(TAG,"parent_id" + parent_id);
-                        session.createLoginSession(customer_id,auth_token,firstname,lastname,email,phone,customer_group_id,child,parent_id);
+                        Log.i(TAG, "token:" + auth_token);
+                        Log.e(TAG, "parent_id" + parent_id);
+                        session.createLoginSession(customer_id, auth_token, firstname, lastname, email, phone, customer_group_id, child, parent_id);
                         dbHelper.clearData();
                         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                         goToMain();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(LoginActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(LoginActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -192,18 +186,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,"error:" + errorResponseString(error));
+                Log.i(TAG, "error:" + errorResponseString(error));
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(LoginActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .show();
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 return header;
             }
@@ -215,14 +209,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private void hidePdialog() {
         try {
-            if(pDialog.isShowing())
+            if (pDialog.isShowing())
                 pDialog.dismiss();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
+
     private void goToMain() {
-        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
     }
 

@@ -24,7 +24,7 @@ import static rkr.simplekeyboard.inputmethod.latin.common.Constants.CODE_UNSPECI
 
 /**
  * The string parser of the key specification.
- *
+ * <p>
  * Each key specification is one of the following:
  * - Label optionally followed by keyOutputText (keyLabel|keyOutputText).
  * - Label optionally followed by code point (keyLabel|!code/code_name).

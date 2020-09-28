@@ -23,9 +23,9 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
 import android.os.Build;
@@ -149,31 +149,31 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
             }
             final KeyboardSwitcher switcher = latinIme.mKeyboardSwitcher;
             switch (msg.what) {
-            case MSG_UPDATE_SHIFT_STATE:
-                switcher.requestUpdatingShiftState(latinIme.getCurrentAutoCapsState(),
-                        latinIme.getCurrentRecapitalizeState());
-                break;
-            case MSG_RESET_CACHES:
-                final SettingsValues settingsValues = latinIme.mSettings.getCurrent();
-                if (latinIme.mInputLogic.retryResetCachesAndReturnSuccess(
-                        msg.arg1 == ARG1_TRUE /* tryResumeSuggestions */,
-                        msg.arg2 /* remainingTries */, this /* handler */)) {
-                    // If we were able to reset the caches, then we can reload the keyboard.
-                    // Otherwise, we'll do it when we can.
-                    latinIme.mKeyboardSwitcher.loadKeyboard(latinIme.getCurrentInputEditorInfo(),
-                            settingsValues, latinIme.getCurrentAutoCapsState(),
+                case MSG_UPDATE_SHIFT_STATE:
+                    switcher.requestUpdatingShiftState(latinIme.getCurrentAutoCapsState(),
                             latinIme.getCurrentRecapitalizeState());
-                }
-                break;
-            case MSG_WAIT_FOR_DICTIONARY_LOAD:
-                Log.i(TAG, "Timeout waiting for dictionary load");
-                break;
-            case MSG_DEALLOCATE_MEMORY:
-                latinIme.deallocateMemory();
-                break;
-            case MSG_SWITCH_LANGUAGE_AUTOMATICALLY:
-                latinIme.switchLanguage((InputMethodSubtype)msg.obj);
-                break;
+                    break;
+                case MSG_RESET_CACHES:
+                    final SettingsValues settingsValues = latinIme.mSettings.getCurrent();
+                    if (latinIme.mInputLogic.retryResetCachesAndReturnSuccess(
+                            msg.arg1 == ARG1_TRUE /* tryResumeSuggestions */,
+                            msg.arg2 /* remainingTries */, this /* handler */)) {
+                        // If we were able to reset the caches, then we can reload the keyboard.
+                        // Otherwise, we'll do it when we can.
+                        latinIme.mKeyboardSwitcher.loadKeyboard(latinIme.getCurrentInputEditorInfo(),
+                                settingsValues, latinIme.getCurrentAutoCapsState(),
+                                latinIme.getCurrentRecapitalizeState());
+                    }
+                    break;
+                case MSG_WAIT_FOR_DICTIONARY_LOAD:
+                    Log.i(TAG, "Timeout waiting for dictionary load");
+                    break;
+                case MSG_DEALLOCATE_MEMORY:
+                    latinIme.deallocateMemory();
+                    break;
+                case MSG_SWITCH_LANGUAGE_AUTOMATICALLY:
+                    latinIme.switchLanguage((InputMethodSubtype) msg.obj);
+                    break;
             }
         }
 
@@ -225,7 +225,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         }
 
         private void executePendingImsCallback(final LatinIME latinIme, final EditorInfo editorInfo,
-                boolean restarting) {
+                                               boolean restarting) {
             if (mHasPendingFinishInputView) {
                 latinIme.onFinishInputViewInternal(mHasPendingFinishInput);
             }
@@ -484,7 +484,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         if (DebugFlags.DEBUG_ENABLED) {
             Log.d(TAG, "onStartInputView: editorInfo:"
                     + String.format("inputType=0x%08x imeOptions=0x%08x",
-                            editorInfo.inputType, editorInfo.imeOptions));
+                    editorInfo.inputType, editorInfo.imeOptions));
             Log.d(TAG, "All caps = "
                     + ((editorInfo.inputType & InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS) != 0)
                     + ", sentence caps = "
@@ -612,8 +612,8 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
 
     @Override
     public void onUpdateSelection(final int oldSelStart, final int oldSelEnd,
-            final int newSelStart, final int newSelEnd,
-            final int composingSpanStart, final int composingSpanEnd) {
+                                  final int newSelStart, final int newSelEnd,
+                                  final int composingSpanStart, final int composingSpanEnd) {
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd,
                 composingSpanStart, composingSpanEnd);
         if (DebugFlags.DEBUG_ENABLED) {
@@ -632,52 +632,53 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
                     getCurrentRecapitalizeState());
         }
         try {
-            final CharSequence extractText = getCurrentInputConnection().getExtractedText(new ExtractedTextRequest(),0).text;
+            final CharSequence extractText = getCurrentInputConnection().getExtractedText(new ExtractedTextRequest(), 0).text;
             final String separator = getWordSeparators();
             int startLimit = 0;
             int endLimit = 0;
-            int i = (newSelStart>0) ? newSelStart-1 : 0;
+            int i = (newSelStart > 0) ? newSelStart - 1 : 0;
             boolean matches;
             boolean nextTask = true;
-            Log.i(TAG,"selStart:" + newSelStart);
-            do{
-                if (extractText.length()>0){
+            Log.i(TAG, "selStart:" + newSelStart);
+            do {
+                if (extractText.length() > 0) {
                     matches = String.valueOf(extractText.charAt(i)).matches(separator);
-                    if (matches){
+                    if (matches) {
                         nextTask = false;
                         i++;
-                    }else if(i==0){
+                    } else if (i == 0) {
                         nextTask = false;
-                    }else if(i>0){
+                    } else if (i > 0) {
                         i--;
-                    }else{
+                    } else {
                         nextTask = false;
                     }
-                }else{
+                } else {
                     nextTask = false;
                 }
 
-            }while (nextTask);
+            } while (nextTask);
             startLimit = i;
             endLimit = newSelStart;
-            for (int x = newSelStart;x<extractText.length();x++){
+            for (int x = newSelStart; x < extractText.length(); x++) {
                 matches = String.valueOf(extractText.charAt(x)).matches(separator);
-                if (matches){
+                if (matches) {
                     endLimit = x;
                     break;
-                }else{
-                    endLimit = x+1;
+                } else {
+                    endLimit = x + 1;
                 }
             }
 
-            Log.i(TAG,"startLimit:" + startLimit + " endLimit:" + endLimit);
+            Log.i(TAG, "startLimit:" + startLimit + " endLimit:" + endLimit);
             mComposing.setLength(0);
-            mComposing.append(extractText.subSequence(startLimit,endLimit));
-            updateCandidates(startLimit,endLimit, getCurrentInputConnection());
-        }catch (Exception e){
+            mComposing.append(extractText.subSequence(startLimit, endLimit));
+            updateCandidates(startLimit, endLimit, getCurrentInputConnection());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private void updateCandidates(int start, int end, InputConnection inputConnection) {
         //status_auto_text = sharePref.getSessionBool(SharPref.STATUS_AUTOTEXT);
         //if (status_auto_text==false) return;
@@ -687,22 +688,25 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
             listSuggestions.clear();
             list = dbHelper.cari_autotext(mComposing.toString());
 
-            setSuggestions(list, start, end,inputConnection);
+            setSuggestions(list, start, end, inputConnection);
         } else {
-            setSuggestions(null, start, end,inputConnection);
+            setSuggestions(null, start, end, inputConnection);
         }
     }
+
     public void setSuggestions(List<String> suggestions, int start, int end, InputConnection inputConnection) {
         mSuggestions = suggestions;
-        mKeyboardSwitcher.setSuggestions(suggestions,start,end,inputConnection);
+        mKeyboardSwitcher.setSuggestions(suggestions, start, end, inputConnection);
 
 //        if (mCandidateView != null) {
 //            mCandidateView.setSuggestions(suggestions, completions, typedWordValid);
 //        }
     }
+
     private String getWordSeparators() {
         return "[ .,;:!?()\\[\\]*\\&@{}\\/<>\\_+=|'\\n\\\"]";
     }
+
     @Override
     public void hideWindow() {
         mKeyboardSwitcher.onHideWindow();
@@ -735,7 +739,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
             mInsetsUpdater.setInsets(outInsets);
             return;
         }
-        final int visibleTopY = inputHeight - visibleKeyboardView.getHeight() - (int) convertDpToPixel(60,getApplicationContext());
+        final int visibleTopY = inputHeight - visibleKeyboardView.getHeight() - (int) convertDpToPixel(60, getApplicationContext());
         // Need to set expanded touchable region only if a keyboard view is being shown.
         if (visibleKeyboardView.isShown()) {
             final int touchLeft = 0;
@@ -839,9 +843,9 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
 
     @Override
     public void onMovePointer(int steps) {
-        for (;steps < 0; steps++)
+        for (; steps < 0; steps++)
             mInputLogic.sendDownUpKeyEvent(KeyEvent.KEYCODE_DPAD_LEFT);
-        for (;steps > 0; steps--)
+        for (; steps > 0; steps--)
             mInputLogic.sendDownUpKeyEvent(KeyEvent.KEYCODE_DPAD_RIGHT);
     }
 
@@ -895,7 +899,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     // Implementation of {@link KeyboardActionListener}.
     @Override
     public void onCodeInput(final int codePoint, final int x, final int y,
-            final boolean isKeyRepeat) {
+                            final boolean isKeyRepeat) {
         // TODO: this processing does not belong inside LatinIME, the caller should be doing this.
         final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
         // x and y include some padding, but everything down the line (especially native
@@ -926,7 +930,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     // squashed into the same variable, and this method should be removed.
     // public for testing, as we don't want to copy the same logic into test code
     public static Event createSoftwareKeypressEvent(final int keyCodeOrCodePoint, final int keyX,
-             final int keyY, final boolean isKeyRepeat) {
+                                                    final int keyY, final boolean isKeyRepeat) {
         final int keyCode;
         final int codePoint;
         if (keyCodeOrCodePoint <= 0) {
@@ -977,18 +981,19 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
      * After an input transaction has been executed, some state must be updated. This includes
      * the shift state of the keyboard and suggestions. This method looks at the finished
      * inputTransaction to find out what is necessary and updates the state accordingly.
+     *
      * @param inputTransaction The transaction that has been executed.
      */
     private void updateStateAfterInputTransaction(final InputTransaction inputTransaction) {
         switch (inputTransaction.getRequiredShiftUpdate()) {
-        case InputTransaction.SHIFT_UPDATE_LATER:
-            mHandler.postUpdateShiftState();
-            break;
-        case InputTransaction.SHIFT_UPDATE_NOW:
-            mKeyboardSwitcher.requestUpdatingShiftState(getCurrentAutoCapsState(),
-                    getCurrentRecapitalizeState());
-            break;
-        default: // SHIFT_NO_UPDATE
+            case InputTransaction.SHIFT_UPDATE_LATER:
+                mHandler.postUpdateShiftState();
+                break;
+            case InputTransaction.SHIFT_UPDATE_NOW:
+                mKeyboardSwitcher.requestUpdatingShiftState(getCurrentAutoCapsState(),
+                        getCurrentRecapitalizeState());
+                break;
+            default: // SHIFT_NO_UPDATE
         }
     }
 
@@ -1022,7 +1027,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     // release matching call is {@link #onReleaseKey(int,boolean)} below.
     @Override
     public void onPressKey(final int primaryCode, final int repeatCount,
-            final boolean isSinglePointer) {
+                           final boolean isSinglePointer) {
         mKeyboardSwitcher.onPressKey(primaryCode, isSinglePointer, getCurrentAutoCapsState(),
                 getCurrentRecapitalizeState());
         hapticAndAudioFeedback(primaryCode, repeatCount);
@@ -1065,7 +1070,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         final CharSequence title = getString(R.string.english_ime_input_options);
         // TODO: Should use new string "Select active input modes".
         final CharSequence languageSelectionTitle = getString(R.string.language_selection_title);
-        final CharSequence[] items = new CharSequence[] {
+        final CharSequence[] items = new CharSequence[]{
                 languageSelectionTitle,
                 getString(ApplicationUtils.getActivityTitleResId(this, SettingsActivity.class))
         };
@@ -1075,18 +1080,18 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
             public void onClick(DialogInterface di, int position) {
                 di.dismiss();
                 switch (position) {
-                case 0:
-                    final Intent intent = IntentUtils.getInputLanguageSelectionIntent(
-                            imeId,
-                            Intent.FLAG_ACTIVITY_NEW_TASK
-                                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-                                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra(Intent.EXTRA_TITLE, languageSelectionTitle);
-                    startActivity(intent);
-                    break;
-                case 1:
-                    launchSettings();
-                    break;
+                    case 0:
+                        final Intent intent = IntentUtils.getInputLanguageSelectionIntent(
+                                imeId,
+                                Intent.FLAG_ACTIVITY_NEW_TASK
+                                        | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra(Intent.EXTRA_TITLE, languageSelectionTitle);
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        launchSettings();
+                        break;
                 }
             }
         };

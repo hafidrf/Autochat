@@ -35,7 +35,7 @@ public class NotificationIds {
     public int EMAIL_5;
     public int EMAIL_6;
     public int INBOX_MORE;
-    
+
     private static NotificationIds singleton;
 
     public static NotificationIds getInstance(Context context) {
@@ -64,6 +64,7 @@ public class NotificationIds {
             protected Object doInBackground(Object[] params) {
                 return null;
             }
+
             @Override
             protected void onPostExecute(Object o) {
                 detectNotificationIds(context);
@@ -93,16 +94,13 @@ public class NotificationIds {
     public int inbox_notification_event_9_id = 0;
     public int inbox_notification_event_10_id = 0;
 
-    private void recursiveDetectNotificationsIds(ViewGroup v)
-    {
-        for(int i=0; i<v.getChildCount(); i++)
-        {
+    private void recursiveDetectNotificationsIds(ViewGroup v) {
+        for (int i = 0; i < v.getChildCount(); i++) {
             View child = v.getChildAt(i);
             if (child instanceof ViewGroup)
-                recursiveDetectNotificationsIds((ViewGroup)child);
-            else if (child instanceof TextView)
-            {
-                String text = ((TextView)child).getText().toString();
+                recursiveDetectNotificationsIds((ViewGroup) child);
+            else if (child instanceof TextView) {
+                String text = ((TextView) child).getText().toString();
                 int id = child.getId();
                 if (text.equals("1")) notification_title_id = id;
                     //else if (text.equals("2")) notification_text_id = id;
@@ -123,21 +121,17 @@ public class NotificationIds {
                 else if (text.equals("17")) inbox_notification_event_8_id = id;
                 else if (text.equals("18")) inbox_notification_event_9_id = id;
                 else if (text.equals("19")) inbox_notification_event_10_id = id;
-            }
-            else if (child instanceof ImageView)
-            {
-                Drawable d = ((ImageView)child).getDrawable();
-                if (d!=null)
-                {
+            } else if (child instanceof ImageView) {
+                Drawable d = ((ImageView) child).getDrawable();
+                if (d != null) {
                     this.notification_image_id = child.getId();
                 }
             }
         }
     }
 
-//  TODO: This is the old main method used to detect notification id's
-    private void detectNotificationIds(Context context)
-    {
+    //  TODO: This is the old main method used to detect notification id's
+    private void detectNotificationIds(Context context) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.dummy_icon)
                 .setContentTitle("1")
@@ -168,13 +162,12 @@ public class NotificationIds {
 
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
-        String[] events = {"10","11","12","13","14","15","16","17","18","19"};
+        String[] events = {"10", "11", "12", "13", "14", "15", "16", "17", "18", "19"};
         inboxStyle.setBigContentTitle("6");
         mBuilder.setContentTitle("9");
         inboxStyle.setSummaryText("5");
 
-        for (int i=0; i < events.length; i++)
-        {
+        for (int i = 0; i < events.length; i++) {
             inboxStyle.addLine(events[i]);
         }
         mBuilder.setStyle(inboxStyle);
@@ -184,15 +177,13 @@ public class NotificationIds {
     }
 
     @SuppressLint("NewApi")
-    private void detectExpandedNotificationsIds(android.app.Notification n, Context context)
-    {
-        if(Build.VERSION.SDK_INT >= 16)
-        {
+    private void detectExpandedNotificationsIds(android.app.Notification n, Context context) {
+        if (Build.VERSION.SDK_INT >= 16) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
             n.bigContentView.reapply(context, localView);
             recursiveDetectNotificationsIds(localView);
         }
     }
-    
+
 }

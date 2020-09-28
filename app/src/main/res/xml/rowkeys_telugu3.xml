@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2014, The Android Open Source Project
@@ -32,8 +31,9 @@
     <!-- U+0C2E: "మ" TELUGU LETTER MA
          U+0C02: "ం" TELUGU SIGN ANUSVARA
          U+0C01: "ఁ" TELUGU SIGN CANDRABINDU -->
-    <Key latin:keySpec="&#x0C2E;"
-         latin:moreKeys="&#x0C02;,&#x0C01;" />
+    <Key
+        latin:keySpec="&#x0C2E;"
+        latin:moreKeys="&#x0C02;,&#x0C01;" />
     <!-- U+0C28: "న" TELUGU LETTER NA
          U+0C23: "ణ" TELUGU LETTER NNA
          U+0C19: "ఙ" TELUGU LETTER NGA

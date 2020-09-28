@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2014, The Android Open Source Project
@@ -47,20 +46,15 @@
                 latin:keySpec="&#x0B8A;"
                 latin:moreKeys="&#x0BC2;,%" />
             <!-- U+0BAE: "ம" TAMIL LETTER MA -->
-            <Key
-                latin:keySpec="&#x0BAE;" />
+            <Key latin:keySpec="&#x0BAE;" />
             <!-- U+0BA9: "ன" TAMIL LETTER NNNA -->
-            <Key
-                latin:keySpec="&#x0BA9;" />
+            <Key latin:keySpec="&#x0BA9;" />
             <!-- U+0BA8: "ந" TAMIL LETTER NA -->
-            <Key
-                latin:keySpec="&#x0BA8;" />
+            <Key latin:keySpec="&#x0BA8;" />
             <!-- U+0B99: "ங" TAMIL LETTER NGA -->
-            <Key
-                latin:keySpec="&#x0B99;" />
+            <Key latin:keySpec="&#x0B99;" />
             <!-- U+0BA3: "ண" TAMIL LETTER NNA -->
-            <Key
-                latin:keySpec="&#x0BA3;" />
+            <Key latin:keySpec="&#x0BA3;" />
         </case>
         <default>
             <!-- U+0B94: "ஔ" TAMIL LETTER AU

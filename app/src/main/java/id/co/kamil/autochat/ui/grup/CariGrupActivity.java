@@ -12,11 +12,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -94,7 +92,7 @@ public class CariGrupActivity extends AppCompatActivity {
                 try {
                     grupAdapter.filter(edtCari.getText().toString().trim());
                     listGrup.invalidate();
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -110,8 +108,8 @@ public class CariGrupActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final ItemGrup dataJson = dataGrup.get(i);
                 Intent intent = new Intent();
-                intent.putExtra("dataJson",dataJson.toString());
-                setResult(RESULT_OK,intent);
+                intent.putExtra("dataJson", dataJson.toString());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -120,13 +118,13 @@ public class CariGrupActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadGrup(){
+    private void loadGrup() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final String uri = Uri.parse(URL_POST_LIST_GRUP)
                 .buildUpon()
@@ -144,28 +142,28 @@ public class CariGrupActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
                         boolean exclude = false;
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             exclude = false;
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
                             final String description = data.getJSONObject(i).getString("description");
-                            for(int a =0 ;a<excludeGroup.length();a++){
-                                if (excludeGroup.get(a).toString().equals(id)){
+                            for (int a = 0; a < excludeGroup.length(); a++) {
+                                if (excludeGroup.get(a).toString().equals(id)) {
                                     exclude = true;
                                     break;
                                 }
                             }
-                            if (!exclude){
-                                dataGrup.add(new ItemGrup(id,name,description,data.getJSONObject(i)));
+                            if (!exclude) {
+                                dataGrup.add(new ItemGrup(id, name, description, data.getJSONObject(i)));
                             }
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(CariGrupActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                     displayGrup();
@@ -173,7 +171,7 @@ public class CariGrupActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(CariGrupActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -183,15 +181,15 @@ public class CariGrupActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(CariGrupActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(CariGrupActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(CariGrupActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -204,7 +202,7 @@ public class CariGrupActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(CariGrupActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -220,7 +218,7 @@ public class CariGrupActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(CariGrupActivity.this)
@@ -232,13 +230,13 @@ public class CariGrupActivity extends AppCompatActivity {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("X-API-KEY",token);
+                header.put("X-API-KEY", token);
                 return header;
             }
         };
@@ -253,7 +251,7 @@ public class CariGrupActivity extends AppCompatActivity {
     }
 
     private void displayGrup() {
-        grupAdapter = new AdapterGrup(dataGrup,this);
+        grupAdapter = new AdapterGrup(dataGrup, this);
         listGrup.setAdapter(grupAdapter);
     }
 }

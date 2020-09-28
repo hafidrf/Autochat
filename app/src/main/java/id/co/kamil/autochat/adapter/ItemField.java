@@ -1,11 +1,9 @@
 package id.co.kamil.autochat.adapter;
 
-import org.json.JSONObject;
-
 public class ItemField {
 
     String judul;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     public ItemField(String judul, boolean checkbox, boolean chkvisible) {
         this.judul = judul;

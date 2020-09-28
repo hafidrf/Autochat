@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2012, The Android Open Source Project
@@ -18,24 +17,19 @@
 */
 -->
 
-<merge
-    xmlns:latin="http://schemas.android.com/apk/res-auto"
->
+<merge xmlns:latin="http://schemas.android.com/apk/res-auto">
     <switch>
         <case latin:showNumberRow="true">
             <!-- U+0444: "ф" CYRILLIC SMALL LETTER EF -->
-            <Key
-                latin:keySpec="&#x0444;" />
+            <Key latin:keySpec="&#x0444;" />
             <!-- U+0446: "ц" CYRILLIC SMALL LETTER TSE -->
-            <Key
-                latin:keySpec="&#x0446;" />
+            <Key latin:keySpec="&#x0446;" />
             <!-- U+0443: "у" CYRILLIC SMALL LETTER U -->
             <Key
                 latin:keySpec="&#x0443;"
                 latin:moreKeys="!text/morekeys_cyrillic_u" />
             <!-- U+0436: "ж" CYRILLIC SMALL LETTER ZHE -->
-            <Key
-                latin:keySpec="&#x0436;" />
+            <Key latin:keySpec="&#x0436;" />
             <!-- U+044D: "э" CYRILLIC SMALL LETTER E -->
             <Key
                 latin:keySpec="&#x044D;"
@@ -54,11 +48,9 @@
                 latin:keySpec="&#x0448;"
                 latin:moreKeys="&#x0449;" />
             <!-- U+04AF: "ү" CYRILLIC SMALL LETTER STRAIGHT U -->
-            <Key
-                latin:keySpec="&#x04AF;" />
+            <Key latin:keySpec="&#x04AF;" />
             <!-- U+0437: "з" CYRILLIC SMALL LETTER ZE -->
-            <Key
-                latin:keySpec="&#x0437;" />
+            <Key latin:keySpec="&#x0437;" />
         </case>
         <default>
             <!-- U+0444: "ф" CYRILLIC SMALL LETTER EF -->
@@ -120,6 +112,5 @@
         </default>
     </switch>
     <!-- U+043A: "к" CYRILLIC SMALL LETTER KA -->
-    <Key
-        latin:keySpec="&#x043A;" />
+    <Key latin:keySpec="&#x043A;" />
 </merge>

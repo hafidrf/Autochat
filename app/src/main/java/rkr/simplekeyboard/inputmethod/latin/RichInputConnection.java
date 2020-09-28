@@ -36,7 +36,7 @@ import rkr.simplekeyboard.inputmethod.latin.utils.DebugLogUtils;
 
 /**
  * Enrichment class for InputConnection to simplify interaction and add functionality.
- *
+ * <p>
  * This class serves as a wrapper to be able to simply add hooks to any calls to the underlying
  * InputConnection. It also keeps track of a number of things to avoid having to call upon IPC
  * all the time to find out what text is in the buffer, when we need it to determine caps mode
@@ -61,7 +61,7 @@ public final class RichInputConnection {
 
     private static final int OPERATION_GET_TEXT_BEFORE_CURSOR = 0;
     private static final int OPERATION_RELOAD_TEXT_CACHE = 3;
-    private static final String[] OPERATION_NAMES = new String[] {
+    private static final String[] OPERATION_NAMES = new String[]{
             "GET_TEXT_BEFORE_CURSOR",
             "GET_TEXT_AFTER_CURSOR",
             "GET_WORD_RANGE_AT_CURSOR",
@@ -92,7 +92,7 @@ public final class RichInputConnection {
     private final StringBuilder mComposingText = new StringBuilder();
 
     /**
-     * This variable is a temporary object used in {@link #commitText(CharSequence,int)}
+     * This variable is a temporary object used in {@link #commitText(CharSequence, int)}
      * to avoid object creation.
      */
     private SpannableStringBuilder mTempObjectForCommitText = new SpannableStringBuilder();
@@ -129,14 +129,14 @@ public final class RichInputConnection {
         }
         final String reference = (beforeCursor.length() <= actualLength) ? beforeCursor.toString()
                 : beforeCursor.subSequence(beforeCursor.length() - actualLength,
-                        beforeCursor.length()).toString();
+                beforeCursor.length()).toString();
         if (et.selectionStart != mExpectedSelStart
                 || !(reference.equals(internal.toString()))) {
             final String context = "Expected selection start = " + mExpectedSelStart
                     + "\nActual selection start = " + et.selectionStart
                     + "\nExpected text = " + internal.length() + " " + internal
                     + "\nActual text = " + reference.length() + " " + reference;
-            ((LatinIME)mParent).debugDumpStateAndCrashWithException(context);
+            ((LatinIME) mParent).debugDumpStateAndCrashWithException(context);
         } else {
             Log.e(TAG, DebugLogUtils.getStackTrace(2));
             Log.e(TAG, "Exp <> Actual : " + mExpectedSelStart + " <> " + et.selectionStart);
@@ -169,7 +169,7 @@ public final class RichInputConnection {
 
     /**
      * Reset the cached text and retrieve it again from the editor.
-     *
+     * <p>
      * This should be called when the cursor moved. It's possible that we can't connect to
      * the application when doing this; notably, this happens sometimes during rotation, probably
      * because of a race condition in the framework. In this case, we just can't retrieve the
@@ -177,13 +177,13 @@ public final class RichInputConnection {
      * return false so that the caller knows about this and can retry later.
      *
      * @param newSelStart the new position of the selection start, as received from the system.
-     * @param newSelEnd the new position of the selection end, as received from the system.
+     * @param newSelEnd   the new position of the selection end, as received from the system.
      * @return true if we were able to connect to the editor successfully, false otherwise. When
-     *   this method returns false, the caches could not be correctly refreshed so they were only
-     *   reset: the caller should try again later to return to normal operation.
+     * this method returns false, the caches could not be correctly refreshed so they were only
+     * reset: the caller should try again later to return to normal operation.
      */
     public boolean resetCachesUponCursorMoveAndReturnSuccess(final int newSelStart,
-            final int newSelEnd) {
+                                                             final int newSelEnd) {
         mExpectedSelStart = newSelStart;
         mExpectedSelEnd = newSelEnd;
         mComposingText.setLength(0);
@@ -246,7 +246,7 @@ public final class RichInputConnection {
     /**
      * Calls {@link InputConnection#commitText(CharSequence, int)}.
      *
-     * @param text The text to commit. This may include styles.
+     * @param text              The text to commit. This may include styles.
      * @param newCursorPosition The new cursor position around the text.
      */
     public void commitText(final CharSequence text, final int newCursorPosition) {
@@ -286,7 +286,7 @@ public final class RichInputConnection {
     }
 
     public CharSequence getSelectedText(final int flags) {
-        return isConnected() ?  mIC.getSelectedText(flags) : null;
+        return isConnected() ? mIC.getSelectedText(flags) : null;
     }
 
     public boolean canDeleteCharacters() {
@@ -295,7 +295,7 @@ public final class RichInputConnection {
 
     /**
      * Gets the caps modes we should be in after this specific string.
-     *
+     * <p>
      * This returns a bit set of TextUtils#CAP_MODE_*, masked by the inputType argument.
      * This method also supports faking an additional space after the string passed in argument,
      * to support cases where a space will be added automatically, like in phantom space
@@ -303,7 +303,7 @@ public final class RichInputConnection {
      * Note that for English, we are using American typography rules (which are not specific to
      * American English, it's just the most common set of rules for English).
      *
-     * @param inputType a mask of the caps modes to test for.
+     * @param inputType              a mask of the caps modes to test for.
      * @param spacingAndPunctuations the values of the settings to use for locale and separators.
      * @return the caps modes that should be on as a set of bits
      */
@@ -439,41 +439,41 @@ public final class RichInputConnection {
             // sending the key events for only Enter and Backspace because some applications
             // mistakenly catch them to do some stuff.
             switch (keyEvent.getKeyCode()) {
-            case KeyEvent.KEYCODE_ENTER:
-                mCommittedTextBeforeComposingText.append("\n");
-                mExpectedSelStart += 1;
-                mExpectedSelEnd = mExpectedSelStart;
-                break;
-            case KeyEvent.KEYCODE_DEL:
-                if (0 == mComposingText.length()) {
-                    if (mCommittedTextBeforeComposingText.length() > 0) {
-                        mCommittedTextBeforeComposingText.delete(
-                                mCommittedTextBeforeComposingText.length() - 1,
-                                mCommittedTextBeforeComposingText.length());
-                    }
-                } else {
-                    mComposingText.delete(mComposingText.length() - 1, mComposingText.length());
-                }
-
-                if (mExpectedSelStart > 0 && mExpectedSelStart == mExpectedSelEnd) {
-                    // TODO: Handle surrogate pairs.
-                    mExpectedSelStart -= 1;
-                }
-                mExpectedSelEnd = mExpectedSelStart;
-                break;
-            case KeyEvent.KEYCODE_UNKNOWN:
-                if (null != keyEvent.getCharacters()) {
-                    mCommittedTextBeforeComposingText.append(keyEvent.getCharacters());
-                    mExpectedSelStart += keyEvent.getCharacters().length();
+                case KeyEvent.KEYCODE_ENTER:
+                    mCommittedTextBeforeComposingText.append("\n");
+                    mExpectedSelStart += 1;
                     mExpectedSelEnd = mExpectedSelStart;
-                }
-                break;
-            default:
-                final String text = StringUtils.newSingleCodePointString(keyEvent.getUnicodeChar());
-                mCommittedTextBeforeComposingText.append(text);
-                mExpectedSelStart += text.length();
-                mExpectedSelEnd = mExpectedSelStart;
-                break;
+                    break;
+                case KeyEvent.KEYCODE_DEL:
+                    if (0 == mComposingText.length()) {
+                        if (mCommittedTextBeforeComposingText.length() > 0) {
+                            mCommittedTextBeforeComposingText.delete(
+                                    mCommittedTextBeforeComposingText.length() - 1,
+                                    mCommittedTextBeforeComposingText.length());
+                        }
+                    } else {
+                        mComposingText.delete(mComposingText.length() - 1, mComposingText.length());
+                    }
+
+                    if (mExpectedSelStart > 0 && mExpectedSelStart == mExpectedSelEnd) {
+                        // TODO: Handle surrogate pairs.
+                        mExpectedSelStart -= 1;
+                    }
+                    mExpectedSelEnd = mExpectedSelStart;
+                    break;
+                case KeyEvent.KEYCODE_UNKNOWN:
+                    if (null != keyEvent.getCharacters()) {
+                        mCommittedTextBeforeComposingText.append(keyEvent.getCharacters());
+                        mExpectedSelStart += keyEvent.getCharacters().length();
+                        mExpectedSelEnd = mExpectedSelStart;
+                    }
+                    break;
+                default:
+                    final String text = StringUtils.newSingleCodePointString(keyEvent.getUnicodeChar());
+                    mCommittedTextBeforeComposingText.append(text);
+                    mExpectedSelStart += text.length();
+                    mExpectedSelEnd = mExpectedSelStart;
+                    break;
             }
         }
         if (isConnected()) {
@@ -483,11 +483,11 @@ public final class RichInputConnection {
 
     /**
      * Set the selection of the text editor.
-     *
+     * <p>
      * Calls through to {@link InputConnection#setSelection(int, int)}.
      *
      * @param start the character index where the selection should start.
-     * @param end the character index where the selection should end.
+     * @param end   the character index where the selection should end.
      * @return Returns true on success, false on failure: either the input connection is no longer
      * valid when setting the selection or when retrieving the text cache at that point, or
      * invalid arguments were passed.
@@ -542,7 +542,7 @@ public final class RichInputConnection {
             final int textLength = textBeforeCursor.length();
             if (textLength < Constants.EDITOR_CONTENTS_CACHE_SIZE
                     && (textLength > mExpectedSelStart
-                            ||  mExpectedSelStart < Constants.EDITOR_CONTENTS_CACHE_SIZE)) {
+                    || mExpectedSelStart < Constants.EDITOR_CONTENTS_CACHE_SIZE)) {
                 // It should not be possible to have only one of those variables be
                 // NOT_A_CURSOR_POSITION, so if they are equal, either the selection is zero-sized
                 // (simple cursor, no selection) or there is no cursor/we don't know its pos
