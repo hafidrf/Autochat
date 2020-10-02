@@ -95,12 +95,13 @@ public class WASendService extends AccessibilityService {
                 if (backButton == null) {
                     dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + buttonSend + " dan ID Button Back : " + backButton, "warning", user_id);
                     Log.e(TAG, "button Send : " + buttonSend);
+                    return;
                 } else if (statusSending) {
                     backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    return;
                 } else {
                     dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + buttonSend, "warning", user_id);
                 }
-                return;
             }
             if (idMessage == null) {
                 dbHelper.insertLog(created, ID_SERVICE_WA, "Tidak ada pesan yang akan dikirim", "warning", user_id);
@@ -108,7 +109,9 @@ public class WASendService extends AccessibilityService {
             }
 
 
-            buttonSend.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            if (buttonSend != null) {
+                buttonSend.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
             dbHelper = new DBHelper(this);
             Date c = Calendar.getInstance().getTime();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -121,7 +124,9 @@ public class WASendService extends AccessibilityService {
             setID(null);
             try_again = 0;
 
-            backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            if (backButton != null) {
+                backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
