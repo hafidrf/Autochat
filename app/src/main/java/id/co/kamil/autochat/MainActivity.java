@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +40,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -65,6 +63,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import id.co.kamil.autochat.autoreply.MyNotifiService;
@@ -127,7 +126,10 @@ public class MainActivity extends AppCompatActivity {
             ContactsContract.CommonDataKinds.Phone.NUMBER
     };
     private final String[][] kontakWabot = {
-            {"083128302901", "WABOT"}, {"085314855832", "CS WABOT 1 (Mita)"}, {"085759730309", "CS WABOT 2 (Dela)"}, {"081394565865", "CS WABOT 3 (Hendi)"},
+            {"083128302901", "WABOT"},
+            {"085314855832", "CS WABOT 1 (Mita)"},
+            {"085759730309", "CS WABOT 2 (Dela)"},
+            {"081394565865", "CS WABOT 3 (Hendi)"},
     };
     private SharPref sharePref;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
@@ -135,26 +137,35 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getStringExtra("action");
-            if (action.equals("kontak")) {
-                navController.navigate(R.id.nav_kontak);
-            } else if (action.equals("antrian")) {
-                navController.navigate(R.id.nav_antrian_pesan);
-            } else if (action.equals("jadwal")) {
-                navController.navigate(R.id.nav_kirim_terjadwal);
-            } else if (action.equals("terkirim")) {
-                navController.navigate(R.id.nav_pesan_terkirim);
-            } else if (action.equals("enableAlwaysScreenOn")) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            } else if (action.equals("disableAlwaysScreenOn")) {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            } else if (action.equals("enableForegroundService")) {
-                Intent intent1 = new Intent(MainActivity.this, ServiceSync.class);
-                intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, true);
-                startService(intent1);
-            } else if (action.equals("disableForegroundService")) {
-                Intent intent1 = new Intent(MainActivity.this, ServiceSync.class);
-                intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, false);
-                startService(intent1);
+            switch (action) {
+                case "kontak":
+                    navController.navigate(R.id.nav_kontak);
+                    break;
+                case "antrian":
+                    navController.navigate(R.id.nav_antrian_pesan);
+                    break;
+                case "jadwal":
+                    navController.navigate(R.id.nav_kirim_terjadwal);
+                    break;
+                case "terkirim":
+                    navController.navigate(R.id.nav_pesan_terkirim);
+                    break;
+                case "enableAlwaysScreenOn":
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    break;
+                case "disableAlwaysScreenOn":
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    break;
+                case "enableForegroundService":
+                    Intent intent1 = new Intent(MainActivity.this, ServiceSync.class);
+                    intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, true);
+                    startService(intent1);
+                    break;
+                case "disableForegroundService":
+                    intent1 = new Intent(MainActivity.this, ServiceSync.class);
+                    intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, false);
+                    startService(intent1);
+                    break;
             }
         }
     };
@@ -196,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        if (userDetail.get(KEY_CHILD).equals(true) || userDetail.get(KEY_CHILD).equals("true")) {
+        if ("true".equals(userDetail.get(KEY_CHILD))) {
             Menu menuNav = navigationView.getMenu();
             menuNav.findItem(R.id.nav_operator).setVisible(false);
             menuNav.findItem(R.id.nav_apikey).setVisible(false);
@@ -223,7 +234,10 @@ public class MainActivity extends AppCompatActivity {
         txtEmail = (TextView) navHeader.findViewById(R.id.txtEmail);
         imgProfile = (ImageView) navHeader.findViewById(R.id.imgProfile);
 
-        txtNama.setText(userDetail.get(KEY_FIRSTNAME) + " " + userDetail.get(KEY_LASTNAME));
+        txtNama.setText(String.format(Locale.getDefault(), "%s %s",
+                userDetail.get(KEY_FIRSTNAME),
+                userDetail.get(KEY_LASTNAME)
+        ));
         txtEmail.setText(userDetail.get(KEY_EMAIL));
 
         loadService();
@@ -235,14 +249,14 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
 
                 // checking for type intent filter
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                if (Config.REGISTRATION_COMPLETE.equals(intent.getAction())) {
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
 
                     displayFirebaseRegId();
 
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                } else if (Config.PUSH_NOTIFICATION.equals(intent.getAction())) {
                     // new push notification is received
 
                     String message = intent.getStringExtra("message");
@@ -262,26 +276,32 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         // Get new Instance ID token
-                        String token = task.getResult().getToken();
+                        InstanceIdResult result = task.getResult();
+                        if (result == null) return;
+                        String token = result.getToken();
                         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("regId", token);
-                        editor.commit();
+                        editor.apply();
                         displayFirebaseRegId();
                     }
                 });
         final String intentFragment = getIntent().getStringExtra("fragment");
         if (intentFragment != null) {
-            if (intentFragment.equals("kontak")) {
-                navController.navigate(R.id.nav_kontak);
-            } else if (intentFragment.equals("broadcast")) {
-                MenuItem menuNav = navigationView.getMenu().findItem(R.id.nav_kirim_pesan);
-                showKirimPesan(menuNav);
-            } else if (intentFragment.equals("autotext")) {
-                navController.navigate(R.id.nav_autotext);
-            } else if (intentFragment.equals("templatepromosi")) {
-                navController.navigate(R.id.nav_template);
-
+            switch (intentFragment) {
+                case "kontak":
+                    navController.navigate(R.id.nav_kontak);
+                    break;
+                case "broadcast":
+                    MenuItem menuNav = navigationView.getMenu().findItem(R.id.nav_kirim_pesan);
+                    showKirimPesan(menuNav);
+                    break;
+                case "autotext":
+                    navController.navigate(R.id.nav_autotext);
+                    break;
+                case "templatepromosi":
+                    navController.navigate(R.id.nav_template);
+                    break;
             }
         }
 
@@ -341,13 +361,14 @@ public class MainActivity extends AppCompatActivity {
                 Uri.encode(number));
         String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
         Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null);
+        if (cur == null) return false;
+
         try {
             if (cur.moveToFirst()) {
                 return true;
             }
         } finally {
-            if (cur != null)
-                cur.close();
+            cur.close();
         }
         return false;
     }
@@ -366,10 +387,8 @@ public class MainActivity extends AppCompatActivity {
                         indexKontak.add(x);
                     }
                 }
-                if (indexKontak.size() == kontakWabot.length) {
-
-                } else {
-                    boolean add = true;
+                if (indexKontak.size() != kontakWabot.length) {
+                    boolean add;
                     for (int a = 0; a < kontakWabot.length; a++) {
                         add = true;
                         for (int x = 0; x < indexKontak.size(); x++) {
@@ -384,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         } else {
@@ -446,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveLocalContact(String nama, String nomor) {
-        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         int rawContactInsertIndex = ops.size();
 
         ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
@@ -466,10 +485,8 @@ public class MainActivity extends AppCompatActivity {
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, nomor) // Number of the person
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); // Type of mobile number
         try {
-            ContentProviderResult[] res = getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        } catch (RemoteException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        } catch (OperationApplicationException e) {
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (RemoteException | OperationApplicationException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -537,9 +554,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void doUpgrade(MenuItem item) {
-        String url = URL_DIRECT_LINK_UPGRADE;
         Intent intent2 = new Intent(Intent.ACTION_VIEW);
-        intent2.setData(Uri.parse(url));
+        intent2.setData(Uri.parse(URL_DIRECT_LINK_UPGRADE));
         startActivity(intent2);
     }
 
@@ -584,7 +600,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 header.put("x-api-key", token);
@@ -718,7 +734,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
