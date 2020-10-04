@@ -110,8 +110,7 @@ public class MyNotifiService extends NotificationListenerService {
     private String getDate(long time) {
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         cal.setTimeInMillis(time * 1000);
-        String date = DateFormat.format("dd-MM-yyyy hh:mm:ss", cal).toString();
-        return date;
+        return DateFormat.format("dd-MM-yyyy hh:mm:ss", cal).toString();
     }
 
     @Override
@@ -120,9 +119,8 @@ public class MyNotifiService extends NotificationListenerService {
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c);
-        String created = formattedDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String created = df.format(c);
         try {
             if (sbn.getPackageName().equals("com.whatsapp") || sbn.getPackageName().equals("com.whatsapp.w4b")) {
 
@@ -142,7 +140,7 @@ public class MyNotifiService extends NotificationListenerService {
                     Log.i(TAG, e.getMessage());
                 }
                 Log.i(TAG, "Here");
-                if (statusAutoReply == false) return;
+                if (!statusAutoReply) return;
                 try {
 
                     //this.cancelNotification(sbn.getKey());
@@ -155,16 +153,17 @@ public class MyNotifiService extends NotificationListenerService {
                         boolean autoreply_personal = sharePref.getSessionBool(AUTOREPLY_PERSONAL);
                         boolean autoreply_business = sharePref.getSessionBool(AUTOREPLY_BUSINESS);
 
-                        String msg_client = sbn.getNotification().extras.get("android.text").toString().toLowerCase().trim();
-                        String cari = dbHelper.cari_keyword(msg_client);
+                        Object o = sbn.getNotification().extras.get("android.text");
+                        String msg_client = o != null ? o.toString().toLowerCase().trim() : "";
+                        //String cari = dbHelper.cari_keyword(msg_client);
 
                         String sender_ori = sbn.getNotification().extras.getString("android.title");
 
-                        String[] tmp_sender = sender_ori.split(":");
+                        String[] tmp_sender = sender_ori != null ? sender_ori.split(":") : new String[]{};
                         if (tmp_sender.length > 1) {
                             sender_ori = tmp_sender[1].trim();
                         } else {
-                            sender_ori = sender_ori.trim();
+                            sender_ori = sender_ori != null ? sender_ori.trim() : "";
                         }
                         String sender = sender_ori;
                         sender = sender.replace("+62", "62")
@@ -209,7 +208,7 @@ public class MyNotifiService extends NotificationListenerService {
                             dbHelper.insertReceived(sender, msg_client, user_id, String.valueOf(when));
                         }
                         Log.e(TAG, "when(): " + when);
-                        Log.e(TAG, "tickerText:" + sbn.getNotification().extras.get("android.text").toString());
+                        Log.e(TAG, "tickerText:" + sbn.getNotification().extras.get("android.text"));
                         send_notif();
                         if (!autoreply_personal && sbn.getPackageName().equals("com.whatsapp")) {
                             dbHelper.insertLog(created, ID_SERVICE, "AutoReply Personal Disabled", "warning", user_id);
@@ -256,14 +255,15 @@ public class MyNotifiService extends NotificationListenerService {
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c);
-        String created = formattedDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String created = df.format(c);
 
-        String msg_client = sbn.getNotification().extras.get("android.text").toString().toLowerCase().trim();
+        Object o = sbn.getNotification().extras.get("android.text");
+        String msg_client = o != null ? o.toString().toLowerCase().trim() : "";
         String cari = dbHelper.cari_keyword(msg_client);
 
         String sender_ori = sbn.getNotification().extras.getString("android.title");
+        if (sender_ori == null) sender_ori = "";
         String[] tmp_sender = sender_ori.split(":");
         if (tmp_sender.length > 1) {
             sender_ori = tmp_sender[1].trim();
@@ -335,21 +335,20 @@ public class MyNotifiService extends NotificationListenerService {
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c);
-        final String created = formattedDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        final String created = df.format(c);
         dbHelper = new DBHelper(this);
         session = new SessionManager(this);
         userDetail = session.getUserDetails();
         String url_reversal = session.getValue("url_reversal");
         Log.e(TAG, "url_reversal:" + url_reversal);
-        if (url_reversal.isEmpty() || url_reversal.equals(null) || url_reversal.equals("null")) {
+        if (url_reversal == null || url_reversal.isEmpty() || url_reversal.equals("null")) {
             return;
         }
         if (!session.isLoggedIn()) {
             return;
         }
-        final String token = userDetail.get(KEY_TOKEN);
+        //final String token = userDetail.get(KEY_TOKEN);
 
         final List<String[]> dataReceived = dbHelper.getReceivePending(user_id);
         JSONArray sender = new JSONArray();
@@ -405,11 +404,10 @@ public class MyNotifiService extends NotificationListenerService {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> header = new HashMap<>();
+            public Map<String, String> getHeaders() {
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                return header;
+                return new HashMap<>();
             }
         };
         RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -424,9 +422,8 @@ public class MyNotifiService extends NotificationListenerService {
         String[] whereParams = new String[]{"%" + name + "%"};
         String selection = String.format("%s > 0 and display_name LIKE ?", ContactsContract.Contacts.HAS_PHONE_NUMBER);
         String[] mPhoneNumberProjection = {ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
-        Cursor cur = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI, mPhoneNumberProjection, selection, whereParams, null);
-        try {
-            if (cur.moveToFirst()) {
+        try (Cursor cur = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI, mPhoneNumberProjection, selection, whereParams, null)) {
+            if (cur != null && cur.moveToFirst()) {
                 List<String> list = new ArrayList<>();
                 while (cur.moveToNext()) {
                     int phoneNumberIndex = cur.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER);
@@ -438,13 +435,9 @@ public class MyNotifiService extends NotificationListenerService {
                         list.add(phoneNumber);
                     }
                 }
-                if (cur != null)
-                    cur.close();
+                cur.close();
                 return list;
             }
-        } finally {
-            if (cur != null)
-                cur.close();
         }
         return new ArrayList<>();
     }

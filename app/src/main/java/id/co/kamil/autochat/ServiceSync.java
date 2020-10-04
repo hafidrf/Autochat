@@ -83,6 +83,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import id.co.kamil.autochat.bulksender.WASendService;
@@ -224,7 +225,7 @@ public class ServiceSync extends Service {
                     String sha1 = sha1(image_url) + ".jpg";
                     String path = getDirWabot("bulk") + "/" + sha1;
                     if (fileExist(getApplicationContext(), path)) {
-                        if (image_hash.isEmpty() || image_hash == null) {
+                        if (TextUtils.isEmpty(image_hash)) {
                             image_hash = path;
                         }
                     }
@@ -255,7 +256,7 @@ public class ServiceSync extends Service {
                     String sha1 = sha1(image_url) + ".jpg";
                     String path = getDirWabot("bulk") + "/" + sha1;
                     if (fileExist(getApplicationContext(), path)) {
-                        if (image_hash.isEmpty() || image_hash == null) {
+                        if (TextUtils.isEmpty(image_hash)) {
                             image_hash = path;
                         }
                     }
@@ -404,7 +405,7 @@ public class ServiceSync extends Service {
         handler.postDelayed(
                 new Runnable() {
                     public void run() {
-                        if (is_synchronizing == false && is_send == false) {
+                        if (!is_synchronizing && !is_send) {
                             //syncDatabase();
                         }
                     }
@@ -429,7 +430,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_outbox = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_outbox = false;
             startTimerOutbox();
             return;
@@ -499,7 +500,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -519,7 +520,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(1);
             return;
@@ -595,7 +596,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -615,7 +616,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(2);
             return;
@@ -688,7 +689,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -708,7 +709,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(3);
             return;
@@ -781,7 +782,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -801,7 +802,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(4);
             return;
@@ -875,7 +876,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -895,7 +896,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(4);
             return;
@@ -942,7 +943,7 @@ public class ServiceSync extends Service {
                                 for (int i = 0; i < data.length(); i++) {
                                     final String hash = data.getJSONObject(i).getString("picture_hash");
                                     final String url = data.getJSONObject(i).getString("picture_url");
-                                    if (fileExist(getApplicationContext(), getDirWabot("template_promosi") + "/" + hash) == false) {
+                                    if (!fileExist(getApplicationContext(), getDirWabot("template_promosi") + "/" + hash)) {
                                         Picasso.with(getApplicationContext())
                                                 .load(url)
                                                 .into(new Target() {
@@ -986,7 +987,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -1010,7 +1011,7 @@ public class ServiceSync extends Service {
         }
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(0);
             return;
@@ -1089,7 +1090,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -1108,7 +1109,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing = false;
             startTimer();
             return;
@@ -1149,7 +1150,7 @@ public class ServiceSync extends Service {
                             final String versionCode = response.getString("version_code");
                             final JSONArray autoreply = response.getJSONArray("autoreply");
                             final JSONArray autotext = response.getJSONArray("autotext");
-                            final JSONArray outbox = response.getJSONArray("outbox");
+                            //final JSONArray outbox = response.getJSONArray("outbox");
                             final JSONArray kontak = response.getJSONArray("kontak");
                             final JSONArray singkron_kontak_wabot = response.getJSONArray("singkron_kontak_wabot");
                             //Log.i(TAG,response.toString());
@@ -1229,7 +1230,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -1249,20 +1250,16 @@ public class ServiceSync extends Service {
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));
         String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
-        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null);
-        try {
-            if (cur.moveToFirst()) {
+        try (Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null)) {
+            if (cur != null && cur.moveToFirst()) {
                 return true;
             }
-        } finally {
-            if (cur != null)
-                cur.close();
         }
         return false;
     }
 
     private void saveLocalContact(String name, String phone) {
-        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         int rawContactInsertIndex = ops.size();
 
         ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
@@ -1282,10 +1279,8 @@ public class ServiceSync extends Service {
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, phone) // Number of the person
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); // Type of mobile number
         try {
-            ContentProviderResult[] res = getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        } catch (RemoteException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        } catch (OperationApplicationException e) {
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (RemoteException | OperationApplicationException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -1295,9 +1290,8 @@ public class ServiceSync extends Service {
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c);
-        final String created = formattedDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        final String created = df.format(c);
 
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
@@ -1311,7 +1305,7 @@ public class ServiceSync extends Service {
         //addListenerOutbox();
 
         String config_delay_bulk = sharePref.getSessionStr(DELAY_BULK_SENDER);
-        if (config_delay_bulk.isEmpty() || config_delay_bulk.equals("")) {
+        if (TextUtils.isEmpty(config_delay_bulk)) {
             config_delay_bulk = "5";
         }
         long timerBulkSender = 3000;
@@ -1327,7 +1321,7 @@ public class ServiceSync extends Service {
                     public void run() {
                         statusWASender = sharePref.getSessionBool(STATUS_BULK_SENDER);
 
-                        if (is_send == false && statusWASender && is_parent && is_synchronizing == false) {
+                        if (!is_send && statusWASender && is_parent && !is_synchronizing) {
                             //WASendService.setTextToSend(null);
                             Log.e("WhatsApp", "SENDING....");
                             dbHelper.insertLog(created, ID_SERVICE_WA, "Persiapan pengiriman Pesan", "normal", user_id);
@@ -1344,7 +1338,7 @@ public class ServiceSync extends Service {
         handlerWA.postDelayed(
                 new Runnable() {
                     public void run() {
-                        if (is_uploading_outbox == false && is_send == false) {
+                        if (!is_uploading_outbox && !is_send) {
                             uploadDataOutbox();
                         }
                     }
@@ -1384,30 +1378,29 @@ public class ServiceSync extends Service {
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c);
-        return formattedDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return df.format(c);
     }
 
     private void sendWA() {
-        ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
+        //ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
 
         // Initializing a new file
         // The bellow line return a directory in internal storage
-        File dirImage = wrapper.getDir("images", MODE_PRIVATE);
+        //File dirImage = wrapper.getDir("images", MODE_PRIVATE);
 
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
         final String created = getTgl();
         config_on_screen = sharePref.getSessionBool(BULK_SENDER_ON_SCREEN);
         boolean accessibility = isAccessibilityEnabled();
-        if (accessibility == false) {
+        if (!accessibility) {
             is_send = false;
             dbHelper.insertLog(created, ID_SERVICE_WA, "Aksesibilitas Wabot tidak aktif", "warning", user_id);
             startWASender();
             return;
         }
-        if (session.isLoggedIn() == false) {
+        if (!session.isLoggedIn()) {
             startWASender();
             return;
         }
@@ -1419,7 +1412,7 @@ public class ServiceSync extends Service {
 
             String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
             boolean status_prefTryagain = sharePref.getSessionBool(STATUS_ERROR_TRY_AGAIN);
-            if (prefTryagain.isEmpty() || prefTryagain.equals(null) || prefTryagain.equals("") || prefTryagain == null) {
+            if (TextUtils.isEmpty(prefTryagain)) {
                 prefTryagain = "5";
             } else if (Integer.parseInt(prefTryagain) < 5) {
                 prefTryagain = "5";
@@ -1431,13 +1424,13 @@ public class ServiceSync extends Service {
                 String image_hash = antrianPesan.get(0)[3];
                 String image_url = antrianPesan.get(0)[4];
                 String index_order = antrianPesan.get(0)[5];
-                int try_again = sharePref.getSessionInt("tryagain" + id);
-                if (index_order == null || index_order.equals(null) || index_order.equals("null") || index_order.isEmpty()) {
+                //int try_again = sharePref.getSessionInt("tryagain" + id);
+                if (TextUtils.isEmpty(index_order) || index_order.equals("null")) {
                     fOutboxRef.child(id).child("error_again").setValue(1);
                     //dbHelper.updateAntrianPesan(id,"1");
                 } else {
                     if (status_prefTryagain) {
-                        if (Integer.valueOf(index_order) >= Integer.parseInt(prefTryagain)) {
+                        if (Integer.parseInt(index_order) >= Integer.parseInt(prefTryagain)) {
                             //sharePref.createSession(STATUS_BULK_SENDER, false);
                             is_send = false;
                             hapusPesan();
@@ -1452,7 +1445,7 @@ public class ServiceSync extends Service {
                 Log.i(TAG, "send message...");
                 Log.i(TAG, "phone : " + phoneNumber);
                 Log.i(TAG, "message : " + bodyMessage);
-                String bodyLog = "";
+                String bodyLog;
                 if (bodyMessage.length() > 100) {
                     bodyLog = bodyMessage.substring(0, 100) + "...";
                 } else {
@@ -1462,7 +1455,7 @@ public class ServiceSync extends Service {
                 Log.e(TAG, "ImageHash:" + image_hash);
                 Log.e(TAG, "ImageHUrl:" + image_url);
                 WASendService.setID(id);
-                if ((image_hash == null || image_hash.isEmpty() || image_hash.equals(null) || image_hash.equals("null")) && (image_url == null || image_url.isEmpty() || image_url.equals(null) || image_url.equals("null"))) {
+                if ((TextUtils.isEmpty(image_hash) || image_hash.equals("null")) && (TextUtils.isEmpty(image_url) || image_url.equals("null"))) {
 //                    Intent sendIntent = new Intent();
 //                    sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                    sendIntent.setAction(Intent.ACTION_SEND);
@@ -1471,7 +1464,6 @@ public class ServiceSync extends Service {
 //                    sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(phoneNumber)+"@s.whatsapp.net");
 //                    sendIntent.putExtra(Intent.EXTRA_TEXT,bodyMessage);
 //                    startActivity(sendIntent);
-                    String text = bodyMessage;// Replace with your message.
 
                     String toNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
 
@@ -1479,13 +1471,13 @@ public class ServiceSync extends Service {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setPackage("com.whatsapp");
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setData(Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(text, "UTF-8")));
+                        intent.setData(Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(bodyMessage, "UTF-8")));
                         startActivity(intent);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                     Log.e(TAG, "Send Text:");
-                } else if ((image_hash == null || image_hash.isEmpty() || image_hash.equals(null) || image_hash.equals("null")) && !(image_url == null || image_url.isEmpty() || image_url.equals(null) || image_url.equals("null"))) {
+                } else if ((TextUtils.isEmpty(image_hash) || image_hash.equals("null")) && !(TextUtils.isEmpty(image_url) || image_url.equals("null"))) {
                     try {
                         String sha1 = sha1(image_url) + ".jpg";
                         String path = getDirWabot("bulk") + "/" + sha1;
@@ -1549,7 +1541,7 @@ public class ServiceSync extends Service {
         if (TextUtils.isEmpty(prefTryagain)) {
             prefTryagain = "5";
         }
-        Integer maxTryAgain = Integer.parseInt(prefTryagain);
+        int maxTryAgain = Integer.parseInt(prefTryagain);
 //        else if(Integer.parseInt(prefTryagain)<5){
 //            prefTryagain = "5";
 //        }
@@ -1561,7 +1553,7 @@ public class ServiceSync extends Service {
             String index_order = antrianPesan.get(i)[5];
             Log.e(TAG, "index:" + index_order);
             Log.e(TAG, "prefTryagain:" + prefTryagain);
-            Integer tryAgain = Integer.parseInt(index_order);
+            int tryAgain = Integer.parseInt(index_order);
             if (tryAgain >= maxTryAgain) {
 //                deleteArrayListFirebaseAntrian(id);
                 jsonArray.put(Integer.parseInt(id));
@@ -1609,7 +1601,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 header.put("x-api-key", token);
@@ -1645,8 +1637,8 @@ public class ServiceSync extends Service {
     public static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
+            for (String child : children) {
+                boolean success = deleteDir(new File(dir, child));
                 if (!success) {
                     return false;
                 }
@@ -1718,16 +1710,17 @@ public class ServiceSync extends Service {
                             Bitmap : The decoded bitmap, or null if the image data could not be decoded.
                 */
                 // Convert BufferedInputStream to Bitmap object
-                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
 
                 // Return the downloaded bitmap
-                return bmp;
+                return BitmapFactory.decodeStream(bufferedInputStream);
 
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 // Disconnect the http url connection
-                connection.disconnect();
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
             return null;
         }
@@ -1772,10 +1765,7 @@ public class ServiceSync extends Service {
     // Custom method to convert string to url
     protected URL stringToURL(String urlString) {
         try {
-            URL url = new URL(urlString);
-            return url;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            return new URL(urlString);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1816,10 +1806,9 @@ public class ServiceSync extends Service {
         }
 
         // Parse the gallery image url to uri
-        Uri savedImageURI = Uri.parse(file.getAbsolutePath());
 
         // Return the saved image Uri
-        return savedImageURI;
+        return Uri.parse(file.getAbsolutePath());
     }
 
     public static File savebitmap(Bitmap bmp) throws IOException {
@@ -1830,6 +1819,7 @@ public class ServiceSync extends Service {
         bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
         File f = new File(Environment.getExternalStorageDirectory()
                 + File.separator + "testimage.jpg");
+        //noinspection ResultOfMethodCallIgnored
         f.createNewFile();
         FileOutputStream fo = new FileOutputStream(f);
         fo.write(bytes.toByteArray());
@@ -1855,7 +1845,7 @@ public class ServiceSync extends Service {
         dbHelper = new DBHelper(this);
         is_uploading_outbox = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
 
             is_uploading_outbox = false;
             startUploadOutbox();
@@ -1937,7 +1927,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
