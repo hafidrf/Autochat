@@ -166,6 +166,9 @@ public class MainActivity extends AppCompatActivity {
                     intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, false);
                     startService(intent1);
                     break;
+                case "mainScreenSynced":
+                    hidePdialog();
+                    break;
             }
         }
     };
@@ -324,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadService() {
+        showPdialog("Menginisiasi Servis Wabot");
         try {
             Intent intent = new Intent(MainActivity.this, MyNotifiService.class);//启动服务
             startService(intent);//Start service
@@ -331,8 +335,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent1 = new Intent(MainActivity.this, ServiceSync.class);
             boolean foreground_service = sharePref.getSessionBool(STATUS_FOREGROUND_SERVICE);
             intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, foreground_service);
+            intent1.putExtra(SharPref.STATUS_SYNC_SERVICE, true);
             startService(intent1);
         } catch (Exception e) {
+            hidePdialog();
             new AlertDialog.Builder(this)
                     .setMessage("Gagal Load Service, coba lagi?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -610,6 +616,13 @@ public class MainActivity extends AppCompatActivity {
         RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void showPdialog(String title) {
+        if (pDialog.isShowing()) return;
+        if (title == null) title = "Loading...";
+        pDialog.setTitle(title);
+        pDialog.show();
     }
 
     private void hidePdialog() {

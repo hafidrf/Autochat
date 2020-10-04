@@ -38,6 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -91,6 +92,7 @@ import id.co.kamil.autochat.database.DBHelper;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
+import static id.co.kamil.autochat.MainActivity.MAIN_RECEIVER;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_POST_HAPUS_PESAN_ANTRIAN;
 import static id.co.kamil.autochat.utils.API.URL_SYNC_DB;
@@ -127,6 +129,7 @@ public class ServiceSync extends Service {
     private HashMap<String, String> userDetail;
     private String token;
     private boolean is_synchronizing = false;
+    private boolean isMainSynced = false;
     private Handler handler;
     private boolean statusWASender = true;
     private Handler handlerWA;
@@ -191,6 +194,8 @@ public class ServiceSync extends Service {
         } else {
             stopForeground(true);
         }
+
+        isMainSynced = intent.getBooleanExtra(SharPref.STATUS_SYNC_SERVICE, false);
 
         // The service is starting, due to a call to startService()
         session = new SessionManager(this);
@@ -899,6 +904,7 @@ public class ServiceSync extends Service {
         if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(4);
+            mainSynced();
             return;
         }
         Log.i(TAG, "sedang melakukan sinkronisasi template....");
@@ -975,6 +981,7 @@ public class ServiceSync extends Service {
                     Log.i(TAG, e.getMessage());
                     dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + e.getMessage(), "danger", user_id);
                 }
+                mainSynced();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -984,6 +991,7 @@ public class ServiceSync extends Service {
                 Log.i(TAG, "sinkronisasi error.");
                 is_synchronizing_db = false;
                 startTimerDB(4);
+                mainSynced();
             }
         }) {
             @Override
@@ -998,6 +1006,16 @@ public class ServiceSync extends Service {
         //RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         //jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void mainSynced() {
+        if (!isMainSynced) return;
+
+        Intent pushNotification = new Intent(MAIN_RECEIVER);
+        pushNotification.putExtra("action", "mainScreenSynced");
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
+
+        isMainSynced = false;
     }
 
     private void syncKontakWabot() {
