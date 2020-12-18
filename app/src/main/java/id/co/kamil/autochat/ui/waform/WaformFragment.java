@@ -6,11 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +24,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -138,32 +137,32 @@ public class WaformFragment extends Fragment {
         token = userDetail.get(KEY_TOKEN);
         type = userDetail.get(KEY_CUST_GROUP);
 
-        if (type.equals("1")){
+        if (type.equals("1")) {
             limit_pesan = Integer.parseInt(sharePref.getSessionStr(SharPref.KEY_LIMIT_WAFORM_BASIC));
-            if (limit_pesan<=0){
+            if (limit_pesan <= 0) {
                 limit_pesan = LIMIT_WAFORM_BASIC;
             }
-        }else if(type.equals("2")){
+        } else if (type.equals("2")) {
             limit_pesan = Integer.parseInt(sharePref.getSessionStr(SharPref.KEY_LIMIT_WAFORM_PREMIUM));
-            if (limit_pesan<=0){
+            if (limit_pesan <= 0) {
                 limit_pesan = LIMIT_WAFORM_PREMIUM;
             }
         }
         labelStorage = (TextView) view.findViewById(R.id.labelStorage);
         progressStorage = (ProgressBar) view.findViewById(R.id.progressStorage);
 
-        if (type.equals("6")){ // basic
+        if (type.equals("6")) { // basic
             progressStorage.setVisibility(View.GONE);
             labelStorage.setVisibility(View.GONE);
-        }else{
+        } else {
             progressStorage.setVisibility(View.VISIBLE);
             labelStorage.setVisibility(View.VISIBLE);
         }
         pDialog = new ProgressDialog(getContext());
         swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-        layMessage = (LinearLayout)  view.findViewById(R.id.layMessage);
-        lblMessage = (TextView)  view.findViewById(R.id.lblMessage);
-        btnCobaLagi = (Button)  view.findViewById(R.id.btnCobaLagi);
+        layMessage = (LinearLayout) view.findViewById(R.id.layMessage);
+        lblMessage = (TextView) view.findViewById(R.id.lblMessage);
+        btnCobaLagi = (Button) view.findViewById(R.id.btnCobaLagi);
         btnCobaLagi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,17 +174,17 @@ public class WaformFragment extends Fragment {
         listWaform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                String[] arr = {"Edit", "Buka link","Salin","Bagikan"};
+                String[] arr = {"Edit", "Buka link", "Salin", "Bagikan"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setItems(arr, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-                        switch (which){
+                        switch (which) {
                             case 0:
-                                Intent intent = new Intent(getContext(),WaformActivity.class);
-                                intent.putExtra("id",dataWaform.get(i).getId());
-                                intent.putExtra("tipe","edit");
-                                startActivityForResult(intent,REQUEST_ADD);
+                                Intent intent = new Intent(getContext(), WaformActivity.class);
+                                intent.putExtra("id", dataWaform.get(i).getId());
+                                intent.putExtra("tipe", "edit");
+                                startActivityForResult(intent, REQUEST_ADD);
                                 break;
                             case 1:
                                 String url = dataWaform.get(i).getUrl();
@@ -194,7 +193,7 @@ public class WaformFragment extends Fragment {
                                 startActivity(intent2);
                                 break;
                             case 2:
-                                setClipboard(getContext(),dataWaform.get(i).getUrl());
+                                setClipboard(getContext(), dataWaform.get(i).getUrl());
                                 Toast.makeText(getContext(), "berhasil disalin", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
@@ -202,9 +201,9 @@ public class WaformFragment extends Fragment {
                                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
                                 shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                shareIntent.putExtra(Intent.EXTRA_TEXT,konten);
+                                shareIntent.putExtra(Intent.EXTRA_TEXT, konten);
                                 shareIntent.setType("text/plain");
-                                startActivity(Intent.createChooser(shareIntent,"Bagikan lewat"));
+                                startActivity(Intent.createChooser(shareIntent, "Bagikan lewat"));
                                 break;
                         }
                     }
@@ -226,7 +225,7 @@ public class WaformFragment extends Fragment {
                 try {
                     waformAdapter.filter(edtCari.getText().toString().trim());
                     listWaform.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -267,12 +266,13 @@ public class WaformFragment extends Fragment {
         setHasOptionsMenu(true);
         return view;
     }
-    private void loadWaform(){
+
+    private void loadWaform() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final String uri = Uri.parse(URL_POST_LIST_WAFORM)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataWaform.clear();
         JSONObject parameters = new JSONObject();
@@ -286,9 +286,9 @@ public class WaformFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String created = data.getJSONObject(i).getString("created");
                             final String judul = data.getJSONObject(i).getString("title");
@@ -300,18 +300,18 @@ public class WaformFragment extends Fragment {
                             final String url = data.getJSONObject(i).getString("url");
                             final String domain_code = data.getJSONObject(i).getString("domain_code");
                             JSONArray field = new JSONArray();
-                            if (data.getJSONObject(i).isNull("field") == false){
+                            if (data.getJSONObject(i).isNull("field") == false) {
                                 field = data.getJSONObject(i).getJSONArray("field");
                             }
-                            dataWaform.add(new ItemWaform(id,judul,redaksi,submit_text,dest_number,dest_name,domain_code,domain,created,url,field,data.getJSONObject(i),false,false));
+                            dataWaform.add(new ItemWaform(id, judul, redaksi, submit_text, dest_number, dest_name, domain_code, domain, created, url, field, data.getJSONObject(i), false, false));
                         }
-                    }else{
-                        showError(true,message,false);
+                    } else {
+                        showError(true, message, false);
                     }
                     displayGrup();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -320,15 +320,15 @@ public class WaformFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -341,28 +341,28 @@ public class WaformFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -370,80 +370,83 @@ public class WaformFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listWaform.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listWaform.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayGrup() {
-        waformAdapter = new AdapterWaform(dataWaform,getContext());
+        waformAdapter = new AdapterWaform(dataWaform, getContext());
         listWaform.setAdapter(waformAdapter);
         adapterInstance = true;
         count_number = dataWaform.size();
 
-        if (type.equals("1")){ // basic
+        if (type.equals("1")) { // basic
             labelStorage.setText("Penyimpanan (Akun Basic) : " + count_number + " s.d " + limit_pesan + " (form)");
 
-            if (count_number<limit_pesan){
-                progressStorage.setProgress((count_number* 100) / limit_pesan);
-            }else{
+            if (count_number < limit_pesan) {
+                progressStorage.setProgress((count_number * 100) / limit_pesan);
+            } else {
                 progressStorage.setProgress(100);
             }
-        }else if(type.equals("2")){
+        } else if (type.equals("2")) {
             labelStorage.setText("Penyimpanan (Akun Premium) : " + count_number + " s.d " + limit_pesan + " (form)");
 
-            if (count_number<limit_pesan){
-                progressStorage.setProgress((count_number* 100) / limit_pesan);
-            }else{
+            if (count_number < limit_pesan) {
+                progressStorage.setProgress((count_number * 100) / limit_pesan);
+            } else {
                 progressStorage.setProgress(100);
             }
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
-            if (!type.equals("6") &&  count_number>=limit_pesan){
+        if (item.getItemId() == R.id.actTambah) {
+            if (!type.equals("6") && count_number >= limit_pesan) {
                 Toast.makeText(getContext(), "Whatsapp Form sudah limit, silahkan upgrade akun", Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 Intent i = new Intent(getContext(), WaformActivity.class);
-                i.putExtra("tipe","add");
-                startActivityForResult(i,REQUEST_ADD);
+                i.putExtra("tipe", "add");
+                startActivityForResult(i, REQUEST_ADD);
             }
 
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataWaform.size()>0){
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataWaform.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0; i < dataWaform.size(); i++){
+                for (int i = 0; i < dataWaform.size(); i++) {
                     ItemWaform ikontak = dataWaform.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataWaform.set(i,ikontak);
+                    dataWaform.set(i, ikontak);
                 }
                 waformAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data Template tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(true);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(getContext())
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -452,28 +455,29 @@ public class WaformFragment extends Fragment {
                             hapusTemplate();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0; i < dataWaform.size(); i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataWaform.size(); i++) {
                 ItemWaform ikontak = dataWaform.get(i);
                 ikontak.setCheckbox(true);
-                dataWaform.set(i,ikontak);
+                dataWaform.set(i, ikontak);
             }
             waformAdapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }
-    private void listDefault(){
-        for (int i = 0; i < dataWaform.size(); i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataWaform.size(); i++) {
             ItemWaform ikontak = dataWaform.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataWaform.set(i,ikontak);
+            dataWaform.set(i, ikontak);
         }
         waformAdapter.notifyDataSetChanged();
-        if(dataWaform.size()==0){
+        if (dataWaform.size() == 0) {
             loadWaform();
         }
     }
@@ -485,7 +489,7 @@ public class WaformFragment extends Fragment {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
         super.onPrepareOptionsMenu(menu);
@@ -501,14 +505,14 @@ public class WaformFragment extends Fragment {
     private void hapusTemplate() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JSONArray idHapus = new JSONArray();
-        for (int i = 0; i < dataWaform.size(); i++){
-            if (dataWaform.get(i).isCheckbox()){
+        for (int i = 0; i < dataWaform.size(); i++) {
+            if (dataWaform.get(i).isCheckbox()) {
                 idHapus.put(Integer.parseInt(dataWaform.get(i).getId()));
             }
         }
         final JSONObject param = new JSONObject();
         try {
-            param.put("id",idHapus);
+            param.put("id", idHapus);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -528,9 +532,9 @@ public class WaformFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
-                        for (int i = 0; i < dataWaform.size(); i++){
-                            if (dataWaform.get(i).isCheckbox()){
+                    if (status) {
+                        for (int i = 0; i < dataWaform.size(); i++) {
+                            if (dataWaform.get(i).isCheckbox()) {
                                 dataWaform.remove(i);
                                 i = i - 1;
                             }
@@ -543,17 +547,17 @@ public class WaformFragment extends Fragment {
                         menuTop.findItem(R.id.actTambah).setVisible(true);
                         listDefault();
                         loadWaform();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -562,17 +566,17 @@ public class WaformFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -585,35 +589,35 @@ public class WaformFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -623,7 +627,7 @@ public class WaformFragment extends Fragment {
     }
 
     private void hidePdialog() {
-        if(pDialog.isShowing())
+        if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
@@ -631,8 +635,8 @@ public class WaformFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadWaform();
             }
         }

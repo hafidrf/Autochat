@@ -1,9 +1,5 @@
 package id.co.kamil.autochat.ui.followup;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,9 +16,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -88,16 +86,16 @@ public class PilihGrupActivity extends AppCompatActivity {
         String tmpExclude = getIntent().getStringExtra("exclude");
         try {
             excludeGrup = new JSONArray(tmpExclude);
-            Log.i(TAG,"excludeGroup:" + excludeGrup.toString());
+            Log.i(TAG, "excludeGroup:" + excludeGrup.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         pDialog = new ProgressDialog(this);
         swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        layMessage = (LinearLayout)  findViewById(R.id.layMessage);
-        lblMessage = (TextView)  findViewById(R.id.lblMessage);
-        btnCobaLagi = (Button)  findViewById(R.id.btnCobaLagi);
+        layMessage = (LinearLayout) findViewById(R.id.layMessage);
+        lblMessage = (TextView) findViewById(R.id.lblMessage);
+        btnCobaLagi = (Button) findViewById(R.id.btnCobaLagi);
         btnCobaLagi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,9 +108,9 @@ public class PilihGrupActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.putExtra("group_id",dataGrup.get(i).getId());
-                intent.putExtra("group_name",dataGrup.get(i).getJudul());
-                setResult(RESULT_OK,intent);
+                intent.putExtra("group_id", dataGrup.get(i).getId());
+                intent.putExtra("group_name", dataGrup.get(i).getJudul());
+                setResult(RESULT_OK, intent);
                 finish();
 
             }
@@ -128,7 +126,7 @@ public class PilihGrupActivity extends AppCompatActivity {
                 try {
                     grupAdapter.filter(edtCari.getText().toString().trim());
                     listGrup.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -168,12 +166,13 @@ public class PilihGrupActivity extends AppCompatActivity {
         });
 
     }
-    private void loadGrup(){
+
+    private void loadGrup() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final String uri = Uri.parse(URL_POST_LIST_GRUP)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataGrup.clear();
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, null, new Response.Listener<JSONObject>() {
@@ -185,31 +184,31 @@ public class PilihGrupActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
                             final String description = data.getJSONObject(i).getString("description");
-                            if (excludeGrup.length()>0){
+                            if (excludeGrup.length() > 0) {
                                 boolean exist = false;
-                                for (int a = 0 ;a<excludeGrup.length();a++){
-                                    if (id.equals(excludeGrup.getString(a))){
+                                for (int a = 0; a < excludeGrup.length(); a++) {
+                                    if (id.equals(excludeGrup.getString(a))) {
                                         exist = true;
                                         break;
                                     }
                                 }
                                 if (exist) continue;
                             }
-                            dataGrup.add(new ItemGrup(id,name,description,data.getJSONObject(i)));
+                            dataGrup.add(new ItemGrup(id, name, description, data.getJSONObject(i)));
                         }
-                    }else{
-                        showError(true,message,false);
+                    } else {
+                        showError(true, message, false);
                     }
                     displayGrup();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -218,15 +217,15 @@ public class PilihGrupActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(PilihGrupActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(PilihGrupActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(PilihGrupActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -239,28 +238,28 @@ public class PilihGrupActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -268,29 +267,32 @@ public class PilihGrupActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listGrup.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listGrup.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayGrup() {
-        grupAdapter = new AdapterGrup(dataGrup,this);
+        grupAdapter = new AdapterGrup(dataGrup, this);
         listGrup.setAdapter(grupAdapter);
         adapterInstance = true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

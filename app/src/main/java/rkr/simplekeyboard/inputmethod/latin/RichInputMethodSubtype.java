@@ -26,16 +26,15 @@ import rkr.simplekeyboard.inputmethod.compat.InputMethodSubtypeCompatUtils;
 import rkr.simplekeyboard.inputmethod.latin.utils.AdditionalSubtypeUtils;
 import rkr.simplekeyboard.inputmethod.latin.utils.SubtypeLocaleUtils;
 
-import static rkr.simplekeyboard.inputmethod.latin.common.Constants.Subtype.KEYBOARD_MODE;
-
 /**
  * Enrichment class for InputMethodSubtype to enable concurrent multi-lingual input.
- *
+ * <p>
  * Right now, this returns the extra value of its primary subtype.
  */
 // non final for easy mocking.
 public class RichInputMethodSubtype {
     private static final HashMap<Locale, Locale> sLocaleMap = initializeLocaleMap();
+
     private static final HashMap<Locale, Locale> initializeLocaleMap() {
         final HashMap<Locale, Locale> map = new HashMap<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -99,7 +98,7 @@ public class RichInputMethodSubtype {
         if (!(o instanceof RichInputMethodSubtype)) {
             return false;
         }
-        final RichInputMethodSubtype other = (RichInputMethodSubtype)o;
+        final RichInputMethodSubtype other = (RichInputMethodSubtype) o;
         return mSubtype.equals(other.mSubtype) && mLocale.equals(other.mLocale);
     }
 
@@ -118,7 +117,9 @@ public class RichInputMethodSubtype {
     }
 
     // TODO: remove this method
-    public InputMethodSubtype getRawSubtype() { return mSubtype; }
+    public InputMethodSubtype getRawSubtype() {
+        return mSubtype;
+    }
 
     public String getKeyboardLayoutSetName() {
         return SubtypeLocaleUtils.getKeyboardLayoutSetName(mSubtype);

@@ -1,29 +1,19 @@
 package id.co.kamil.autochat.ui.dasbor;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.RemoteException;
-import android.os.StrictMode;
 import android.provider.ContactsContract;
 import android.provider.Settings;
-import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -34,21 +24,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ExpandableListView;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -70,8 +59,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Queue;
+
+import javax.annotation.Nullable;
 
 import id.co.kamil.autochat.FloatingViewService;
 import id.co.kamil.autochat.LoginActivity;
@@ -90,11 +81,8 @@ import id.co.kamil.autochat.utils.SharPref;
 import static id.co.kamil.autochat.MainActivity.MAIN_RECEIVER;
 import static id.co.kamil.autochat.utils.API.DESKRIPSI_INFO;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
-import static id.co.kamil.autochat.utils.API.URL_DIRECT_LINK_UPGRADE;
-import static id.co.kamil.autochat.utils.API.URL_LANDING_PAGE;
 import static id.co.kamil.autochat.utils.API.URL_POST_DASHBOARD;
 import static id.co.kamil.autochat.utils.API.URL_SYNC_DB2;
-import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_GROUP;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_PARENT_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
@@ -103,22 +91,12 @@ import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FOREGROUND_SERVICE;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_SCREEN_ALWAYS_ON;
 import static id.co.kamil.autochat.utils.Utils.convertDpToPixel;
-import static id.co.kamil.autochat.utils.Utils.convertPixelsToDp;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
 import static id.co.kamil.autochat.utils.Utils.errorResponseString;
 
-public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScrollChangedListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class DasborFragment extends Fragment implements ViewTreeObserver.OnScrollChangedListener {
     private static final String TAG = "DasborFragment";
-
     private String _URL_UPGRADE = "";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private TextView txtInfo;
     private ExpandableHeightListView listDashboard;
     private SwipeRefreshLayout swipe_refresh;
@@ -131,7 +109,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     private TextView txtJoin;
     private Button btnShare;
     private Button btnAffiliasi;
-    private String linkPlaystore,linkWeb;
+    private String linkPlaystore, linkWeb;
     private String template_share;
     private Button btnUpgrade;
     private ImageView imgPrice;
@@ -142,31 +120,13 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     private int dbVersionCode;
     private ProgressDialog pDialog;
     private int page_kontak_wabot = 0;
-    private Switch switchEnabledBulkSender,switchAksesibilitas, switchFloatingWidget,
-        switchScreenAlwaysOn, switchEnableForegroundService;
+    private Switch switchEnabledBulkSender, switchAksesibilitas, switchFloatingWidget,
+            switchScreenAlwaysOn, switchEnableForegroundService;
     private boolean status_aksesibilitas;
 
 
     public DasborFragment() {
         // Required empty public constructor
-    }
-
-    public static DasborFragment newInstance(String param1, String param2) {
-        DasborFragment fragment = new DasborFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -210,17 +170,17 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             public void onClick(View v) {
                 try {
                     String konten = template_share;
-                    konten = konten.replace("[linklanding]",linkPlaystore);
-                    konten = konten.replace("[linkweb]",linkWeb);
+                    konten = konten.replace("[linklanding]", linkPlaystore);
+                    konten = konten.replace("[linkweb]", linkWeb);
 
-                    String appId = getActivity().getPackageName();
+                    //String appId = getActivity().getPackageName();
                     Intent i = new Intent(Intent.ACTION_SEND);
                     i.setType("text/plain");
                     i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -241,7 +201,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchEnabledBulkSender.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_BULK_SENDER,isChecked);
+                sharePref.createSession(STATUS_BULK_SENDER, isChecked);
             }
         });
         switchAksesibilitas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -255,7 +215,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchFloatingWidget.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_FLOATING_WIDGET,isChecked);
+                sharePref.createSession(STATUS_FLOATING_WIDGET, isChecked);
 
                 if (getActivity() != null) {
                     if (isChecked) {
@@ -273,7 +233,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchScreenAlwaysOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_SCREEN_ALWAYS_ON,isChecked);
+                sharePref.createSession(STATUS_SCREEN_ALWAYS_ON, isChecked);
 
                 if (getContext() == null) return;
 
@@ -285,7 +245,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchEnableForegroundService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_FOREGROUND_SERVICE,isChecked);
+                sharePref.createSession(STATUS_FOREGROUND_SERVICE, isChecked);
 
                 if (getContext() == null) return;
 
@@ -302,17 +262,17 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             }
         });
         btnSingkronisasi.setVisibility(View.GONE);
-        if (userDetail.get(KEY_PARENT_ID) != null){
-            if (userDetail.get(KEY_PARENT_ID).equals("5187")){
+        if (userDetail.get(KEY_PARENT_ID) != null) {
+            if ("5187".equals(userDetail.get(KEY_PARENT_ID))) {
                 btnSingkronisasi.setVisibility(View.VISIBLE);
             }
         }
-        if (userDetail.get(KEY_CUST_ID) != null){
-            if (userDetail.get(KEY_CUST_ID).equals("5187")){
+        if (userDetail.get(KEY_CUST_ID) != null) {
+            if ("5187".equals(userDetail.get(KEY_CUST_ID))) {
                 btnSingkronisasi.setVisibility(View.VISIBLE);
             }
         }
-        Log.e(TAG,"ParentID" + userDetail.get(KEY_PARENT_ID));
+        Log.e(TAG, "ParentID" + userDetail.get(KEY_PARENT_ID));
         btnSingkronisasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -325,27 +285,30 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 loadDashboard();
             }
         });
-        setTextViewHTML(txtInfo,DESKRIPSI_INFO);
+        setTextViewHTML(txtInfo, DESKRIPSI_INFO);
         listDashboard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent pushNotification = new Intent(MAIN_RECEIVER);
-                if (position==0){
+                if (position == 0) {
                     pushNotification.putExtra("action", "kontak");
-                }else if(position==1){
+                } else if (position == 1) {
                     pushNotification.putExtra("action", "antrian");
-                }else if(position==2){
+                } else if (position == 2) {
                     pushNotification.putExtra("action", "jadwal");
-                }else if(position==3){
+                } else if (position == 3) {
                     pushNotification.putExtra("action", "terkirim");
 
                 }
+
+                if (getContext() == null) return;
                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(pushNotification);
             }
         });
 
         return view;
     }
+
     private void updateStatusBulkSender() {
         boolean status_bulk_sender = sharePref.getSessionBool(STATUS_BULK_SENDER);
         status_aksesibilitas = isAccessibilityEnabled();
@@ -367,10 +330,12 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     }
 
     private boolean isAccessibilityEnabled() {
+        if (getActivity() == null) return false;
         int enabled = 0;
-        final String service = getActivity().getPackageName() +"/"+ WASendService.class.getCanonicalName();
+        final String service = getActivity().getPackageName() + "/" + WASendService.class.getCanonicalName();
 
         try {
+            if (getContext() != null)
             enabled = Settings.Secure.getInt(getContext().getContentResolver()
                     , Settings.Secure.ACCESSIBILITY_ENABLED);
         } catch (Settings.SettingNotFoundException e) {
@@ -393,32 +358,34 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
 
         return false;
     }
-    private String getTgl(){
+
+    private String getTgl() {
 
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c);
-        return formattedDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return df.format(c);
     }
-    private void singkronisasiWabot(){
+
+    private void singkronisasiWabot() {
         final String fieldverdb = "ver_db_kontakwabot";
-        final String created = getTgl();
+        //final String created = getTgl();
         dbHelper = new DBHelper(getContext());
         sharePref = new SharPref(getContext());
         page_kontak_wabot = sharePref.getSessionInt("page_kontak_wabot");
-        if (page_kontak_wabot <= 0 ){
+        if (page_kontak_wabot <= 0) {
             page_kontak_wabot = 1;
         }
         dbVersionCode = dbHelper.getVersionCodeDB2(fieldverdb);
+        if (getContext() == null) return;
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("currentVersion",dbVersionCode);
-            requestBody.put("field","kontak_wabot");
-            requestBody.put("page",page_kontak_wabot);
+            requestBody.put("currentVersion", dbVersionCode);
+            requestBody.put("field", "kontak_wabot");
+            requestBody.put("page", page_kontak_wabot);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -427,7 +394,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 .buildUpon()
                 .toString();
 
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog = new ProgressDialog(getContext());
         pDialog.setMessage("Singkronisasi kontak part " + page_kontak_wabot);
         pDialog.setCancelable(false);
@@ -438,54 +405,54 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
+                    Log.i(TAG, message);
                     //Log.i(TAG,"response:" + response);
-                    if (status){
+                    if (status) {
                         final boolean uptodate = response.getBoolean("is_uptodate");
                         final String versionCode = response.getString("version_code");
-                        if(!uptodate){
+                        if (!uptodate) {
                             final JSONArray data = response.getJSONArray("data");
 
-                            if (data.length()>0){
-                                for (int i = 0;i<data.length();i++){
+                            if (data.length() > 0) {
+                                for (int i = 0; i < data.length(); i++) {
                                     String name = data.getJSONObject(i).getString("name");
                                     String phone = data.getJSONObject(i).getString("phone");
-                                    if (!contactExists(getContext(),phone)){
-                                        saveLocalContact(name,phone);
+                                    if (!contactExists(getContext(), phone)) {
+                                        saveLocalContact(name, phone);
                                     }
                                 }
                                 hidePdialog();
-                                sharePref.createSession("page_kontak_wabot",page_kontak_wabot + 1);
+                                sharePref.createSession("page_kontak_wabot", page_kontak_wabot + 1);
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("singkronisasi selesai")
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .setCancelable(false)
                                         .show();
 
-                            }else{
+                            } else {
                                 hidePdialog();
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("database up to date")
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .setCancelable(false)
                                         .show();
-                                dbHelper.updateDBVersion2(versionCode,fieldverdb);
+                                dbHelper.updateDBVersion2(versionCode, fieldverdb);
                             }
-                        }else{
+                        } else {
                             hidePdialog();
                             new AlertDialog.Builder(getContext())
                                     .setMessage("database up to date")
-                                    .setPositiveButton("OK",null)
+                                    .setPositiveButton("OK", null)
                                     .setCancelable(false)
                                     .show();
-                            dbHelper.updateDBVersion2(versionCode,fieldverdb);
+                            dbHelper.updateDBVersion2(versionCode, fieldverdb);
                         }
 
-                    }else{
+                    } else {
                         hidePdialog();
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .setCancelable(false)
                                 .show();
                     }
@@ -493,11 +460,11 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 } catch (JSONException e) {
                     hidePdialog();
                     e.printStackTrace();
-                    Log.i(TAG,e.getMessage());
+                    Log.i(TAG, e.getMessage());
 
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .setCancelable(false)
                             .show();
                 }
@@ -506,20 +473,20 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 new AlertDialog.Builder(getContext())
                         .setMessage(errorResponseString(error))
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .setCancelable(false)
                         .show();
             }
-        }){
+        }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -533,27 +500,28 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             pDialog.dismiss();
     }
 
-    public boolean contactExists(Context context, String number) {
+    public boolean contactExists(@Nullable Context context, String number) {
+        if (context == null) return false;
 /// number is the phone number
         String selection = String.format("%s > 0", ContactsContract.Contacts.HAS_PHONE_NUMBER);
         Uri lookupUri = Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));
-        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
-        Cursor cur = context.getContentResolver().query(lookupUri,mPhoneNumberProjection, selection, null, null);
+        String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null);
+        if (cur == null) return false;
         try {
             if (cur.moveToFirst()) {
                 return true;
             }
-        }
-        finally {
-            if (cur != null)
-                cur.close();
+        } finally {
+            cur.close();
         }
         return false;
     }
-    private void saveLocalContact(String name,String phone) {
-        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+
+    private void saveLocalContact(String name, String phone) {
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         int rawContactInsertIndex = ops.size();
 
         ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
@@ -561,31 +529,27 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID,rawContactInsertIndex)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name) // Name of the person
                 .build());
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(
-                        ContactsContract.Data.RAW_CONTACT_ID,   rawContactInsertIndex)
+                        ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, phone) // Number of the person
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); // Type of mobile number
-        try
-        {
-            ContentProviderResult[] res = getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        }
-        catch (RemoteException e)
-        {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        catch (OperationApplicationException e)
-        {
+        try {
+            if (getActivity() != null) getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (RemoteException | OperationApplicationException e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
     private void loadDashboard() {
+        if (getContext() == null) return;
+        final Context context = getContext();
         txtJoin.setVisibility(View.GONE);
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
@@ -594,6 +558,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 .toString();
         swipe_refresh.setRefreshing(true);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, null, new Response.Listener<JSONObject>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(JSONObject response) {
                 swipe_refresh.setRefreshing(false);
@@ -615,13 +580,13 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                         final String img_price = response.getString("img_price");
                         final String url_upgrade = response.getString("url_upgrade");
                         final String status_account = response.getString("status_account");
-                        if (img_price == null || img_price.equals(null) || img_price.equals("null")) {
+                        if (img_price == null || img_price.equals("null")) {
                             imgPrice.setVisibility(View.GONE);
                         } else {
                             Picasso.with(getContext()).load(img_price).placeholder(R.drawable.ic_image).error(R.drawable.ic_image).into(imgPrice);
                             imgPrice.setVisibility(View.VISIBLE);
                         }
-                        if (url_upgrade == null || url_upgrade.equals(null) || url_upgrade.equals("null")) {
+                        if (url_upgrade == null || url_upgrade.equals("null")) {
                             btnUpgrade.setVisibility(View.GONE);
                         } else {
                             _URL_UPGRADE = url_upgrade;
@@ -630,35 +595,41 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                         template_share = response.getString("template_share");
                         linkPlaystore = response.getString("link_playstore");
                         linkWeb = response.getString("link_web");
-                        if (!(info.equals(null) || info.equals("null") || info == null)) {
+                        if (!(info == null || info.equals("null"))) {
                             setTextViewHTML(txtInfo, info);
                         }
-                        if (!(join.equals(null) || join.equals("null") || join == null)) {
+                        if (!(join == null || join.equals("null"))) {
                             txtJoin.setVisibility(View.VISIBLE);
                             setTextViewHTML(txtJoin, join);
-                            if (join_color.equals("red")) {
-                                txtJoin.setBackground(getContext().getResources().getDrawable(R.drawable.rectangle_red));
-                            } else if (join_color.equals("green")) {
-                                txtJoin.setBackground(getContext().getResources().getDrawable(R.drawable.rectangle_green));
-                            } else if (join_color.equals("orange")) {
-                                txtJoin.setBackground(getContext().getResources().getDrawable(R.drawable.rectangle_orange));
-                            } else if (join_color.equals("blue")) {
-                                txtJoin.setBackground(getContext().getResources().getDrawable(R.drawable.rectangle_blue));
-                            } else {
-                                txtJoin.setBackground(getContext().getResources().getDrawable(R.drawable.rectangle_tosca));
+                            switch (join_color) {
+                                case "red":
+                                    txtJoin.setBackground(context.getResources().getDrawable(R.drawable.rectangle_red));
+                                    break;
+                                case "green":
+                                    txtJoin.setBackground(context.getResources().getDrawable(R.drawable.rectangle_green));
+                                    break;
+                                case "orange":
+                                    txtJoin.setBackground(context.getResources().getDrawable(R.drawable.rectangle_orange));
+                                    break;
+                                case "blue":
+                                    txtJoin.setBackground(context.getResources().getDrawable(R.drawable.rectangle_blue));
+                                    break;
+                                default:
+                                    txtJoin.setBackground(context.getResources().getDrawable(R.drawable.rectangle_tosca));
+                                    break;
                             }
-                            int pad = (int) convertDpToPixel(10, getContext());
+                            int pad = (int) convertDpToPixel(10, context);
                             txtJoin.setPadding(pad, pad, pad, pad);
                         }
                         session.setKeyCustGroup(account_type_id);
                         if (account_type_id.equals("1")) {
-                            if (status_account.equals(null) || status_account == null || status_account.equals("null")) {
+                            if (status_account == null || status_account.equals("null")) {
                                 txtTypeAccount.setVisibility(View.GONE);
                             } else {
                                 setTextViewHTML(txtTypeAccount, status_account);
                             }
                         } else {
-                            txtTypeAccount.setText("Type akun Anda Saat ini adalah: " + account_type);
+                            txtTypeAccount.setText(String.format("Type akun Anda Saat ini adalah: %s", account_type));
                         }
 
                         dataDashboard.clear();
@@ -686,9 +657,9 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -698,28 +669,28 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
-                            final boolean status = jsonObject.getBoolean("status");
+                            //final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
-                                new androidx.appcompat.app.AlertDialog.Builder(getContext())
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
+                                new androidx.appcompat.app.AlertDialog.Builder(context)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 session.clearData();
-                                                startActivity(new Intent(getContext(), LoginActivity.class));
-                                                getActivity().finish();
+                                                startActivity(new Intent(context, LoginActivity.class));
+                                                if (getActivity() != null) getActivity().finish();
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
 
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
@@ -729,14 +700,14 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                                                 loadDashboard();
                                             }
                                         })
-                                        .setNegativeButton("Batal",null)
+                                        .setNegativeButton("Batal", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
                                 .setMessage(msg)
@@ -746,18 +717,18 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                                         loadDashboard();
                                     }
                                 })
-                                .setNegativeButton("Batal",null)
+                                .setNegativeButton("Batal", null)
                                 .show();
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -765,19 +736,20 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
+
     private void displayList() {
-        final AdapterDashboard adapterDashboard = new AdapterDashboard(getContext(),R.layout.item_list_dashboard,dataDashboard);
+        if (getContext() == null) return;
+        final AdapterDashboard adapterDashboard = new AdapterDashboard(getContext(), R.layout.item_list_dashboard, dataDashboard);
         listDashboard.setAdapter(adapterDashboard);
         listDashboard.setExpanded(true);
     }
 
-    protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span)
-    {
+    protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
         int start = strBuilder.getSpanStart(span);
         int end = strBuilder.getSpanEnd(span);
         int flags = strBuilder.getSpanFlags(span);
         final ClickableSpan clickable = new ClickableSpan() {
-            public void onClick(View view) {
+            public void onClick(@NonNull View view) {
                 // Do something with span.getURL() to handle the link click...
                 String url = span.getURL();
                 Intent intent2 = new Intent(Intent.ACTION_VIEW);
@@ -789,12 +761,11 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         strBuilder.removeSpan(span);
     }
 
-    protected void setTextViewHTML(TextView text, String html)
-    {
+    protected void setTextViewHTML(TextView text, String html) {
         CharSequence sequence = Html.fromHtml(html);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
         URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
-        for(URLSpan span : urls) {
+        for (URLSpan span : urls) {
             makeLinkClickable(strBuilder, span);
         }
         text.setText(strBuilder);
@@ -812,13 +783,14 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         super.onStop();
         scrollView.getViewTreeObserver().removeOnScrollChangedListener(this);
     }
+
     @Override
     public void onScrollChanged() {
         int scrollY = scrollView.getScrollY();
-        if (scrollY==0){
+        if (scrollY == 0) {
             swipe_refresh.setEnabled(true);
-        }else {
-            if (!swipe_refresh.isRefreshing()){
+        } else {
+            if (!swipe_refresh.isRefreshing()) {
                 swipe_refresh.setEnabled(false);
             }
         }

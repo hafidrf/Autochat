@@ -98,8 +98,8 @@ public final class InputAttributes {
         // If it's not multiline and the autoCorrect flag is not set, then don't correct
         mInputTypeNoAutoCorrect =
                 (variation == InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT && !flagAutoCorrect)
-                || flagNoSuggestions
-                || (!flagAutoCorrect && !flagMultiLine);
+                        || flagNoSuggestions
+                        || (!flagAutoCorrect && !flagMultiLine);
 
         mApplicationSpecifiedCompletionOn = flagAutoComplete && isFullscreenMode;
     }
@@ -127,7 +127,7 @@ public final class InputAttributes {
     }
 
     public static boolean inPrivateImeOptions(final String packageName, final String key,
-            final EditorInfo editorInfo) {
+                                              final EditorInfo editorInfo) {
         if (editorInfo == null) return false;
         final String findingKey = (packageName != null) ? packageName + "." + key : key;
         return StringUtils.containsInCommaSplittableText(findingKey, editorInfo.privateImeOptions);

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2012, The Android Open Source Project
@@ -18,12 +17,11 @@
 */
 -->
 
-<merge
-    xmlns:latin="http://schemas.android.com/apk/res-auto"
->
+<merge xmlns:latin="http://schemas.android.com/apk/res-auto">
     <switch>
         <case latin:showExtraChars="true">
-            <Key latin:keySpec="a"
+            <Key
+                latin:keySpec="a"
                 latin:keyHintLabel="\@"
                 latin:additionalMoreKeys="\\@"
                 latin:moreKeys="!text/morekeys_a" />
@@ -68,7 +66,8 @@
                 latin:moreKeys="!text/morekeys_l" />
         </case>
         <default>
-            <Key latin:keySpec="a"
+            <Key
+                latin:keySpec="a"
                 latin:moreKeys="!text/morekeys_a" />
             <Key
                 latin:keySpec="s"
@@ -76,8 +75,7 @@
             <Key
                 latin:keySpec="d"
                 latin:moreKeys="!text/morekeys_d" />
-            <Key
-                latin:keySpec="f" />
+            <Key latin:keySpec="f" />
             <Key
                 latin:keySpec="g"
                 latin:moreKeys="!text/morekeys_g" />

@@ -37,9 +37,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service android:name=".FloatingViewService"
+        <service
+            android:name=".FloatingViewService"
             android:enabled="true"
             android:exported="false" />
+
         <activity android:name=".ui.linkpage.FormLinkPageAddFieldActivity"></activity>
         <activity android:name=".ui.linkpage.FormLinkPageActivity" />
         <activity android:name=".ui.template.TemplateShareDetailActivity" />
@@ -173,10 +175,11 @@
             android:exported="false">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
-        <receiver android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver"
-            tools:remove="android:permission" >
+        <receiver
+            android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver"
+            tools:remove="android:permission">
             <intent-filter>
                 <action
                     android:name="com.android.vending.INSTALL_REFERRER"
@@ -184,8 +187,9 @@
             </intent-filter>
         </receiver>
         <!-- Used for install referrer tracking-->
-        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService"/>
-        <service android:name=".service.BackgroundLocationService"/>
+        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService" />
+        <service android:name=".service.BackgroundLocationService" />
+
         <receiver
             android:name="com.google.android.gms.tagmanager.InstallReferrerReceiver"
             android:permission="android.permission.INSTALL_PACKAGES"

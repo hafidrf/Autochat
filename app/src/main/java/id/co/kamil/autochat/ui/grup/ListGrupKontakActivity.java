@@ -49,9 +49,7 @@ import id.co.kamil.autochat.ui.kontak.LihatKontakActivity;
 import id.co.kamil.autochat.utils.SessionManager;
 
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
-import static id.co.kamil.autochat.utils.API.URL_POST_EDIT_GROUP;
 import static id.co.kamil.autochat.utils.API.URL_POST_HAPUS_CONTACT_FROM_GROUP;
-import static id.co.kamil.autochat.utils.API.URL_POST_LIST_CONTACT;
 import static id.co.kamil.autochat.utils.API.URL_POST_LIST_CONTACT_GROUP;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
@@ -75,7 +73,7 @@ public class ListGrupKontakActivity extends AppCompatActivity {
     private JSONObject dataJsonGrup;
     private String name;
     private String description;
-    private TextView txtGrup,txtDeskripsi;
+    private TextView txtGrup, txtDeskripsi;
     private Menu menuTop;
     private boolean adapterInstance = false;
     private JSONArray customers_id;
@@ -102,15 +100,15 @@ public class ListGrupKontakActivity extends AppCompatActivity {
         btnEditGrup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ListGrupKontakActivity.this,FormGrupActivity.class);
-                intent.putExtra("tipe","edit");
+                Intent intent = new Intent(ListGrupKontakActivity.this, FormGrupActivity.class);
+                intent.putExtra("tipe", "edit");
                 try {
-                    intent.putExtra("id",dataJsonGrup.getString("id"));
-                    intent.putExtra("data",dataJsonGrup.toString());
+                    intent.putExtra("id", dataJsonGrup.getString("id"));
+                    intent.putExtra("data", dataJsonGrup.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                startActivityForResult(intent,REQUEST_EDIT_GROUP);
+                startActivityForResult(intent, REQUEST_EDIT_GROUP);
             }
         });
         edtCari.addTextChangedListener(new TextWatcher() {
@@ -124,7 +122,7 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                 try {
                     kontakAdapter.filter(edtCari.getText().toString().trim());
                     listKontak.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -147,23 +145,24 @@ public class ListGrupKontakActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (is_default){
+        if (is_default) {
             btnEditGrup.setEnabled(false);
-        }else{
+        } else {
             btnEditGrup.setEnabled(true);
         }
         listKontak.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position>=0){
+                if (position >= 0) {
                     Intent intent = new Intent(ListGrupKontakActivity.this, LihatKontakActivity.class);
-                    intent.putExtra("id",dataKontak.get(position).getId());
-                    startActivityForResult(intent,REQUEST_ADD);
+                    intent.putExtra("id", dataKontak.get(position).getId());
+                    startActivityForResult(intent, REQUEST_ADD);
                 }
             }
         });
         loadKontak();
     }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
@@ -172,20 +171,22 @@ public class ListGrupKontakActivity extends AppCompatActivity {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
         return super.onPrepareOptionsMenu(menu);
     }
-    private void listDefault(){
-        for (int i = 0 ; i < dataKontak.size();i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataKontak.size(); i++) {
             ItemKontak ikontak = dataKontak.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataKontak.set(i,ikontak);
+            dataKontak.set(i, ikontak);
         }
         kontakAdapter.notifyDataSetChanged();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menuTop = menu;
@@ -195,33 +196,33 @@ public class ListGrupKontakActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
-        }else if (item.getItemId()==R.id.actTambah){
+        } else if (item.getItemId() == R.id.actTambah) {
             Intent i = new Intent(this, FormTambahKontakGrupActivity.class);
-            i.putExtra("exclude_customers",customers_id.toString());
-            i.putExtra("dataJson",dataJsonGrup.toString());
-            startActivityForResult(i,REQUEST_ADD);
-        }else if (item.getItemId()==R.id.actEdit) {
+            i.putExtra("exclude_customers", customers_id.toString());
+            i.putExtra("dataJson", dataJsonGrup.toString());
+            startActivityForResult(i, REQUEST_ADD);
+        } else if (item.getItemId() == R.id.actEdit) {
             menuTop.findItem(R.id.actBatal).setVisible(true);
             menuTop.findItem(R.id.actHapus).setVisible(true);
             menuTop.findItem(R.id.actSemua).setVisible(true);
             menuTop.findItem(R.id.actEdit).setVisible(false);
             menuTop.findItem(R.id.actTambah).setVisible(false);
-            for (int i = 0 ; i < dataKontak.size();i++){
+            for (int i = 0; i < dataKontak.size(); i++) {
                 ItemKontak ikontak = dataKontak.get(i);
                 ikontak.setChkvisible(!ikontak.isChkvisible());
-                dataKontak.set(i,ikontak);
+                dataKontak.set(i, ikontak);
             }
             kontakAdapter.notifyDataSetChanged();
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(true);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(this)
                     .setMessage("Apakah anda yakin akan mengeluarkan kontak berikut di grup ini?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -230,14 +231,14 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                             hapusKontakGrup();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0 ; i < dataKontak.size();i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataKontak.size(); i++) {
                 ItemKontak ikontak = dataKontak.get(i);
                 ikontak.setCheckbox(true);
-                dataKontak.set(i,ikontak);
+                dataKontak.set(i, ikontak);
             }
             kontakAdapter.notifyDataSetChanged();
         }
@@ -246,12 +247,12 @@ public class ListGrupKontakActivity extends AppCompatActivity {
 
     private void hapusKontakGrup() {
         JSONArray listHapusKontak = new JSONArray();
-        for (int i = 0 ; i < dataKontak.size();i++){
-            if (dataKontak.get(i).isCheckbox()){
+        for (int i = 0; i < dataKontak.size(); i++) {
+            if (dataKontak.get(i).isCheckbox()) {
                 final JSONObject tmpObject = dataKontak.get(i).getJsonObject();
                 try {
                     final String id_grup_kontak = tmpObject.getString("id_grup_kontak");
-                    Log.e(TAG,"idGrupKontak:" + id_grup_kontak);
+                    Log.e(TAG, "idGrupKontak:" + id_grup_kontak);
                     listHapusKontak.put(id_grup_kontak);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -262,7 +263,7 @@ public class ListGrupKontakActivity extends AppCompatActivity {
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",listHapusKontak);
+            requestBody.put("id", listHapusKontak);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -271,7 +272,7 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                 .buildUpon()
                 .toString();
 
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -282,7 +283,7 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(ListGrupKontakActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         loadKontak();
@@ -294,17 +295,17 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                         menuTop.findItem(R.id.actTambah).setVisible(true);
                         listDefault();
                         //finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(ListGrupKontakActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(ListGrupKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -312,17 +313,17 @@ public class ListGrupKontakActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(ListGrupKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(ListGrupKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(ListGrupKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -335,35 +336,35 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(ListGrupKontakActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(ListGrupKontakActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -372,12 +373,12 @@ public class ListGrupKontakActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void loadKontak(){
+    private void loadKontak() {
         dataKontak.clear();
-        customers_id  = new JSONArray();
+        customers_id = new JSONArray();
         JSONObject parameter = new JSONObject();
         try {
-            parameter.put("groupId",idGrup);
+            parameter.put("groupId", idGrup);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -398,22 +399,22 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id_kontak = data.getJSONObject(i).getString("id");
                             final String first_name = data.getJSONObject(i).getString("first_name");
                             final String last_name = data.getJSONObject(i).getString("last_name");
                             final String phone_kontak = data.getJSONObject(i).getString("phone");
                             final String nama_kontak = first_name + " " + last_name;
                             customers_id.put(id_kontak);
-                            dataKontak.add(new ItemKontak(id_kontak,nama_kontak,phone_kontak,false,data.getJSONObject(i)));
+                            dataKontak.add(new ItemKontak(id_kontak, nama_kontak, phone_kontak, false, data.getJSONObject(i)));
                         }
-                        Log.i(TAG,"data:" + data.toString());
-                    }else{
+                        Log.i(TAG, "data:" + data.toString());
+                    } else {
                         new AlertDialog.Builder(ListGrupKontakActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                     displayKontak();
@@ -421,7 +422,7 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(ListGrupKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -433,16 +434,16 @@ public class ListGrupKontakActivity extends AppCompatActivity {
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(ListGrupKontakActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .show();
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -452,26 +453,26 @@ public class ListGrupKontakActivity extends AppCompatActivity {
     }
 
     private void displayKontak() {
-        kontakAdapter = new AdapterKontak(dataKontak,this);
+        kontakAdapter = new AdapterKontak(dataKontak, this);
         listKontak.setAdapter(kontakAdapter);
         adapterInstance = true;
     }
 
     private void hidePdialog() {
-        if(pDialog.isShowing())
+        if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_EDIT_GROUP){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_EDIT_GROUP) {
+            if (resultCode == RESULT_OK) {
                 setResult(RESULT_OK);
                 finish();
             }
-        }else if(requestCode==REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        } else if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 setResult(RESULT_OK);
                 loadKontak();
             }

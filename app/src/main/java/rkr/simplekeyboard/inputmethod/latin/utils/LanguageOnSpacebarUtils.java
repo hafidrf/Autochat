@@ -70,7 +70,7 @@ public final class LanguageOnSpacebarUtils {
     }
 
     public static void onSubtypeChanged(final RichInputMethodSubtype subtype,
-           final boolean implicitlyEnabledSubtype, final Locale systemLocale) {
+                                        final boolean implicitlyEnabledSubtype, final Locale systemLocale) {
         final Locale newLocale = subtype.getLocale();
         if (systemLocale.equals(newLocale)) {
             sIsSystemLanguageSameAsInputLanguage = true;

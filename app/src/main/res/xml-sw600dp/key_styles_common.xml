@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2011, The Android Open Source Project
@@ -18,13 +17,9 @@
 */
 -->
 
-<merge
-    xmlns:latin="http://schemas.android.com/apk/res-auto"
->
+<merge xmlns:latin="http://schemas.android.com/apk/res-auto">
     <switch>
-        <case
-            latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetShiftLockShifted"
-        >
+        <case latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetShiftLockShifted">
             <key-style
                 latin:styleName="hasShiftedLetterHintStyle"
                 latin:keyLabelFlags="hasShiftedLetterHint|shiftedLetterActivated" />
@@ -35,8 +30,7 @@
                 latin:keyLabelFlags="hasShiftedLetterHint" />
         </default>
     </switch>
-    <include
-        latin:keyboardLayout="@xml/key_styles_settings" />
+    <include latin:keyboardLayout="@xml/key_styles_settings" />
     <!-- Functional key styles -->
     <!-- Base style for shift key. A single space is used for dummy label in moreKeys. -->
     <key-style
@@ -45,18 +39,14 @@
         latin:keyLabelFlags="preserveCase"
         latin:moreKeys="!noPanelAutoMoreKey!, |!code/key_capslock" />
     <switch>
-        <case
-            latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetAutomaticShifted"
-        >
+        <case latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetAutomaticShifted">
             <key-style
                 latin:styleName="shiftKeyStyle"
                 latin:keySpec="!icon/shift_key_shifted|!code/key_shift"
                 latin:backgroundType="stickyOff"
                 latin:parentStyle="baseForShiftKeyStyle" />
         </case>
-        <case
-            latin:keyboardLayoutSetElement="alphabetShiftLocked|alphabetShiftLockShifted"
-        >
+        <case latin:keyboardLayoutSetElement="alphabetShiftLocked|alphabetShiftLockShifted">
             <key-style
                 latin:styleName="shiftKeyStyle"
                 latin:keySpec="!icon/shift_key_shifted|!code/key_shift"
@@ -76,8 +66,7 @@
         latin:keySpec="!icon/delete_key|!code/key_delete"
         latin:keyActionFlags="isRepeatable|noKeyPreview"
         latin:backgroundType="functional" />
-    <include
-        latin:keyboardLayout="@xml/key_styles_enter" />
+    <include latin:keyboardLayout="@xml/key_styles_enter" />
     <!-- TODO: Currently there is no way to specify icon alignment per theme. -->
     <key-style
         latin:styleName="spaceKeyStyle"
@@ -111,8 +100,7 @@
     <switch>
         <case
             latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetShiftLockShifted"
-            latin:navigatePrevious="true"
-        >
+            latin:navigatePrevious="true">
             <key-style
                 latin:styleName="tabKeyStyle"
                 latin:keySpec="!icon/tab_key|!code/key_action_previous"
@@ -120,8 +108,7 @@
         </case>
         <case
             latin:keyboardLayoutSetElement="alphabet|alphabetAutomaticShifted|alphabetShiftLocked"
-            latin:navigateNext="true"
-        >
+            latin:navigateNext="true">
             <key-style
                 latin:styleName="tabKeyStyle"
                 latin:keySpec="!icon/tab_key|!code/key_action_next"

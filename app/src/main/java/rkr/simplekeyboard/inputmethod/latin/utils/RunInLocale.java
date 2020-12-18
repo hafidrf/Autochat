@@ -29,7 +29,7 @@ public abstract class RunInLocale<T> {
     /**
      * Execute {@link #job(Resources)} method in specified system locale exclusively.
      *
-     * @param res the resources to use.
+     * @param res       the resources to use.
      * @param newLocale the locale to change to. Run in system locale if null.
      * @return the value returned from {@link #job(Resources)}.
      */

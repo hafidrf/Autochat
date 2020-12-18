@@ -31,12 +31,15 @@ public class KeyboardParams {
     public KeyboardId mId;
     public int mThemeId;
 
-    /** Total height and width of the keyboard, including the paddings and keys */
+    /**
+     * Total height and width of the keyboard, including the paddings and keys
+     */
     public int mOccupiedHeight;
     public int mOccupiedWidth;
 
-    /** Base height and width of the keyboard used to calculate rows' or keys' heights and
-     *  widths
+    /**
+     * Base height and width of the keyboard used to calculate rows' or keys' heights and
+     * widths
      */
     public int mBaseHeight;
     public int mBaseWidth;

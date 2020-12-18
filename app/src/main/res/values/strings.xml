@@ -1,16 +1,12 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Wabot</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
     <string name="menu_kontak">Kontak</string>
     <string name="menu_group">Grup Kontak</string>
     <string name="menu_kirim_pesan">Kirim Pesan</string>
-    <string name="menu_broadcast">Broadcast</string>
     <string name="menu_pesan_terjadwal">Pesan Terjadwal</string>
     <string name="menu_antrian_pesan">Antrian Pesan</string>
     <string name="menu_pesan_terkirim">Pesan Terkirim</string>
@@ -33,35 +29,23 @@
 
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="toast_tidak_ada_internet">Tidak ada koneksi internet. Pastikan jaringan anda terhubung ke internet.</string>
     <string name="toast_network_error">Periksa kembali koneksi internet anda</string>
     <string name="toast_server_error">Terjadi kesalahan server, silakan coba beberapa saat lagi</string>
     <string name="toast_timeout">Timeout. Silakan coba beberapa saat lagi</string>
-    <string name="toast_terjadi_kesalahan">Terjadi kesalahan, silakan coba beberapa saat lagi. Kemungkinan kesalahan dari server atau sesi anda telah habis. Jika masih bermasalah silahkan keluar kemudian login kembali.</string>
     <string name="accessibility_service_label">aksesibilitas Wabot</string>
     <string name="accessibility_service_description">Layanan yang bertanggung jawab untuk mengotomatisasi pengiriman pesan</string>
     <string name="warning_disable_accessibility">Aktifkan layanan aksesibilitas Wabot</string>
     <string name="snack_enable_service">Pengaturan</string>
 
 
-    <string name="ime_name">Wabot Keyboard</string>
-
     <!-- Symbols that are commonly considered word separators in this language -->
-    <string name="word_separators">\u0020.,;:!?\n()[]*&amp;@{}/&lt;&gt;_+=|&quot;</string>
 
     <!-- Labels on soft keys -->
-    <string name="label_go_key">Go</string>
-    <string name="label_next_key">Next</string>
-    <string name="label_send_key">Send</string>
 
     <!-- Labels for subtype -->
-    <string name="label_subtype_generic">%s</string>
-    <string name="label_subtype_en_GB">English (GB)</string>
 
     <!-- Titles for ImePreference -->
-    <string name="settings_name">Wabot Keyboard Settings</string>
-    <string name="general_category">General</string>
     <string name="menu_tutorial">Tutorial</string>
     <string name="menu_ecourse">eCourse Whatsapp Marketing</string>
     <string name="menu_marketing_tool">Marketing Tool</string>
@@ -120,28 +104,22 @@
          (US) should be an abbreviation of United States to fit in the CHAR LIMIT. -->
     <string name="subtype_es_US">Spanish (US)</string>
     <!-- Description for Hinglish (https://en.wikipedia.org/wiki/Hinglish) keyboard subtype [CHAR LIMIT=25] -->
-    <string name="subtype_hi_ZZ">Hinglish</string>
     <!-- Description for Serbian (Latin) keyboard subtype [CHAR LIMIT=25]
          (Latin) can be an abbreviation to fit in the CHAR LIMIT. -->
     <string name="subtype_sr_ZZ">Serbian (Latin)</string>
     <!-- Description for English (UK) keyboard subtype with explicit keyboard layout [CHAR LIMIT=25]
          (UK) should be an abbreviation of United Kingdom to fit in the CHAR LIMIT.
          This should be identical to subtype_en_GB aside from the trailing (%s). -->
-    <string name="subtype_with_layout_en_GB">English (UK) (<xliff:g example="QWERTY" id="KEYBOARD_LAYOUT">%s</xliff:g>)</string>
     <!-- Description for English (US) keyboard subtype with explicit keyboard layout [CHAR LIMIT=25]
          (US) should be an abbreviation of United States to fit in the CHAR LIMIT.
          This should be identical to subtype_en_US aside from the trailing (%s). -->
-    <string name="subtype_with_layout_en_US">English (US) (<xliff:g example="QWERTY" id="KEYBOARD_LAYOUT">%s</xliff:g>)</string>
     <!-- Description for Spanish (US) keyboard subtype with explicit keyboard layout [CHAR LIMIT=25]
          (US) should be an abbreviation of United Statesn to fit in the CHAR LIMIT.
          This should be identical to subtype_es_US aside from the trailing (%s). -->
-    <string name="subtype_with_layout_es_US">Spanish (US) (<xliff:g example="QWERTY" id="KEYBOARD_LAYOUT">%s</xliff:g>)</string>
     <!-- Description for Hinglish (https://en.wikipedia.org/wiki/Hinglish) keyboard subtype with explicit keyboard layout [CHAR LIMIT=25]
          This should be identical to subtype_hi_ZZ aside from the trailing (%s). -->
-    <string name="subtype_with_layout_hi_ZZ">Hinglish (<xliff:g example="QWERTY" id="KEYBOARD_LAYOUT">%s</xliff:g>)</string>
     <!-- Description for Serbian (Latin) keyboard subtype with explicit keyboard layout [CHAR LIMIT=25]
          This should be identical to subtype_sr_ZZ aside from the trailing (%s). -->
-    <string name="subtype_with_layout_sr_ZZ">Serbian (<xliff:g example="QWERTY" id="KEYBOARD_LAYOUT">%s</xliff:g>)</string>
     <!-- Description for "LANGUAGE_NAME" (Traditional) keyboard subtype [CHAR LIMIT=25]
          (Traditional) can be an abbreviation to fit in the CHAR LIMIT. -->
     <string name="subtype_generic_traditional"><xliff:g example="Nepali" id="LANGUAGE_NAME">%s</xliff:g> (Traditional)</string>
@@ -182,21 +160,15 @@
     <string name="custom_input_style_already_exists">"The same input style already exists: <xliff:g example="English (Dvorak)" id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
 
     <!-- Title of the settings for keypress vibration duration [CHAR LIMIT=35] -->
-    <string name="prefs_keypress_vibration_duration_settings">Keypress vibration duration</string>
     <!-- Title of the settings for keypress sound volume [CHAR LIMIT=35] -->
-    <string name="prefs_keypress_sound_volume_settings">Keypress sound volume</string>
     <!-- Title of the settings for key long press delay [CHAR LIMIT=35] -->
-    <string name="prefs_key_longpress_timeout_settings">Key long press delay</string>
 
     <!-- Title of the button to revert to the default value of the device in the settings dialog [CHAR LIMIT=15] -->
     <string name="button_default">Default</string>
 
     <string name="abbreviation_unit_percent" translatable="false"><xliff:g id="PERCENTS">%s</xliff:g>%%</string>
 
-    <string name="prefs_keyboard_height_settings">Keyboard height</string>
-    <string name="keyboard_color">Set custom keyboard color</string>
     <string name="hide_special_chars">Hide special characters</string>
-    <string name="hide_language_switch_key">Hide language switch key</string>
     <string name="show_number_row">Show separate number row</string>
     <string name="space_swipe">Space swipe cursor move</string>
     <string name="delete_swipe">Delete swipe</string>

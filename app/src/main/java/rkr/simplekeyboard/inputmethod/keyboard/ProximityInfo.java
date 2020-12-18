@@ -22,7 +22,9 @@ import java.util.List;
 
 public class ProximityInfo {
     // Must be equal to MAX_PROXIMITY_CHARS_SIZE in native/jni/src/defines.h
-    /** Number of key widths from current touch point to search for nearest keys. */
+    /**
+     * Number of key widths from current touch point to search for nearest keys.
+     */
     private static final float SEARCH_DISTANCE = 1.2f;
     private static final List<Key> EMPTY_KEY_LIST = Collections.emptyList();
 
@@ -40,8 +42,8 @@ public class ProximityInfo {
 
     @SuppressWarnings("unchecked")
     ProximityInfo(final int gridWidth, final int gridHeight, final int minWidth, final int height,
-            final int mostCommonKeyWidth,
-            final List<Key> sortedKeys) {
+                  final int mostCommonKeyWidth,
+                  final List<Key> sortedKeys) {
         mGridWidth = gridWidth;
         mGridHeight = gridHeight;
         mGridSize = mGridWidth * mGridHeight;

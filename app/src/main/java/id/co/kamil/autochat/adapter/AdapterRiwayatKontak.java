@@ -29,7 +29,7 @@ public class AdapterRiwayatKontak extends ArrayAdapter<ItemRiwayatKontak> {
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull final ViewGroup parent) {
         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View view = inflater.inflate(this._resource,parent,false);
+        final View view = inflater.inflate(this._resource, parent, false);
         TextView itemKomentar = (TextView) view.findViewById(R.id.itemKomentar);
         ImageButton buttonHapus = (ImageButton) view.findViewById(R.id.btnHapus);
         final ItemRiwayatKontak item = getItem(position);
@@ -37,7 +37,7 @@ public class AdapterRiwayatKontak extends ArrayAdapter<ItemRiwayatKontak> {
         buttonHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView)parent).performItemClick(view,position,position);
+                ((ListView) parent).performItemClick(view, position, position);
             }
         });
         return view;

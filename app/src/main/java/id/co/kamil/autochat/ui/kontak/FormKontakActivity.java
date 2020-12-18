@@ -85,22 +85,22 @@ public class FormKontakActivity extends AppCompatActivity {
     private static final int REQUEST_GRUP = 100;
     private static final int REQUEST_ADD_CONTACT = 5;
     private static final int REQUEST_CONTACT = 6;
-    private LinearLayout layUmum,layRiwayat;
-    private RadioButton optUmum,optRiwayat;
+    private LinearLayout layUmum, layRiwayat;
+    private RadioButton optUmum, optRiwayat;
     private String tipeForm;
-    private EditText edtNamaDepan,edtEmail,edtPhone,edtTelegram,edtAlamat,edtWeb,edtFacebook,edtInstagram,edtLinkedin,edtBukalapak,edtTokopedia,edtShopee,edtOlshopid,edtTglLahir,edtNote;
+    private EditText edtNamaDepan, edtEmail, edtPhone, edtTelegram, edtAlamat, edtWeb, edtFacebook, edtInstagram, edtLinkedin, edtBukalapak, edtTokopedia, edtShopee, edtOlshopid, edtTglLahir, edtNote;
     private ProgressDialog pDialog;
     private SessionManager session;
     private HashMap<String, String> userDetail;
     private String token;
     private List<String> riwayatUpdate = new ArrayList<>();
     private Spinner spinGender;
-    private String[] dataGender = new String[]{"Laki-laki","Perempuan"};
+    private String[] dataGender = new String[]{"Laki-laki", "Perempuan"};
     private Button btnSimpan;
     private JSONArray customers = new JSONArray();
     private String idKontak;
     private JSONObject dataJson;
-    private int selectedYear,selectedMonth,selectedDay;
+    private int selectedYear, selectedMonth, selectedDay;
     private List<ItemRiwayatKontak> dataRiwayat = new ArrayList<>();
     private ExpandableHeightListView listRiwayat;
     private List<ItemRiwayatKontak> deleteRiwayat = new ArrayList<>();
@@ -108,7 +108,7 @@ public class FormKontakActivity extends AppCompatActivity {
     private EditText edtKomentar;
     private AdapterRiwayatKontak adapterRiwayat;
     private List<ItemGrup> dataGrup = new ArrayList<>();
-    private AdapterGrup grupAdapter ;
+    private AdapterGrup grupAdapter;
     private boolean adapterInstance;
     private ExpandableHeightListView listGrup;
     private Button btnTambahGrup;
@@ -123,7 +123,7 @@ public class FormKontakActivity extends AppCompatActivity {
     private String cityId = "";
     private Spinner spinProvinsi;
     private Spinner spinSapaan;
-    private String[] dataSapaan = new String[]{"Mas","Mba","Sis","Bro","Bapak","Ibu","Kakak","Kak"};
+    private String[] dataSapaan = new String[]{"Mas", "Mba", "Sis", "Bro", "Bapak", "Ibu", "Kakak", "Kak"};
     private EditText edtNamaBelakang;
     private ImageButton btnCariKontak;
     private CheckBox chkUcapanSelamat;
@@ -139,9 +139,9 @@ public class FormKontakActivity extends AppCompatActivity {
         token = userDetail.get(KEY_TOKEN);
 
         tipeForm = getIntent().getStringExtra("tipe");
-        if (tipeForm.equals("add")){
+        if (tipeForm.equals("add")) {
             getSupportActionBar().setTitle("Tambah Kontak");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Edit Kontak");
             idKontak = getIntent().getStringExtra("id");
 
@@ -183,17 +183,17 @@ public class FormKontakActivity extends AppCompatActivity {
         btnCariKontak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(FormKontakActivity.this,KontakLokalActivity.class),REQUEST_CONTACT);
+                startActivityForResult(new Intent(FormKontakActivity.this, KontakLokalActivity.class), REQUEST_CONTACT);
             }
         });
         btnTambahRiwayat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(edtKomentar.getText())){
+                if (TextUtils.isEmpty(edtKomentar.getText())) {
                     edtKomentar.setError("Field ini tidak boleh kosong");
                     edtKomentar.requestFocus();
-                }else{
-                    ItemRiwayatKontak item = new ItemRiwayatKontak("",edtKomentar.getText().toString(),"add","pending");
+                } else {
+                    ItemRiwayatKontak item = new ItemRiwayatKontak("", edtKomentar.getText().toString(), "add", "pending");
                     deleteRiwayat.add(item);
                     dataRiwayat.add(item);
                     adapterRiwayat.notifyDataSetChanged();
@@ -208,10 +208,10 @@ public class FormKontakActivity extends AppCompatActivity {
         optUmum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
+                if (b) {
                     layUmum.setVisibility(View.VISIBLE);
                     layRiwayat.setVisibility(View.GONE);
-                }else{
+                } else {
                     layUmum.setVisibility(View.GONE);
                     layRiwayat.setVisibility(View.VISIBLE);
                 }
@@ -221,43 +221,43 @@ public class FormKontakActivity extends AppCompatActivity {
         optRiwayat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
+                if (b) {
                     layUmum.setVisibility(View.GONE);
                     layRiwayat.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     layUmum.setVisibility(View.VISIBLE);
                     layRiwayat.setVisibility(View.GONE);
                 }
 
             }
         });
-        if (optUmum.isChecked()){
+        if (optUmum.isChecked()) {
             layUmum.setVisibility(View.VISIBLE);
             layRiwayat.setVisibility(View.GONE);
-        }else{
+        } else {
             layUmum.setVisibility(View.GONE);
             layRiwayat.setVisibility(View.VISIBLE);
         }
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     simpan();
                 }
             }
         });
 
-        final ArrayAdapter sapaanAdapter = new ArrayAdapter(this,R.layout.item_spinner,dataSapaan);
+        final ArrayAdapter sapaanAdapter = new ArrayAdapter(this, R.layout.item_spinner, dataSapaan);
         spinSapaan.setAdapter(sapaanAdapter);
 
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(this,R.layout.item_spinner,dataGender);
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.item_spinner, dataGender);
         spinGender.setAdapter(arrayAdapter);
 
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             final String tmpData = getIntent().getStringExtra("data");
             try {
                 dataJson = new JSONObject(tmpData);
-                Log.i(TAG,dataJson.toString());
+                Log.i(TAG, dataJson.toString());
                 String itemNamaDepan = dataJson.getString("first_name");
                 String itemNamaBelakang = dataJson.getString("last_name");
                 String itemEmail = dataJson.getString("email");
@@ -278,72 +278,72 @@ public class FormKontakActivity extends AppCompatActivity {
                 String itemProvinsi = dataJson.getString("id_provinsi");
                 String itemUltah = dataJson.getString("kirim_ultah");
 
-                if (itemNamaDepan.equals("null") || itemNamaDepan.equals(null)){
+                if (itemNamaDepan.equals("null") || itemNamaDepan.equals(null)) {
                     itemNamaDepan = "";
                 }
-                if (itemNamaBelakang.equals("null") || itemNamaBelakang.equals(null)){
+                if (itemNamaBelakang.equals("null") || itemNamaBelakang.equals(null)) {
                     itemNamaBelakang = "";
                 }
-                if (itemEmail.equals("null") || itemEmail.equals(null)){
+                if (itemEmail.equals("null") || itemEmail.equals(null)) {
                     itemEmail = "";
                 }
 
-                if (itemPhone.equals("null") || itemPhone.equals(null)){
+                if (itemPhone.equals("null") || itemPhone.equals(null)) {
                     itemPhone = "";
                 }
-                if (itemSapaan.equals("null") || itemSapaan.equals(null)){
+                if (itemSapaan.equals("null") || itemSapaan.equals(null)) {
                     itemSapaan = "";
                 }
-                if (itemTelegram.equals("null") || itemTelegram.equals(null)){
+                if (itemTelegram.equals("null") || itemTelegram.equals(null)) {
                     itemTelegram = "";
                 }
-                if (itemAddress.equals("null") || itemAddress.equals(null)){
+                if (itemAddress.equals("null") || itemAddress.equals(null)) {
                     itemAddress = "";
                 }
-                if (itemWeb.equals("null") || itemWeb.equals(null)){
+                if (itemWeb.equals("null") || itemWeb.equals(null)) {
                     itemWeb = "";
                 }
-                if (itemFacebook.equals("null") || itemFacebook.equals(null)){
+                if (itemFacebook.equals("null") || itemFacebook.equals(null)) {
                     itemFacebook = "";
                 }
-                if (itemInstagram.equals("null") || itemInstagram.equals(null)){
+                if (itemInstagram.equals("null") || itemInstagram.equals(null)) {
                     itemInstagram = "";
                 }
-                if (itemLinkedin.equals("null") || itemLinkedin.equals(null)){
+                if (itemLinkedin.equals("null") || itemLinkedin.equals(null)) {
                     itemLinkedin = "";
                 }
-                if (itemTokopedia.equals("null") || itemTokopedia.equals(null)){
+                if (itemTokopedia.equals("null") || itemTokopedia.equals(null)) {
                     itemTokopedia = "";
                 }
-                if (itemBukalapak.equals("null") || itemBukalapak.equals(null)){
+                if (itemBukalapak.equals("null") || itemBukalapak.equals(null)) {
                     itemBukalapak = "";
                 }
-                if (itemShopee.equals("null") || itemShopee.equals(null)){
+                if (itemShopee.equals("null") || itemShopee.equals(null)) {
                     itemShopee = "";
                 }
-                if (itemOlshop.equals("null") || itemOlshop.equals(null)){
+                if (itemOlshop.equals("null") || itemOlshop.equals(null)) {
                     itemOlshop = "";
                 }
-                if (itemNote.equals("null") || itemNote.equals(null)){
+                if (itemNote.equals("null") || itemNote.equals(null)) {
                     itemNote = "";
                 }
-                if (itemCity.equals("null") || itemCity.equals(null)){
+                if (itemCity.equals("null") || itemCity.equals(null)) {
                     itemCity = "";
                 }
-                if (itemProvinsi.equals("null") || itemProvinsi.equals(null)){
+                if (itemProvinsi.equals("null") || itemProvinsi.equals(null)) {
                     itemProvinsi = "";
                 }
-                if (itemUltah.equals("1")){
+                if (itemUltah.equals("1")) {
                     chkUcapanSelamat.setChecked(true);
-                }else{
+                } else {
                     chkUcapanSelamat.setChecked(false);
                 }
                 edtNamaDepan.setText(itemNamaDepan);
                 edtNamaBelakang.setText(itemNamaBelakang);
                 edtEmail.setText(itemEmail);
                 edtPhone.setText(itemPhone);
-                for (int sp =0;sp<dataSapaan.length;sp++){
-                    if (dataSapaan[sp].equals(itemSapaan)){
+                for (int sp = 0; sp < dataSapaan.length; sp++) {
+                    if (dataSapaan[sp].equals(itemSapaan)) {
                         spinSapaan.setSelection(sp);
                     }
                 }
@@ -359,9 +359,9 @@ public class FormKontakActivity extends AppCompatActivity {
                 edtOlshopid.setText(itemOlshop);
 
                 final String gender = dataJson.getString("gender");
-                if (gender.toLowerCase().equals("laki-laki") || gender.equals("null") || gender.equals(null)){
+                if (gender.toLowerCase().equals("laki-laki") || gender.equals("null") || gender.equals(null)) {
                     spinGender.setSelection(0);
-                }else{
+                } else {
                     spinGender.setSelection(1);
                 }
                 provinsiId = itemProvinsi;
@@ -374,11 +374,11 @@ public class FormKontakActivity extends AppCompatActivity {
                 edtNote.setText(itemNote);
                 customers = dataJson.getJSONArray("customer_groups");
                 dataGrup.clear();
-                for (int i = 0;i<customers.length();i++){
+                for (int i = 0; i < customers.length(); i++) {
                     final String id = customers.getJSONObject(i).getString("id");
                     final String name = customers.getJSONObject(i).getString("name");
                     final String description = customers.getJSONObject(i).getString("description");
-                    dataGrup.add(new ItemGrup(id,name,description,true,true));
+                    dataGrup.add(new ItemGrup(id, name, description, true, true));
                 }
 
             } catch (JSONException e) {
@@ -395,7 +395,7 @@ public class FormKontakActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
-                                final String month = String.valueOf(monthOfYear+1);
+                                final String month = String.valueOf(monthOfYear + 1);
                                 selectedYear = year;
                                 selectedMonth = monthOfYear;
                                 selectedDay = dayOfMonth;
@@ -413,9 +413,9 @@ public class FormKontakActivity extends AppCompatActivity {
         btnTambahGrup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG,"cust_groups:" + customers.toString());
+                Log.i(TAG, "cust_groups:" + customers.toString());
                 JSONArray exclude_group = new JSONArray();
-                for (int i = 0;i<customers.length();i++ ){
+                for (int i = 0; i < customers.length(); i++) {
                     try {
                         exclude_group.put(customers.getJSONObject(i).getString("id"));
                     } catch (JSONException e) {
@@ -423,34 +423,34 @@ public class FormKontakActivity extends AppCompatActivity {
                     }
                 }
                 Intent intent = new Intent(FormKontakActivity.this, CariGrupActivity.class);
-                intent.putExtra("exclude_group",exclude_group.toString());
-                startActivityForResult(intent,REQUEST_GRUP);
+                intent.putExtra("exclude_group", exclude_group.toString());
+                startActivityForResult(intent, REQUEST_GRUP);
             }
         });
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             loadRiwayat();
-        }else{
+        } else {
             displayRiwayat();
         }
         listRiwayat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if (view.getId()==R.id.btnHapus){
+                if (view.getId() == R.id.btnHapus) {
                     new AlertDialog.Builder(FormKontakActivity.this)
                             .setMessage("Apakah anda yakin akan menghapus item riwayat berikut ?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String historiId = dataRiwayat.get(position).getId();
-                                    if (TextUtils.isEmpty(historiId)){
+                                    if (TextUtils.isEmpty(historiId)) {
                                         dataRiwayat.remove(position);
                                         adapterRiwayat.notifyDataSetChanged();
-                                    }else{
+                                    } else {
                                         hapus_riwayat(historiId);
                                     }
                                 }
                             })
-                            .setNegativeButton("Tidak",null)
+                            .setNegativeButton("Tidak", null)
                             .show();
                 }
             }
@@ -485,7 +485,7 @@ public class FormKontakActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_GRUP) {
+        if (requestCode == REQUEST_GRUP) {
             if (resultCode == RESULT_OK) {
                 Log.i(TAG, "OK");
                 try {
@@ -499,10 +499,10 @@ public class FormKontakActivity extends AppCompatActivity {
                         itemGrup.setChkvisible(true);
                         itemGrup.setJsonObject(dataJson);
                         dataGrup.add(itemGrup);
-                        HashMap<String,String> dataItemGroup = new HashMap<>();
-                        dataItemGroup.put("id",itemGrup.getId());
-                        dataItemGroup.put("name",itemGrup.getJudul());
-                        dataItemGroup.put("description",itemGrup.getDeskripsi());
+                        HashMap<String, String> dataItemGroup = new HashMap<>();
+                        dataItemGroup.put("id", itemGrup.getId());
+                        dataItemGroup.put("name", itemGrup.getJudul());
+                        dataItemGroup.put("description", itemGrup.getDeskripsi());
                         JSONObject jsonObject = new JSONObject(dataItemGroup);
                         customers.put(jsonObject);
                     }
@@ -513,18 +513,18 @@ public class FormKontakActivity extends AppCompatActivity {
                 }
 
             }
-        }else if(requestCode == REQUEST_CONTACT){
-            if (resultCode==RESULT_OK){
+        } else if (requestCode == REQUEST_CONTACT) {
+            if (resultCode == RESULT_OK) {
                 String number = data.getStringExtra("nomor")
-                        .replace("-","")
-                        .replace(" ","")
-                        .replace("+62","62");
+                        .replace("-", "")
+                        .replace(" ", "")
+                        .replace("+62", "62");
                 edtPhone.setText(number);
             }
         }
     }
 
-    private void loadProvinsi(){
+    private void loadProvinsi() {
         dataIdProvinsi.clear();
         dataNameProvinsi.clear();
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -543,20 +543,20 @@ public class FormKontakActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         dataIdProvinsi.add("");
                         dataNameProvinsi.add("Pilih Provinsi");
                         final JSONArray data = response.getJSONArray("data");
-                        for (int a = 0;a<data.length();a++){
+                        for (int a = 0; a < data.length(); a++) {
                             final String id = data.getJSONObject(a).getString("provinsiId");
                             final String name = data.getJSONObject(a).getString("provinsiName");
                             dataIdProvinsi.add(id);
                             dataNameProvinsi.add(name);
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                     displayProvinsi();
@@ -564,7 +564,7 @@ public class FormKontakActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -574,15 +574,15 @@ public class FormKontakActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new androidx.appcompat.app.AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -595,29 +595,29 @@ public class FormKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
@@ -633,16 +633,16 @@ public class FormKontakActivity extends AppCompatActivity {
     }
 
     private void displayProvinsi() {
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,dataNameProvinsi);
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataNameProvinsi);
         spinProvinsi.setAdapter(arrayAdapter);
-        if (tipeForm.equals("edit") && !provinsiId.isEmpty()){
-            for (int i = 0;i<dataIdProvinsi.size();i++){
-                if (provinsiId.equals(dataIdProvinsi.get(i))){
+        if (tipeForm.equals("edit") && !provinsiId.isEmpty()) {
+            for (int i = 0; i < dataIdProvinsi.size(); i++) {
+                if (provinsiId.equals(dataIdProvinsi.get(i))) {
                     spinProvinsi.setSelection(i);
                     break;
                 }
             }
-        }else if(dataIdProvinsi.size()>0){
+        } else if (dataIdProvinsi.size() > 0) {
             provinsiId = dataIdProvinsi.get(0);
         }
         loadKota();
@@ -651,11 +651,11 @@ public class FormKontakActivity extends AppCompatActivity {
     private void loadKota() {
         dataIdKota.clear();
         dataNameKota.clear();
-        if (provinsiId.equals("") || provinsiId.isEmpty()){
+        if (provinsiId.equals("") || provinsiId.isEmpty()) {
             return;
         }
-        HashMap<String,String> param = new HashMap<>();
-        param.put("provinsiId",provinsiId);
+        HashMap<String, String> param = new HashMap<>();
+        param.put("provinsiId", provinsiId);
         final JSONObject parameter = new JSONObject(param);
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final String uri = Uri.parse(URL_GET_KOTA)
@@ -673,26 +673,26 @@ public class FormKontakActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int a = 0;a<data.length();a++){
+                        for (int a = 0; a < data.length(); a++) {
                             final String id = data.getJSONObject(a).getString("kotaId");
                             final String name = data.getJSONObject(a).getString("kotaName");
                             dataIdKota.add(id);
                             dataNameKota.add(name);
                         }
                         displayKota();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -702,15 +702,15 @@ public class FormKontakActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new androidx.appcompat.app.AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -723,28 +723,28 @@ public class FormKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
@@ -760,22 +760,22 @@ public class FormKontakActivity extends AppCompatActivity {
     }
 
     private void displayKota() {
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, dataNameKota);
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataNameKota);
         spinKota.setAdapter(arrayAdapter);
-        if (tipeForm.equals("edit") && !cityId.isEmpty()){
-            for (int i = 0;i<dataIdKota.size();i++){
-                if (cityId.equals(dataIdKota.get(i))){
+        if (tipeForm.equals("edit") && !cityId.isEmpty()) {
+            for (int i = 0; i < dataIdKota.size(); i++) {
+                if (cityId.equals(dataIdKota.get(i))) {
                     spinKota.setSelection(i);
                     break;
                 }
             }
-        }else if(dataIdKota.size()>0){
+        } else if (dataIdKota.size() > 0) {
             cityId = dataIdKota.get(0);
         }
     }
 
     private void displayGrup() {
-        grupAdapter = new AdapterGrup(dataGrup,this);
+        grupAdapter = new AdapterGrup(dataGrup, this);
         listGrup.setAdapter(grupAdapter);
         listGrup.setExpanded(true);
         adapterInstance = true;
@@ -787,7 +787,7 @@ public class FormKontakActivity extends AppCompatActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("contactId",idKontak);
+            requestBody.put("contactId", idKontak);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -798,7 +798,7 @@ public class FormKontakActivity extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -806,18 +806,18 @@ public class FormKontakActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        Log.i(TAG,"dataRiwayat : " + data.toString());
-                        if (data.length()>0){
-                            for (int i = 0 ;i<data.length();i++){
+                        Log.i(TAG, "dataRiwayat : " + data.toString());
+                        if (data.length() > 0) {
+                            for (int i = 0; i < data.length(); i++) {
                                 final String id = data.getJSONObject(i).getString("id");
                                 final String komentar = data.getJSONObject(i).getString("comment");
-                                dataRiwayat.add(new ItemRiwayatKontak(id,komentar,"-","-"));
+                                dataRiwayat.add(new ItemRiwayatKontak(id, komentar, "-", "-"));
                             }
                             labelNotfoundRiwayat.setVisibility(View.GONE);
                         }
-                    }else{
+                    } else {
                         labelNotfoundRiwayat.setVisibility(View.VISIBLE);
                         labelNotfoundRiwayat.setText(message);
 
@@ -827,7 +827,7 @@ public class FormKontakActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -835,17 +835,17 @@ public class FormKontakActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new androidx.appcompat.app.AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -858,29 +858,29 @@ public class FormKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> header = new HashMap<>();
@@ -896,28 +896,28 @@ public class FormKontakActivity extends AppCompatActivity {
     }
 
     private void displayRiwayat() {
-        adapterRiwayat = new AdapterRiwayatKontak(this,R.layout.item_riwayat_kontak,dataRiwayat);
+        adapterRiwayat = new AdapterRiwayatKontak(this, R.layout.item_riwayat_kontak, dataRiwayat);
         listRiwayat.setAdapter(adapterRiwayat);
         listRiwayat.setExpanded(true);
-        if (dataRiwayat.size()>0){
+        if (dataRiwayat.size() > 0) {
             labelNotfoundRiwayat.setVisibility(View.GONE);
-        }else{
+        } else {
             labelNotfoundRiwayat.setVisibility(View.VISIBLE);
         }
     }
 
     private boolean isRequired() {
-        if (TextUtils.isEmpty(edtNamaDepan.getText())){
+        if (TextUtils.isEmpty(edtNamaDepan.getText())) {
             edtNamaDepan.setError("Field ini tidak boleh kosong");
             edtNamaDepan.requestFocus();
             return false;
         }
-        if (TextUtils.isEmpty(edtPhone.getText())){
+        if (TextUtils.isEmpty(edtPhone.getText())) {
             edtPhone.setError("Field ini tidak boleh kosong");
             edtPhone.requestFocus();
             return false;
         }
-        if(!Patterns.PHONE.matcher(edtPhone.getText().toString()).matches()){
+        if (!Patterns.PHONE.matcher(edtPhone.getText().toString()).matches()) {
             edtPhone.setError("Format No Salah");
             edtPhone.requestFocus();
             return false;
@@ -926,25 +926,25 @@ public class FormKontakActivity extends AppCompatActivity {
         return true;
     }
 
-    private void simpan(){
+    private void simpan() {
         String ucapan_ultah = "0";
         if (chkUcapanSelamat.isChecked()) ucapan_ultah = "1";
         final JSONArray jsonArray = new JSONArray();
 
-        for (int i=0;i<dataRiwayat.size();i++){
+        for (int i = 0; i < dataRiwayat.size(); i++) {
             final String statusRiwayat = dataRiwayat.get(i).getStatus();
             final String actionRiwayat = dataRiwayat.get(i).getAction();
             final String id = dataRiwayat.get(i).getId();
             final String komentar = dataRiwayat.get(i).getKomentar();
-            if (statusRiwayat.equals("pending") && actionRiwayat.equals("add")){
+            if (statusRiwayat.equals("pending") && actionRiwayat.equals("add")) {
                 jsonArray.put(komentar);
             }
         }
-        Log.i(TAG,"dataR:"+dataRiwayat.toString());
-        Log.i(TAG,"riwayat:" + jsonArray.toString());
+        Log.i(TAG, "dataR:" + dataRiwayat.toString());
+        Log.i(TAG, "riwayat:" + jsonArray.toString());
         final JSONArray customer_group = new JSONArray();
-        for(int i=0;i<dataGrup.size();i++){
-            if (dataGrup.get(i).isCheckbox()){
+        for (int i = 0; i < dataGrup.size(); i++) {
+            if (dataGrup.get(i).isCheckbox()) {
                 customer_group.put(Integer.parseInt(dataGrup.get(i).getId()));
             }
         }
@@ -953,43 +953,43 @@ public class FormKontakActivity extends AppCompatActivity {
         try {
             requestBody.put("first_name", edtNamaDepan.getText().toString());
             requestBody.put("last_name", edtNamaBelakang.getText().toString());
-            requestBody.put("email",edtEmail.getText().toString());
-            requestBody.put("phone",edtPhone.getText().toString());
-            requestBody.put("customer_group",customer_group);
-            requestBody.put("sapaan",dataSapaan[spinSapaan.getSelectedItemPosition()]);
-            requestBody.put("telegram",edtTelegram.getText().toString());
-            requestBody.put("address",edtAlamat.getText().toString());
-            requestBody.put("web",edtWeb.getText().toString());
-            requestBody.put("facebook",edtFacebook.getText().toString());
-            requestBody.put("instagram",edtInstagram.getText().toString());
-            requestBody.put("linkedin",edtLinkedin.getText().toString());
-            requestBody.put("tokopedia",edtTokopedia.getText().toString());
-            requestBody.put("bukalapak",edtBukalapak.getText().toString());
-            requestBody.put("shopee",edtShopee.getText().toString());
-            requestBody.put("olshop_id",edtOlshopid.getText().toString());
-            requestBody.put("gender",dataGender[spinGender.getSelectedItemPosition()]);
-            requestBody.put("city",cityId);
-            requestBody.put("date_of_birth",edtTglLahir.getText().toString());
-            requestBody.put("note",edtNote.getText().toString());
-            requestBody.put("histori_kontak",jsonArray);
-            requestBody.put("ucapan_ultah",ucapan_ultah);
-            if (tipeForm.equals("edit")){
-                requestBody.put("id",idKontak);
+            requestBody.put("email", edtEmail.getText().toString());
+            requestBody.put("phone", edtPhone.getText().toString());
+            requestBody.put("customer_group", customer_group);
+            requestBody.put("sapaan", dataSapaan[spinSapaan.getSelectedItemPosition()]);
+            requestBody.put("telegram", edtTelegram.getText().toString());
+            requestBody.put("address", edtAlamat.getText().toString());
+            requestBody.put("web", edtWeb.getText().toString());
+            requestBody.put("facebook", edtFacebook.getText().toString());
+            requestBody.put("instagram", edtInstagram.getText().toString());
+            requestBody.put("linkedin", edtLinkedin.getText().toString());
+            requestBody.put("tokopedia", edtTokopedia.getText().toString());
+            requestBody.put("bukalapak", edtBukalapak.getText().toString());
+            requestBody.put("shopee", edtShopee.getText().toString());
+            requestBody.put("olshop_id", edtOlshopid.getText().toString());
+            requestBody.put("gender", dataGender[spinGender.getSelectedItemPosition()]);
+            requestBody.put("city", cityId);
+            requestBody.put("date_of_birth", edtTglLahir.getText().toString());
+            requestBody.put("note", edtNote.getText().toString());
+            requestBody.put("histori_kontak", jsonArray);
+            requestBody.put("ucapan_ultah", ucapan_ultah);
+            if (tipeForm.equals("edit")) {
+                requestBody.put("id", idKontak);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         String uri = "";
-        if (tipeForm.equals("add")){
+        if (tipeForm.equals("add")) {
             uri = Uri.parse(URL_POST_CREATE_CONTACT)
                     .buildUpon()
                     .toString();
-        }else{
+        } else {
             uri = Uri.parse(URL_POST_EDIT_CONTACT)
                     .buildUpon()
                     .toString();
         }
-        Log.i(TAG,"idKontak : " + idKontak + ";url:" + uri + ", " + requestBody.toString());
+        Log.i(TAG, "idKontak : " + idKontak + ";url:" + uri + ", " + requestBody.toString());
 
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
@@ -1003,19 +1003,19 @@ public class FormKontakActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final String contactId = response.getString("id");
                         idKontak = contactId;
                         setResult(RESULT_OK);
                         Toast.makeText(FormKontakActivity.this, message, Toast.LENGTH_SHORT).show();
-                        if (contactExists(FormKontakActivity.this,edtPhone.getText().toString())==false){
+                        if (contactExists(FormKontakActivity.this, edtPhone.getText().toString()) == false) {
                             saveLocalContact();
                         }
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
 
@@ -1023,7 +1023,7 @@ public class FormKontakActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -1031,17 +1031,17 @@ public class FormKontakActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new androidx.appcompat.app.AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -1054,29 +1054,29 @@ public class FormKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> header = new HashMap<>();
@@ -1090,25 +1090,26 @@ public class FormKontakActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
+
     public boolean contactExists(Context context, String number) {
 /// number is the phone number
         String selection = String.format("%s > 0", ContactsContract.Contacts.HAS_PHONE_NUMBER);
         Uri lookupUri = Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));
-        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
-        Cursor cur = context.getContentResolver().query(lookupUri,mPhoneNumberProjection, selection, null, null);
+        String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null);
         try {
             if (cur.moveToFirst()) {
                 return true;
             }
-        }
-        finally {
+        } finally {
             if (cur != null)
                 cur.close();
         }
         return false;
     }
+
     private void saveLocalContact() {
         ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
         int rawContactInsertIndex = ops.size();
@@ -1118,27 +1119,22 @@ public class FormKontakActivity extends AppCompatActivity {
                 .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID,rawContactInsertIndex)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, edtNamaDepan.getText().toString()) // Name of the person
                 .build());
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(
-                        ContactsContract.Data.RAW_CONTACT_ID,   rawContactInsertIndex)
+                        ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, edtPhone.getText().toString()) // Number of the person
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); // Type of mobile number
-        try
-        {
+        try {
             ContentProviderResult[] res = getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        }
-        catch (RemoteException e)
-        {
+        } catch (RemoteException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        catch (OperationApplicationException e)
-        {
+        } catch (OperationApplicationException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -1148,7 +1144,7 @@ public class FormKontakActivity extends AppCompatActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("historiId",id_riwayat);
+            requestBody.put("historiId", id_riwayat);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1168,13 +1164,13 @@ public class FormKontakActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         returnRiwayat[0] = true;
                         Toast.makeText(FormKontakActivity.this, message, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
 
@@ -1182,7 +1178,7 @@ public class FormKontakActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -1190,17 +1186,17 @@ public class FormKontakActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new androidx.appcompat.app.AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -1213,35 +1209,35 @@ public class FormKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormKontakActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormKontakActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("X-API-KEY",token);
+                header.put("X-API-KEY", token);
                 return header;
             }
         };
@@ -1259,7 +1255,7 @@ public class FormKontakActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

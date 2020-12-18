@@ -1,7 +1,7 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemFollowupData {
-    String id,message,schedule,interval;
+    String id, message, schedule, interval;
 
     public ItemFollowupData(String id, String message, String schedule, String interval) {
         this.id = id;

@@ -1,8 +1,5 @@
 package id.co.kamil.autochat.ui.operator;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -16,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -72,21 +72,22 @@ public class FormOperatorActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(edtEmail.getText().toString())){
+                if (TextUtils.isEmpty(edtEmail.getText().toString())) {
                     edtEmail.setError("Field ini tidak boleh kosong");
                     edtEmail.requestFocus();
-                }else{
+                } else {
                     simpanOperator();
                 }
             }
         });
     }
-    private void simpanOperator(){
+
+    private void simpanOperator() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("email",edtEmail.getText().toString());
+            requestBody.put("email", edtEmail.getText().toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -95,7 +96,7 @@ public class FormOperatorActivity extends AppCompatActivity {
         String uri = Uri.parse(URL_POST_CREATE_OPERATOR)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -106,21 +107,21 @@ public class FormOperatorActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(FormOperatorActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormOperatorActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormOperatorActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -128,17 +129,17 @@ public class FormOperatorActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormOperatorActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormOperatorActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormOperatorActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -151,7 +152,7 @@ public class FormOperatorActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormOperatorActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -162,7 +163,7 @@ public class FormOperatorActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormOperatorActivity.this)
@@ -175,12 +176,12 @@ public class FormOperatorActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -193,9 +194,10 @@ public class FormOperatorActivity extends AppCompatActivity {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

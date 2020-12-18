@@ -26,10 +26,11 @@ public class AdapterWaformData extends ArrayAdapter<ItemWaformData> {
     }
 
     public class ViewHolder {
-        TextView txtJudul,txtType;
-        ImageButton btnHapus,btnEdit;
+        TextView txtJudul, txtType;
+        ImageButton btnHapus, btnEdit;
 
     }
+
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
@@ -39,7 +40,7 @@ public class AdapterWaformData extends ArrayAdapter<ItemWaformData> {
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater)
                     getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(resource, parent,false);
+            rowView = inflater.inflate(resource, parent, false);
             // configure view holder
             viewHolder = new ViewHolder();
             viewHolder.txtJudul = (TextView) rowView.findViewById(R.id.judul);
@@ -60,13 +61,13 @@ public class AdapterWaformData extends ArrayAdapter<ItemWaformData> {
         viewHolder.btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView) parent).performItemClick(view,position,0);
+                ((ListView) parent).performItemClick(view, position, 0);
             }
         });
         viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView) parent).performItemClick(view,position,0);
+                ((ListView) parent).performItemClick(view, position, 0);
             }
         });
         return rowView;

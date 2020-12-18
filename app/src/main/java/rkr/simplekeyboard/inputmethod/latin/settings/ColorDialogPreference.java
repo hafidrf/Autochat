@@ -33,7 +33,9 @@ public final class ColorDialogPreference extends DialogPreference
         implements SeekBar.OnSeekBarChangeListener {
     public interface ValueProxy {
         int readValue(final String key);
+
         void writeDefaultValue(final String key);
+
         void writeValue(final int value, final String key);
     }
 
@@ -56,22 +58,22 @@ public final class ColorDialogPreference extends DialogPreference
     @Override
     protected View onCreateDialogView() {
         final View view = super.onCreateDialogView();
-        mSeekBarRed = (SeekBar)view.findViewById(R.id.seek_bar_dialog_bar_red);
+        mSeekBarRed = (SeekBar) view.findViewById(R.id.seek_bar_dialog_bar_red);
         mSeekBarRed.setMax(255);
         mSeekBarRed.setOnSeekBarChangeListener(this);
         mSeekBarRed.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
         mSeekBarRed.getThumb().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-        mSeekBarGreen = (SeekBar)view.findViewById(R.id.seek_bar_dialog_bar_green);
+        mSeekBarGreen = (SeekBar) view.findViewById(R.id.seek_bar_dialog_bar_green);
         mSeekBarGreen.setMax(255);
         mSeekBarGreen.setOnSeekBarChangeListener(this);
         mSeekBarGreen.getThumb().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
         mSeekBarGreen.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
-        mSeekBarBlue = (SeekBar)view.findViewById(R.id.seek_bar_dialog_bar_blue);
+        mSeekBarBlue = (SeekBar) view.findViewById(R.id.seek_bar_dialog_bar_blue);
         mSeekBarBlue.setMax(255);
         mSeekBarBlue.setOnSeekBarChangeListener(this);
         mSeekBarBlue.getThumb().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
         mSeekBarBlue.getProgressDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
-        mValueView = (TextView)view.findViewById(R.id.seek_bar_dialog_value);
+        mValueView = (TextView) view.findViewById(R.id.seek_bar_dialog_value);
         return view;
     }
 
@@ -141,7 +143,7 @@ public final class ColorDialogPreference extends DialogPreference
 
     private String getValueText(final int value) {
         String temp = Integer.toHexString(value);
-        for (; temp.length() < 8; temp = "0" + temp);
+        for (; temp.length() < 8; temp = "0" + temp) ;
         return temp.substring(2).toUpperCase();
     }
 }

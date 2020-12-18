@@ -1,8 +1,8 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemShorten {
-    String id,domain,subdomaincode,totalklik;
-    boolean checkbox,chkvisible;
+    String id, domain, subdomaincode, totalklik;
+    boolean checkbox, chkvisible;
 
     @Override
     public String toString() {

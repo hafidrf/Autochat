@@ -1,9 +1,5 @@
 package id.co.kamil.autochat.ui.followup;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -89,9 +89,9 @@ public class MainFollowupActivity extends AppCompatActivity {
 
         pDialog = new ProgressDialog(this);
         swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        layMessage = (LinearLayout)  findViewById(R.id.layMessage);
-        lblMessage = (TextView)  findViewById(R.id.lblMessage);
-        btnCobaLagi = (Button)  findViewById(R.id.btnCobaLagi);
+        layMessage = (LinearLayout) findViewById(R.id.layMessage);
+        lblMessage = (TextView) findViewById(R.id.lblMessage);
+        btnCobaLagi = (Button) findViewById(R.id.btnCobaLagi);
         btnCobaLagi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,11 +103,11 @@ public class MainFollowupActivity extends AppCompatActivity {
         listFollowup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainFollowupActivity.this,FormFollowupActivity.class);
+                Intent intent = new Intent(MainFollowupActivity.this, FormFollowupActivity.class);
                 intent.putExtra("id", dataFollowup.get(i).getId());
                 intent.putExtra("data", dataFollowup.get(i).getJsonObject().toString());
                 intent.putExtra("tipe", "edit");
-                startActivityForResult(intent,REQUEST_ADD);
+                startActivityForResult(intent, REQUEST_ADD);
 
             }
         });
@@ -122,7 +122,7 @@ public class MainFollowupActivity extends AppCompatActivity {
                 try {
                     followupAdapter.filter(edtCari.getText().toString().trim());
                     listFollowup.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -162,12 +162,13 @@ public class MainFollowupActivity extends AppCompatActivity {
         });
 
     }
-    private void loadFollowup(){
+
+    private void loadFollowup() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final String uri = Uri.parse(URL_POST_LIST_FOLLOW_UP)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataFollowup.clear();
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, null, new Response.Listener<JSONObject>() {
@@ -179,20 +180,20 @@ public class MainFollowupActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
-                            dataFollowup.add(new ItemFollowup(id,name,data.getJSONObject(i),false,false));
+                            dataFollowup.add(new ItemFollowup(id, name, data.getJSONObject(i), false, false));
                         }
-                    }else{
-                        showError(true,message,false);
+                    } else {
+                        showError(true, message, false);
                     }
                     displayFollowup();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -201,15 +202,15 @@ public class MainFollowupActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(MainFollowupActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(MainFollowupActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(MainFollowupActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -222,28 +223,28 @@ public class MainFollowupActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -251,56 +252,59 @@ public class MainFollowupActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listFollowup.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listFollowup.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayFollowup() {
-        followupAdapter = new AdapterFollowup(dataFollowup,this);
+        followupAdapter = new AdapterFollowup(dataFollowup, this);
         listFollowup.setAdapter(followupAdapter);
         adapterInstance = true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
+        if (item.getItemId() == R.id.actTambah) {
             Intent i = new Intent(this, FormFollowupActivity.class);
-            i.putExtra("tipe","add");
-            startActivityForResult(i,REQUEST_ADD);
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataFollowup.size()>0){
+            i.putExtra("tipe", "add");
+            startActivityForResult(i, REQUEST_ADD);
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataFollowup.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0; i < dataFollowup.size(); i++){
+                for (int i = 0; i < dataFollowup.size(); i++) {
                     ItemFollowup ikontak = dataFollowup.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataFollowup.set(i,ikontak);
+                    dataFollowup.set(i, ikontak);
                 }
                 followupAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(MainFollowupActivity.this, "Data Followup tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(true);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(this)
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -309,30 +313,31 @@ public class MainFollowupActivity extends AppCompatActivity {
                             hapusFollowup();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0; i < dataFollowup.size(); i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataFollowup.size(); i++) {
                 ItemFollowup ikontak = dataFollowup.get(i);
                 ikontak.setCheckbox(true);
-                dataFollowup.set(i,ikontak);
+                dataFollowup.set(i, ikontak);
             }
             followupAdapter.notifyDataSetChanged();
-        }else if(item.getItemId()==android.R.id.home){
+        } else if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
-    private void listDefault(){
-        for (int i = 0; i < dataFollowup.size(); i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataFollowup.size(); i++) {
             ItemFollowup ikontak = dataFollowup.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataFollowup.set(i,ikontak);
+            dataFollowup.set(i, ikontak);
         }
         followupAdapter.notifyDataSetChanged();
-        if(dataFollowup.size()==0){
+        if (dataFollowup.size() == 0) {
             loadFollowup();
         }
     }
@@ -344,7 +349,7 @@ public class MainFollowupActivity extends AppCompatActivity {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
         return super.onPrepareOptionsMenu(menu);
@@ -360,14 +365,14 @@ public class MainFollowupActivity extends AppCompatActivity {
     private void hapusFollowup() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONArray idHapus = new JSONArray();
-        for (int i = 0; i < dataFollowup.size(); i++){
-            if (dataFollowup.get(i).isCheckbox()){
+        for (int i = 0; i < dataFollowup.size(); i++) {
+            if (dataFollowup.get(i).isCheckbox()) {
                 idHapus.put(Integer.parseInt(dataFollowup.get(i).getId()));
             }
         }
         final JSONObject param = new JSONObject();
         try {
-            param.put("id",idHapus);
+            param.put("id", idHapus);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -387,9 +392,9 @@ public class MainFollowupActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
-                        for (int i = 0; i < dataFollowup.size(); i++){
-                            if (dataFollowup.get(i).isCheckbox()){
+                    if (status) {
+                        for (int i = 0; i < dataFollowup.size(); i++) {
+                            if (dataFollowup.get(i).isCheckbox()) {
                                 dataFollowup.remove(i);
                                 i = i - 1;
                             }
@@ -401,17 +406,17 @@ public class MainFollowupActivity extends AppCompatActivity {
                         menuTop.findItem(R.id.actEdit).setVisible(true);
                         menuTop.findItem(R.id.actTambah).setVisible(true);
                         listDefault();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(MainFollowupActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(MainFollowupActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -420,17 +425,17 @@ public class MainFollowupActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(MainFollowupActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(MainFollowupActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(MainFollowupActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -443,35 +448,35 @@ public class MainFollowupActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(MainFollowupActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(MainFollowupActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -481,7 +486,7 @@ public class MainFollowupActivity extends AppCompatActivity {
     }
 
     private void hidePdialog() {
-        if(pDialog.isShowing())
+        if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
@@ -489,8 +494,8 @@ public class MainFollowupActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadFollowup();
             }
         }

@@ -5,12 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -28,6 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -51,9 +50,7 @@ import java.util.Map;
 
 import id.co.kamil.autochat.LoginActivity;
 import id.co.kamil.autochat.R;
-import id.co.kamil.autochat.adapter.AdapterPesan;
 import id.co.kamil.autochat.adapter.AdapterSchedule;
-import id.co.kamil.autochat.adapter.ItemPesan;
 import id.co.kamil.autochat.adapter.ItemSchedule;
 import id.co.kamil.autochat.utils.SessionManager;
 
@@ -147,15 +144,15 @@ public class ScheduleFragment extends Fragment {
         listSchedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getContext(),FormScheduleActivity.class);
-                intent.putExtra("is_new",false);
-                if(dataSchedule.get(i).isGroup()){
-                    intent.putExtra("tipe","grup");
-                }else{
-                    intent.putExtra("tipe","kontak");
+                Intent intent = new Intent(getContext(), FormScheduleActivity.class);
+                intent.putExtra("is_new", false);
+                if (dataSchedule.get(i).isGroup()) {
+                    intent.putExtra("tipe", "grup");
+                } else {
+                    intent.putExtra("tipe", "kontak");
                 }
-                intent.putExtra("id",dataSchedule.get(i).getId());
-                startActivityForResult(intent,REQUEST_ADD);
+                intent.putExtra("id", dataSchedule.get(i).getId());
+                startActivityForResult(intent, REQUEST_ADD);
             }
         });
         edtCari.addTextChangedListener(new TextWatcher() {
@@ -169,7 +166,7 @@ public class ScheduleFragment extends Fragment {
                 try {
                     adapterSchedule.filter(edtCari.getText().toString().trim());
                     listSchedule.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -218,6 +215,7 @@ public class ScheduleFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -227,30 +225,32 @@ public class ScheduleFragment extends Fragment {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
     }
-    private void listDefault(){
-        for (int i = 0; i < dataSchedule.size(); i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataSchedule.size(); i++) {
             ItemSchedule ikontak = dataSchedule.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataSchedule.set(i,ikontak);
+            dataSchedule.set(i, ikontak);
         }
         adapterSchedule.notifyDataSetChanged();
-        if (dataSchedule.size()==0){
+        if (dataSchedule.size() == 0) {
             loadPesan();
         }
 
     }
-    private void loadPesan(){
+
+    private void loadPesan() {
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final String uri = Uri.parse(URL_POST_LIST_SCHEDULE)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataSchedule.clear();
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, null, new Response.Listener<JSONObject>() {
@@ -262,9 +262,9 @@ public class ScheduleFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
 
                             final String id = data.getJSONObject(i).getString("id");
                             final String next_schedule = data.getJSONObject(i).getString("next_schedule");
@@ -276,23 +276,23 @@ public class ScheduleFragment extends Fragment {
                             final String status_pesan = data.getJSONObject(i).getString("status");
                             String name;
                             boolean isGroup = true;
-                            if (group_id.equals(null) || group_id == null || group_id.equals("null")){
+                            if (group_id.equals(null) || group_id == null || group_id.equals("null")) {
                                 name = contact_name;
                                 isGroup = false;
-                            }else{
+                            } else {
                                 name = group_name;
                                 isGroup = true;
                             }
-                            dataSchedule.add(new ItemSchedule(id,name,next_schedule,tipe,msg,status_pesan, isGroup,false,false));
+                            dataSchedule.add(new ItemSchedule(id, name, next_schedule, tipe, msg, status_pesan, isGroup, false, false));
                         }
-                    }else{
-                        Log.i(TAG,response.toString());
-                        showError(true,message,false);
+                    } else {
+                        Log.i(TAG, response.toString());
+                        showError(true, message, false);
                     }
                     displayPesan();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -301,15 +301,15 @@ public class ScheduleFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -322,28 +322,28 @@ public class ScheduleFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -352,23 +352,24 @@ public class ScheduleFragment extends Fragment {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listSchedule.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listSchedule.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayPesan() {
-        adapterSchedule = new AdapterSchedule(dataSchedule,getContext());
+        adapterSchedule = new AdapterSchedule(dataSchedule, getContext());
         listSchedule.setAdapter(adapterSchedule);
         adapterInstance = true;
     }
@@ -376,8 +377,8 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_ADD){
-            if(resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadPesan();
             }
         }
@@ -385,54 +386,54 @@ public class ScheduleFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
+        if (item.getItemId() == R.id.actTambah) {
             String[] arr = {"Buat per Grup Kontak", "Buat per Kontak"};
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setItems(arr, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int which) {
-                    switch (which){
+                    switch (which) {
                         case 0:
                             Intent intent = new Intent(getContext(), FormScheduleActivity.class);
-                            intent.putExtra("tipe","grup");
-                            intent.putExtra("is_new",true);
-                            startActivityForResult(intent,REQUEST_ADD);
+                            intent.putExtra("tipe", "grup");
+                            intent.putExtra("is_new", true);
+                            startActivityForResult(intent, REQUEST_ADD);
                             break;
                         case 1:
                             Intent intent2 = new Intent(getContext(), FormScheduleActivity.class);
-                            intent2.putExtra("tipe","kontak");
-                            intent2.putExtra("is_new",true);
-                            startActivityForResult(intent2,REQUEST_ADD);
+                            intent2.putExtra("tipe", "kontak");
+                            intent2.putExtra("is_new", true);
+                            startActivityForResult(intent2, REQUEST_ADD);
                             break;
                     }
                 }
             });
             builder.create();
             builder.show();
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataSchedule.size()>0){
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataSchedule.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0; i < dataSchedule.size(); i++){
+                for (int i = 0; i < dataSchedule.size(); i++) {
                     ItemSchedule ikontak = dataSchedule.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataSchedule.set(i,ikontak);
+                    dataSchedule.set(i, ikontak);
                 }
                 adapterSchedule.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data antrian pesan tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(true);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(getContext())
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -441,35 +442,36 @@ public class ScheduleFragment extends Fragment {
                             hapusPesan();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0; i < dataSchedule.size(); i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataSchedule.size(); i++) {
                 ItemSchedule ikontak = dataSchedule.get(i);
                 ikontak.setCheckbox(true);
-                dataSchedule.set(i,ikontak);
+                dataSchedule.set(i, ikontak);
             }
             adapterSchedule.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void hapusPesan() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final JSONArray jsonArray = new JSONArray();
 
-        for (int i = 0; i < dataSchedule.size(); i++){
-            if (dataSchedule.get(i).isCheckbox() ){
+        for (int i = 0; i < dataSchedule.size(); i++) {
+            if (dataSchedule.get(i).isCheckbox()) {
                 jsonArray.put(Integer.parseInt(dataSchedule.get(i).getId()));
             }
         }
         final JSONObject request_body = new JSONObject();
         try {
-            request_body.put("id",jsonArray);
+            request_body.put("id", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i(TAG,request_body.toString());
+        Log.i(TAG, request_body.toString());
         final String uri = Uri.parse(URL_POST_HAPUS_SCHEDULE)
                 .buildUpon()
                 .toString();
@@ -477,7 +479,7 @@ public class ScheduleFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body , new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -485,10 +487,10 @@ public class ScheduleFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
-                        for (int i = 0; i < dataSchedule.size(); i++){
-                            if (dataSchedule.get(i).isCheckbox()){
+                    Log.i(TAG, message);
+                    if (status) {
+                        for (int i = 0; i < dataSchedule.size(); i++) {
+                            if (dataSchedule.get(i).isCheckbox()) {
                                 dataSchedule.remove(i);
                                 i = i - 1;
                             }
@@ -501,17 +503,17 @@ public class ScheduleFragment extends Fragment {
                         menuTop.findItem(R.id.actTambah).setVisible(false);
                         listDefault();
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -520,17 +522,17 @@ public class ScheduleFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -543,7 +545,7 @@ public class ScheduleFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -554,7 +556,7 @@ public class ScheduleFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
@@ -566,12 +568,12 @@ public class ScheduleFragment extends Fragment {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };

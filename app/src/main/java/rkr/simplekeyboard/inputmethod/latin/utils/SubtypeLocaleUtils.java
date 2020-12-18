@@ -33,7 +33,7 @@ import static rkr.simplekeyboard.inputmethod.latin.common.Constants.Subtype.Extr
 
 /**
  * A helper class to deal with subtype locales.
-  */
+ */
 // TODO: consolidate this into RichInputMethodSubtype
 public final class SubtypeLocaleUtils {
     static final String TAG = SubtypeLocaleUtils.class.getSimpleName();
@@ -175,7 +175,7 @@ public final class SubtypeLocaleUtils {
     }
 
     private static String getSubtypeLocaleDisplayNameInternal(final String localeString,
-            final Locale displayLocale) {
+                                                              final Locale displayLocale) {
         final Integer exceptionalNameResId;
         if (displayLocale.equals(Locale.ROOT)
                 && sExceptionalLocaleDisplayedInRootLocale.containsKey(localeString)) {
@@ -221,7 +221,7 @@ public final class SubtypeLocaleUtils {
     //  zz    azerty  T  Alphabet (AZERTY)       in system locale
 
     private static String getReplacementString(final InputMethodSubtype subtype,
-            final Locale displayLocale) {
+                                               final Locale displayLocale) {
         if (subtype.containsExtraValueKey(UNTRANSLATABLE_STRING_IN_SUBTYPE_NAME)) {
             return subtype.getExtraValueOf(UNTRANSLATABLE_STRING_IN_SUBTYPE_NAME);
         }
@@ -242,7 +242,7 @@ public final class SubtypeLocaleUtils {
     }
 
     private static String getSubtypeDisplayNameInternal(final InputMethodSubtype subtype,
-            final Locale displayLocale) {
+                                                        final Locale displayLocale) {
         final String replacementString = getReplacementString(subtype, displayLocale);
         // TODO: rework this for multi-lingual subtypes
         final int nameResId = subtype.getNameResId();

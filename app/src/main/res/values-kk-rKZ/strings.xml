@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -36,13 +35,7 @@
     <string name="subtype_en_GB">"ағылшын (ҰБ)"</string>
     <string name="subtype_en_US">"ағылшын (АҚШ)"</string>
     <string name="subtype_es_US">"Испан (АҚШ)"</string>
-    <string name="subtype_hi_ZZ">"Хинглиш"</string>
     <string name="subtype_sr_ZZ">"Серб (латын жазуы)"</string>
-    <string name="subtype_with_layout_en_GB">"Ағылшын (Құрама Корольдік) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"Ағылшын (АҚШ) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"Испан (АҚШ) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Хинглиш (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"Серб (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (дәстүрлі)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (шағын)"</string>
     <string name="custom_input_styles_title">"Реттелетін енгізу стильдері"</string>
@@ -56,8 +49,5 @@
     <string name="enable">"Қосу"</string>
     <string name="not_now">"Қазір емес"</string>
     <string name="custom_input_style_already_exists">"Бірдей енгізу стилі бұрыннан бар: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Пернені басқан кездегі діріл ұзақтығы"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Пернені басқан кездегі дыбыс деңгейі"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Пернені ұзақ басу кідірісі"</string>
     <string name="button_default">"Әдепкі"</string>
 </resources>

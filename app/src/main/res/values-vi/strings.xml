@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -36,13 +35,7 @@
     <string name="subtype_en_GB">"Tiếng Anh (Anh)"</string>
     <string name="subtype_en_US">"Tiếng Anh (Mỹ)"</string>
     <string name="subtype_es_US">"Tiếng Tây Ban Nha (Mỹ)"</string>
-    <string name="subtype_hi_ZZ">"Tiếng Anh-Hindi"</string>
     <string name="subtype_sr_ZZ">"Tiếng Serbia (La tinh)"</string>
-    <string name="subtype_with_layout_en_GB">"Tiếng Anh (Anh) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"Tiếng Anh (Mỹ) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"Tiếng Tây Ban Nha (Mỹ) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Tiếng Anh-Hindi (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"Tiếng Serbia (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (Truyền thống)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (Viết tắt)"</string>
     <string name="custom_input_styles_title">"Kiểu nhập tùy chỉnh"</string>
@@ -56,14 +49,8 @@
     <string name="enable">"Bật"</string>
     <string name="not_now">"Để sau"</string>
     <string name="custom_input_style_already_exists">"Đã tồn tại kiểu nhập tương tự: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Thời gian rung khi nhấn phím"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Âm lượng khi nhấn phím"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Thời gian trễ nhấn và giữ phím"</string>
     <string name="button_default">"Mặc định"</string>
-    <string name="prefs_keyboard_height_settings">Chiều cao bàn phím</string>
-    <string name="keyboard_color">Tuỳ chọn màu bàn phím</string>
     <string name="hide_special_chars">Ẩn ký tự đặc biệt</string>
-    <string name="hide_language_switch_key">Ẩn phím chuyển ngôn ngữ</string>
     <string name="show_number_row">Hiển thị bàn phím số</string>
     <string name="space_swipe">Vuốt phím space để di chuyển con trỏ</string>
     <string name="delete_swipe">Xoá vuốt</string>

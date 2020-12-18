@@ -35,7 +35,7 @@ public abstract class SubScreenFragment extends PreferenceFragment
     private OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
 
     static void setPreferenceEnabled(final String prefKey, final boolean enabled,
-            final PreferenceScreen screen) {
+                                     final PreferenceScreen screen) {
         final Preference preference = screen.findPreference(prefKey);
         if (preference != null) {
             preference.setEnabled(enabled);

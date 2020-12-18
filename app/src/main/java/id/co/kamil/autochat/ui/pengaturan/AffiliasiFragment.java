@@ -3,9 +3,6 @@ package id.co.kamil.autochat.ui.pengaturan;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import id.co.kamil.autochat.R;
 
@@ -38,7 +37,7 @@ public class AffiliasiFragment extends Fragment {
     private EditText edtLinkPlaystore;
     private EditText edtLinkWeb;
     private ImageButton btnBagikanWeb;
-    private ImageButton btnCopyPlaystore,btnCopyWeb;
+    private ImageButton btnCopyPlaystore, btnCopyWeb;
     private TextView txtInfo;
 
     public AffiliasiFragment() {
@@ -81,7 +80,7 @@ public class AffiliasiFragment extends Fragment {
         btnCopyPlaystore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setClipboard(getContext(),edtLinkPlaystore.getText().toString());
+                setClipboard(getContext(), edtLinkPlaystore.getText().toString());
                 Toast.makeText(getContext(), "link berhasil disalin", Toast.LENGTH_SHORT).show();
             }
         });
@@ -89,7 +88,7 @@ public class AffiliasiFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                setClipboard(getContext(),edtLinkWeb.getText().toString());
+                setClipboard(getContext(), edtLinkWeb.getText().toString());
                 Toast.makeText(getContext(), "link berhasil disalin", Toast.LENGTH_SHORT).show();
             }
         });
@@ -98,8 +97,8 @@ public class AffiliasiFragment extends Fragment {
             public void onClick(View v) {
                 try {
                     String konten = TEMPLATE_SHARE;
-                    konten = konten.replace("[linklanding]",URL_LANDING_PAGE);
-                    konten = konten.replace("[linkweb]",edtLinkPlaystore.getText().toString());
+                    konten = konten.replace("[linklanding]", URL_LANDING_PAGE);
+                    konten = konten.replace("[linkweb]", edtLinkPlaystore.getText().toString());
 
                     String appId = getActivity().getPackageName();
                     Intent i = new Intent(Intent.ACTION_SEND);
@@ -108,7 +107,7 @@ public class AffiliasiFragment extends Fragment {
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -118,8 +117,8 @@ public class AffiliasiFragment extends Fragment {
             public void onClick(View v) {
                 try {
                     String konten = TEMPLATE_SHARE;
-                    konten = konten.replace("[linklanding]",URL_LANDING_PAGE);
-                    konten = konten.replace("[linkweb]",edtLinkWeb.getText().toString());
+                    konten = konten.replace("[linklanding]", URL_LANDING_PAGE);
+                    konten = konten.replace("[linkweb]", edtLinkWeb.getText().toString());
 
                     String appId = getActivity().getPackageName();
                     Intent i = new Intent(Intent.ACTION_SEND);
@@ -128,7 +127,7 @@ public class AffiliasiFragment extends Fragment {
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -151,12 +150,12 @@ public class AffiliasiFragment extends Fragment {
         edtKodeReferal.setText("7cqBvzjj");
         String url_track_web = Uri.parse(URL_LANDING_PAGE)
                 .buildUpon()
-                .appendQueryParameter("tracking",edtKodeReferal.getText().toString())
+                .appendQueryParameter("tracking", edtKodeReferal.getText().toString())
                 .toString();
         edtLinkWeb.setText(url_track_web);
         String url_track_playstore = Uri.parse("https://")
                 .buildUpon()
-                .appendQueryParameter("referrer",edtKodeReferal.getText().toString())
+                .appendQueryParameter("referrer", edtKodeReferal.getText().toString())
                 .toString();
         edtLinkPlaystore.setText(url_track_playstore);
     }

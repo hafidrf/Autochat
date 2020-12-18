@@ -1,14 +1,5 @@
 package id.co.kamil.autochat.ui.pesan;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -34,6 +25,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -48,7 +48,6 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,12 +100,12 @@ public class FormKirimPesanActivity extends AppCompatActivity {
     private JSONArray excludeContact = new JSONArray();
     private List<ItemRecyclerTag> listNoTujuan = new ArrayList<>();
     private TextView txtWarnWA;
-    private TextView txtSapaan,txtNamaDepan,txtNamaBelakang;
+    private TextView txtSapaan, txtNamaDepan, txtNamaBelakang;
     private ImageView imgPesan;
-    private ImageButton btnBrowse,btnHapus;
+    private ImageButton btnBrowse, btnHapus;
     private boolean imageSelect = false;
     private String imagePath = "";
-    private String stringPesan = "",stringFilename = "";
+    private String stringPesan = "", stringFilename = "";
 
 
     @Override
@@ -122,11 +121,11 @@ public class FormKirimPesanActivity extends AppCompatActivity {
 
         lblNomorTujuan = (TextView) findViewById(R.id.labelNomorTujuan);
         btnKontakTdkDipilih = (Button) findViewById(R.id.btnKontakTdkDipilih);
-        if (tipeForm.equals("kontak")){
+        if (tipeForm.equals("kontak")) {
             getSupportActionBar().setTitle("Kirim Pesan berdasarkan Kontak");
             lblNomorTujuan.setText("Nomor Tujuan");
             btnKontakTdkDipilih.setVisibility(View.GONE);
-        }else{
+        } else {
             getSupportActionBar().setTitle("Kirim Pesan berdasarkan Grup Kontak");
             lblNomorTujuan.setText("Nama Grup");
             btnKontakTdkDipilih.setVisibility(View.VISIBLE);
@@ -150,20 +149,20 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         txtSapaan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[sapaan] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[sapaan] ");
             }
         });
 
         txtNamaDepan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[nama_depan] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_depan] ");
             }
         });
         txtNamaBelakang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(),"[nama_belakang] " );
+                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_belakang] ");
             }
         });
         txtWarnWA = (TextView) findViewById(R.id.txtWarningWhatsApp);
@@ -173,7 +172,7 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     simpanPesanAntrian();
                 }
             }
@@ -182,20 +181,20 @@ public class FormKirimPesanActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FormKirimPesanActivity.this, ExcludeContactActivity.class);
-                intent.putExtra("contact_id",excludeContact.toString());
-                startActivityForResult(intent,REQUEST_EXCLUDE);
+                intent.putExtra("contact_id", excludeContact.toString());
+                startActivityForResult(intent, REQUEST_EXCLUDE);
             }
         });
         btnCariKontak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tipeForm.equals("grup")){
+                if (tipeForm.equals("grup")) {
                     Intent i = new Intent(FormKirimPesanActivity.this, PilihGrupKontakActivity.class);
-                    startActivityForResult(i,REQUEST_GRUP);
-                }else{
+                    startActivityForResult(i, REQUEST_GRUP);
+                } else {
                     Intent i = new Intent(FormKirimPesanActivity.this, CariKontakActivity.class);
-                    i.putExtra("exclude",excludeContact.toString());
-                    startActivityForResult(i,REQUEST_KONTAK);
+                    i.putExtra("exclude", excludeContact.toString());
+                    startActivityForResult(i, REQUEST_KONTAK);
                 }
             }
         });
@@ -204,11 +203,11 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gridNoTujuan);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         new LinearSnapHelper().attachToRecyclerView(recyclerView);
-        adapterTag = new RecylerTagAdapter(listNoTujuan, this,new RecylerTagAdapter.OnItemClickListener() {
+        adapterTag = new RecylerTagAdapter(listNoTujuan, this, new RecylerTagAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ItemRecyclerTag item) {
-                for(int i=0;i<listNoTujuan.size();i++){
-                    if (listNoTujuan.get(i).getId().equals(item.getId())){
+                for (int i = 0; i < listNoTujuan.size(); i++) {
+                    if (listNoTujuan.get(i).getId().equals(item.getId())) {
                         listNoTujuan.remove(i);
                         adapterTag.notifyDataSetChanged();
                         break;
@@ -219,19 +218,19 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapterTag);
 
-        recyclerView.setMinimumHeight((int) convertDpToPixel(35,this));
+        recyclerView.setMinimumHeight((int) convertDpToPixel(35, this));
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager();
         layoutManager.setFlexWrap(FlexWrap.WRAP);
         layoutManager.setFlexDirection(FlexDirection.ROW);
         recyclerView.setLayoutManager(layoutManager);
-        if (isAccessibilityEnabled()==false){
+        if (isAccessibilityEnabled() == false) {
             View v = (LinearLayoutCompat) findViewById(R.id.layMaster);
             showSnackBar(v);
         }
         reloadExcludeContact();
-        if (appInstalledOrNot("com.whatsapp")){
+        if (appInstalledOrNot("com.whatsapp")) {
             txtWarnWA.setVisibility(View.GONE);
-        }else{
+        } else {
             txtWarnWA.setVisibility(View.VISIBLE);
         }
 
@@ -250,17 +249,17 @@ public class FormKirimPesanActivity extends AppCompatActivity {
             }
         });
 
-        if (stringPesan != null){
-            if (stringPesan.isEmpty() == false){
+        if (stringPesan != null) {
+            if (stringPesan.isEmpty() == false) {
                 StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                 StrictMode.setVmPolicy(builder.build());
                 edtIsiPesan.setText(stringPesan);
-                if (stringFilename.isEmpty() == false && stringFilename != null){
+                if (stringFilename.isEmpty() == false && stringFilename != null) {
                     String pathPicture = getDirWabot("template_promosi") + "/" + stringFilename;
                     File filePath = new File(pathPicture);
-                    if(filePath.exists()){
+                    if (filePath.exists()) {
                         Uri uri = Uri.fromFile(filePath);
-                        if (checkPermissionGallery()){
+                        if (checkPermissionGallery()) {
                             imgPesan.setImageURI(uri);
                             imagePath = pathPicture;
                             imageSelect = true;
@@ -271,7 +270,8 @@ public class FormKirimPesanActivity extends AppCompatActivity {
             }
         }
     }
-    public boolean checkPermissionGallery(){
+
+    public boolean checkPermissionGallery() {
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -286,7 +286,8 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         }
         return false;
     }
-    public void callGalleryPhoto(){
+
+    public void callGalleryPhoto() {
 
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -305,26 +306,27 @@ public class FormKirimPesanActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
     private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         boolean app_installed;
         try {
             pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
             app_installed = true;
-        }
-        catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException e) {
             app_installed = false;
         }
         return app_installed;
     }
+
     private boolean isRequired() {
-        if(listNoTujuan.size()<=0 && tipeForm.equals("grup")){
+        if (listNoTujuan.size() <= 0 && tipeForm.equals("grup")) {
             Toast.makeText(this, "Grup belum dipilih", Toast.LENGTH_SHORT).show();
             return false;
-        }else if (excludeContact.length()<=0 && tipeForm.equals("kontak")){
+        } else if (excludeContact.length() <= 0 && tipeForm.equals("kontak")) {
             Toast.makeText(this, "Kontak belum dipilih", Toast.LENGTH_SHORT).show();
             return false;
-        }else if(TextUtils.isEmpty(edtIsiPesan.getText().toString())){
+        } else if (TextUtils.isEmpty(edtIsiPesan.getText().toString())) {
             edtIsiPesan.setError("Field ini tidak boleh kosong");
             edtIsiPesan.requestFocus();
             return false;
@@ -332,19 +334,18 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         return true;
     }
 
-    public void showSnackBar(View llShow)
-    {
+    public void showSnackBar(View llShow) {
         // Create the Snackbar
         LinearLayout.LayoutParams objLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final Snackbar snackbar = Snackbar.make(llShow, "", Snackbar.LENGTH_INDEFINITE);
         // Get the Snackbar's layout view
         Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
-        layout.setPadding(0,0,0,0);
+        layout.setPadding(0, 0, 0, 0);
         // Hide the text
         TextView textView = (TextView) layout.findViewById(R.id.snackbar_text);
         textView.setVisibility(View.INVISIBLE);
 
-        LayoutInflater mInflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         // Inflate our custom view
         View snackView = getLayoutInflater().inflate(R.layout.my_snackbar, null);
         // Configure the view
@@ -373,23 +374,24 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         // Show the Snackbar
         snackbar.show();
     }
-    private void simpanPesanAntrian(){
+
+    private void simpanPesanAntrian() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         String url = "";
         try {
-            requestBody.put("message",edtIsiPesan.getText().toString());
-            if (imageSelect){
-                requestBody.put("image_hash",imagePath);
+            requestBody.put("message", edtIsiPesan.getText().toString());
+            if (imageSelect) {
+                requestBody.put("image_hash", imagePath);
             }
-            if (tipeForm.equals("grup")){
-                requestBody.put("groupId",listNoTujuan.get(0).getId());
-                requestBody.put("exclude_contact",excludeContact);
+            if (tipeForm.equals("grup")) {
+                requestBody.put("groupId", listNoTujuan.get(0).getId());
+                requestBody.put("exclude_contact", excludeContact);
                 url = URL_POST_CREATE_PESAN_ANTRIAN_GROUP;
-            }else{
+            } else {
                 url = URL_POST_CREATE_PESAN_ANTRIAN_CONTACT;
-                requestBody.put("contactId",excludeContact);
+                requestBody.put("contactId", excludeContact);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -398,7 +400,7 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         String uri = Uri.parse(url)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -409,21 +411,21 @@ public class FormKirimPesanActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(FormKirimPesanActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormKirimPesanActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormKirimPesanActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -431,11 +433,11 @@ public class FormKirimPesanActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
                     errorResponse(FormKirimPesanActivity.this, error);
-                }else {
+                } else {
                     if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
@@ -481,12 +483,12 @@ public class FormKirimPesanActivity extends AppCompatActivity {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -503,17 +505,17 @@ public class FormKirimPesanActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_KONTAK){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_KONTAK) {
+            if (resultCode == RESULT_OK) {
                 String dataId = data.getStringExtra("id");
                 String dataTitle = data.getStringExtra("title");
                 String dataNomor = data.getStringExtra("nomor");
-                listNoTujuan.add(new ItemRecyclerTag(dataId,dataTitle));
+                listNoTujuan.add(new ItemRecyclerTag(dataId, dataTitle));
                 adapterTag.notifyDataSetChanged();
                 reloadExcludeContact();
             }
-        }else if(requestCode==REQUEST_GRUP){
-            if (resultCode==RESULT_OK){
+        } else if (requestCode == REQUEST_GRUP) {
+            if (resultCode == RESULT_OK) {
                 String dataExclude = data.getStringExtra("exclude");
                 String dataGroupName = data.getStringExtra("group_name");
                 String dataGroupId = data.getStringExtra("group_id");
@@ -522,11 +524,11 @@ public class FormKirimPesanActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                listNoTujuan.add(new ItemRecyclerTag(dataGroupId,dataGroupName));
+                listNoTujuan.add(new ItemRecyclerTag(dataGroupId, dataGroupName));
                 adapterTag.notifyDataSetChanged();
                 reloadExcludeContact();
             }
-        }else if(requestCode== LOAD_IMAGE_RESULT) {
+        } else if (requestCode == LOAD_IMAGE_RESULT) {
             if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -548,14 +550,15 @@ public class FormKirimPesanActivity extends AppCompatActivity {
                     Toast.makeText(this, "Maaf, Tipe File tidak diizinkan", Toast.LENGTH_SHORT).show();
                 }
             }
-        }else if(requestCode==LOAD_IMAGE_RESULT_PROMOSI){
+        } else if (requestCode == LOAD_IMAGE_RESULT_PROMOSI) {
             checkPermissionGallery();
         }
     }
-    private void reloadExcludeContact(){
-        if (tipeForm.equals("kontak")){
+
+    private void reloadExcludeContact() {
+        if (tipeForm.equals("kontak")) {
             excludeContact = new JSONArray();
-            for(int i = 0; i< listNoTujuan.size();i++){
+            for (int i = 0; i < listNoTujuan.size(); i++) {
                 excludeContact.put(listNoTujuan.get(i).getId());
             }
 
@@ -564,16 +567,16 @@ public class FormKirimPesanActivity extends AppCompatActivity {
 //            }else{
 //                btnCariKontak.setEnabled(true);
 //            }
-        }else{
+        } else {
 
-            if (listNoTujuan.size()>0){
+            if (listNoTujuan.size() > 0) {
                 btnCariKontak.setEnabled(false);
-            }else{
+            } else {
                 btnCariKontak.setEnabled(true);
             }
-            if (excludeContact.length()>0){
+            if (excludeContact.length() > 0) {
                 btnKontakTdkDipilih.setEnabled(true);
-            }else{
+            } else {
                 btnKontakTdkDipilih.setEnabled(false);
             }
         }
@@ -581,14 +584,15 @@ public class FormKirimPesanActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
+
     private boolean isAccessibilityEnabled() {
         int enabled = 0;
-        final String service = getPackageName() +"/"+ WASendService.class.getCanonicalName();
+        final String service = getPackageName() + "/" + WASendService.class.getCanonicalName();
 
         try {
             enabled = Settings.Secure.getInt(getApplicationContext().getContentResolver()

@@ -22,8 +22,9 @@ public class AdapterShorten extends BaseAdapter {
     ArrayList<ItemShorten> arraylist;
 
     private static final int resource = R.layout.item_list_shorten;
+
     public class ViewHolder {
-        TextView txtDomain,txtKlik;
+        TextView txtDomain, txtKlik;
         CheckBox chk1;
 
     }
@@ -78,9 +79,9 @@ public class AdapterShorten extends BaseAdapter {
         viewHolder.chk1.setChecked(item.isCheckbox());
 
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {

@@ -52,13 +52,13 @@ public final class XmlParseUtils {
     @SuppressWarnings("serial")
     public static final class IllegalAttribute extends ParseException {
         public IllegalAttribute(final XmlPullParser parser, final String tag,
-                final String attribute) {
+                                final String attribute) {
             super("Tag " + tag + " has illegal attribute " + attribute, parser);
         }
     }
 
     @SuppressWarnings("serial")
-    public static final class NonEmptyTag extends ParseException{
+    public static final class NonEmptyTag extends ParseException {
         public NonEmptyTag(final XmlPullParser parser, final String tag) {
             super(tag + " must be empty tag", parser);
         }
@@ -72,8 +72,8 @@ public final class XmlParseUtils {
     }
 
     public static void checkAttributeExists(final TypedArray attr, final int attrId,
-            final String attrName, final String tag, final XmlPullParser parser)
-                    throws XmlPullParserException {
+                                            final String attrName, final String tag, final XmlPullParser parser)
+            throws XmlPullParserException {
         if (attr.hasValue(attrId)) {
             return;
         }

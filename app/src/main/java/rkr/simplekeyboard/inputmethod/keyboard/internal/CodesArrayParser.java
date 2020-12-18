@@ -39,11 +39,11 @@ public final class CodesArrayParser {
     private static final char COMMA = Constants.CODE_COMMA;
     private static final String COMMA_REGEX = StringUtils.newSingleCodePointString(COMMA);
     private static final String VERTICAL_BAR_REGEX = // "\\|"
-            new String(new char[] { Constants.CODE_BACKSLASH, Constants.CODE_VERTICAL_BAR });
+            new String(new char[]{Constants.CODE_BACKSLASH, Constants.CODE_VERTICAL_BAR});
     private static final int BASE_HEX = 16;
 
     private CodesArrayParser() {
-     // This utility class is not publicly instantiable.
+        // This utility class is not publicly instantiable.
     }
 
     private static String getLabelSpec(final String codesArraySpec) {

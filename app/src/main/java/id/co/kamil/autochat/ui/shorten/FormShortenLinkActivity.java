@@ -1,8 +1,5 @@
 package id.co.kamil.autochat.ui.shorten;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +17,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -56,7 +56,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
     private static final String TAG = "FormShortenLinkActivity";
     private String tipeForm;
     private Button btnSimpan;
-    private EditText edtPhone,edtRedaksi,edtSubdomain;
+    private EditText edtPhone, edtRedaksi, edtSubdomain;
     private SessionManager session;
     private HashMap<String, String> userDetail;
     private String token;
@@ -65,7 +65,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
     private EditText edtCode;
     private TextView txtLoading;
     private String lastSubdomain;
-    private String[] arrDomain = {"autochat.id","autochat.my.id"};
+    private String[] arrDomain = {"autochat.id", "autochat.my.id"};
     private Spinner spinDomain;
 
     @Override
@@ -82,9 +82,9 @@ public class FormShortenLinkActivity extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         tipeForm = getIntent().getStringExtra("tipe");
 
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             getSupportActionBar().setTitle("Edit Shortenlink");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Tambah Shortenlink");
         }
         txtLoading = (TextView) findViewById(R.id.loading);
@@ -96,7 +96,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
         edtPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (i==0 && charSequence.equals(0)){
+                if (i == 0 && charSequence.equals(0)) {
                     return;
                 }
             }
@@ -124,12 +124,12 @@ public class FormShortenLinkActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (tipeForm.equals("add")){
+                if (tipeForm.equals("add")) {
                     checkAvailable(edtSubdomain.getText().toString());
-                }else if (lastSubdomain.equals(edtSubdomain.getText().toString())){
+                } else if (lastSubdomain.equals(edtSubdomain.getText().toString())) {
                     txtLoading.setText("Subdomain Tersedia");
                     txtLoading.setTextColor(Color.BLUE);
-                }else{
+                } else {
                     checkAvailable(edtSubdomain.getText().toString());
                 }
             }
@@ -141,11 +141,11 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                 simpan();
             }
         });
-        final ArrayAdapter domainAdapter = new ArrayAdapter(this,R.layout.item_spinner,arrDomain);
+        final ArrayAdapter domainAdapter = new ArrayAdapter(this, R.layout.item_spinner, arrDomain);
         spinDomain.setAdapter(domainAdapter);
 
         edtPhone.requestFocus();
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             idShorten = getIntent().getStringExtra("id");
             getData();
         }
@@ -153,16 +153,17 @@ public class FormShortenLinkActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
-    private void checkAvailable(String subdomain){
+
+    private void checkAvailable(String subdomain) {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("subdomain",subdomain);
+            requestBody.put("subdomain", subdomain);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -172,7 +173,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
         txtLoading.setText("Cek ketersediaan subdomain...");
         txtLoading.setTextColor(Color.GREEN);
 
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -180,10 +181,10 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         txtLoading.setTextColor(Color.BLUE);
                         txtLoading.setText(message);
-                    }else{
+                    } else {
                         txtLoading.setTextColor(Color.RED);
                         txtLoading.setText(message);
                     }
@@ -201,13 +202,13 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
                     errorResponse(FormShortenLinkActivity.this, error);
-                }else {
-                    if (response.statusCode==403){
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormShortenLinkActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -220,7 +221,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormShortenLinkActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -231,23 +232,23 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
                         final String msg = getResources().getString(errorResponse(error));
                         txtLoading.setTextColor(Color.RED);
                         txtLoading.setText(msg);
-                        Log.i(TAG,errorResponseString(error));
+                        Log.i(TAG, errorResponseString(error));
                     }
 
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
+                Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","multipart/form-data");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
 
@@ -256,11 +257,12 @@ public class FormShortenLinkActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void getData(){
+
+    private void getData() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",idShorten);
+            requestBody.put("id", idShorten);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -270,7 +272,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -279,24 +281,24 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONObject data = response.getJSONObject("data");
                         String phone = data.getString("s_phone");
                         final String domain = data.getString("s_domain");
                         final String subdomain = data.getString("s_subdomain");
                         final String redaksi = data.getString("s_redaksi");
-                        phone = phone.replaceFirst("62","");
+                        phone = phone.replaceFirst("62", "");
                         lastSubdomain = subdomain;
                         edtPhone.setText(phone);
                         edtSubdomain.setText(subdomain);
                         edtRedaksi.setText(redaksi);
-                        if (domain.contains("autochat.id")){
+                        if (domain.contains("autochat.id")) {
                             spinDomain.setSelection(0);
-                        }else{
+                        } else {
                             spinDomain.setSelection(1);
                         }
 
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormShortenLinkActivity.this)
                                 .setMessage(message)
                                 .setCancelable(false)
@@ -327,7 +329,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(FormShortenLinkActivity.this)
                         .setMessage(msg)
@@ -341,12 +343,12 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                         .show();
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
+                Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","multipart/form-data");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
 
@@ -355,7 +357,8 @@ public class FormShortenLinkActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void simpan(){
+
+    private void simpan() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final String phone = edtPhone.getText().toString();
@@ -369,23 +372,23 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                     .appendQueryParameter("text", edtRedaksi.getText().toString())
                     .build().toString();
 
-            requestBody.put("domain","https://" + arrDomain[spinDomain.getSelectedItemPosition()] + "/");
-            requestBody.put("phone",edtCode.getText().toString() + edtPhone.getText().toString());
-            requestBody.put("redaksi",edtRedaksi.getText().toString());
-            requestBody.put("url_redirect",uri);
-            requestBody.put("subdomain",edtSubdomain.getText().toString());
-            if (tipeForm.equals("edit")){
-                requestBody.put("id",idShorten);
+            requestBody.put("domain", "https://" + arrDomain[spinDomain.getSelectedItemPosition()] + "/");
+            requestBody.put("phone", edtCode.getText().toString() + edtPhone.getText().toString());
+            requestBody.put("redaksi", edtRedaksi.getText().toString());
+            requestBody.put("url_redirect", uri);
+            requestBody.put("subdomain", edtSubdomain.getText().toString());
+            if (tipeForm.equals("edit")) {
+                requestBody.put("id", idShorten);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         String uri = "";
-        if (tipeForm.equals("add")){
+        if (tipeForm.equals("add")) {
             uri = Uri.parse(URL_POST_CREATE_SHORTEN)
                     .buildUpon()
                     .toString();
-        }else{
+        } else {
             uri = Uri.parse(URL_POST_EDIT_SHORTEN)
                     .buildUpon()
                     .toString();
@@ -394,7 +397,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, uri, new Response.Listener<String>() {
             @Override
             public void onResponse(String r) {
@@ -417,7 +420,7 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                     }
 
                 } catch (JSONException e) {
-                    Log.i(TAG,r);
+                    Log.i(TAG, r);
                     e.printStackTrace();
                     new AlertDialog.Builder(FormShortenLinkActivity.this)
                             .setMessage(e.getMessage())
@@ -429,19 +432,19 @@ public class FormShortenLinkActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(FormShortenLinkActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .show();
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
+                Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","multipart/form-data");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
 
@@ -452,15 +455,15 @@ public class FormShortenLinkActivity extends AppCompatActivity {
                         .appendQueryParameter("phone", code + phone)
                         .appendQueryParameter("text", edtRedaksi.getText().toString())
                         .build().toString();
-                Map<String,String> param = new HashMap<>();
+                Map<String, String> param = new HashMap<>();
 
-                param.put("domain","https://" + arrDomain[spinDomain.getSelectedItemPosition()] + "/");
-                param.put("phone",edtCode.getText().toString() + edtPhone.getText().toString());
-                param.put("redaksi",edtRedaksi.getText().toString());
-                param.put("url_redirect",uri);
-                param.put("subdomain",edtSubdomain.getText().toString());
-                if (tipeForm.equals("edit")){
-                    param.put("id",idShorten);
+                param.put("domain", "https://" + arrDomain[spinDomain.getSelectedItemPosition()] + "/");
+                param.put("phone", edtCode.getText().toString() + edtPhone.getText().toString());
+                param.put("redaksi", edtRedaksi.getText().toString());
+                param.put("url_redirect", uri);
+                param.put("subdomain", edtSubdomain.getText().toString());
+                if (tipeForm.equals("edit")) {
+                    param.put("id", idShorten);
                 }
                 return param;
             }

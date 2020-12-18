@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2013, The Android Open Source Project
@@ -20,5 +19,4 @@
 
 <resources>
     <string name="english_ime_name" translatable="false">WABOT Keyboard</string>
-    <string name="english_ime_settings" translatable="false">WABOT Keyboard Settings</string>
 </resources>

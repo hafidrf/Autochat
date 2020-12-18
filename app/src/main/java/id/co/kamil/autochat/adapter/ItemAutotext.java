@@ -2,8 +2,8 @@ package id.co.kamil.autochat.adapter;
 
 public class ItemAutotext {
 
-    String id,shorcut,template,group_id,group_name,group_description;
-    boolean checkbox,chkvisible;
+    String id, shorcut, template, group_id, group_name, group_description;
+    boolean checkbox, chkvisible;
 
     @Override
     public String toString() {

@@ -7,13 +7,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -90,10 +88,10 @@ public class CariKontakActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.putExtra("id",dataKontak.get(i).getId());
-                intent.putExtra("title",dataKontak.get(i).getJudul());
-                intent.putExtra("nomor",dataKontak.get(i).getNomorhp());
-                setResult(RESULT_OK,intent);
+                intent.putExtra("id", dataKontak.get(i).getId());
+                intent.putExtra("title", dataKontak.get(i).getJudul());
+                intent.putExtra("nomor", dataKontak.get(i).getNomorhp());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -108,7 +106,7 @@ public class CariKontakActivity extends AppCompatActivity {
                 try {
                     kontakAdapter.filter(edtCari.getText().toString().trim());
                     listKontak.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -133,7 +131,8 @@ public class CariKontakActivity extends AppCompatActivity {
         });
 
     }
-    private void loadKontak(){
+
+    private void loadKontak() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final String uri = Uri.parse(URL_POST_LIST_CONTACT)
                 .buildUpon()
@@ -148,29 +147,29 @@ public class CariKontakActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String first_name = data.getJSONObject(i).getString("first_name");
                             final String last_name = data.getJSONObject(i).getString("last_name");
                             final String name = first_name + " " + last_name;
                             final String phone = data.getJSONObject(i).getString("phone");
                             boolean exist = false;
-                            for(int a=0;a<excludeContact.length();a++){
-                                if (id.equals(excludeContact.get(a))){
+                            for (int a = 0; a < excludeContact.length(); a++) {
+                                if (id.equals(excludeContact.get(a))) {
                                     exist = true;
                                     break;
                                 }
                             }
-                            if (exist==false){
-                                dataKontak.add(new ItemKontak(id,name,phone,false,data.getJSONObject(i)));
+                            if (exist == false) {
+                                dataKontak.add(new ItemKontak(id, name, phone, false, data.getJSONObject(i)));
                             }
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(CariKontakActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
 
                     }
@@ -179,7 +178,7 @@ public class CariKontakActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(CariKontakActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -189,15 +188,15 @@ public class CariKontakActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(CariKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(CariKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(CariKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -210,33 +209,33 @@ public class CariKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(CariKontakActivity.this)
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(CariKontakActivity.this)
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -251,12 +250,13 @@ public class CariKontakActivity extends AppCompatActivity {
     }
 
     private void displayKontak() {
-        kontakAdapter = new AdapterKontak(dataKontak,this);
+        kontakAdapter = new AdapterKontak(dataKontak, this);
         listKontak.setAdapter(kontakAdapter);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

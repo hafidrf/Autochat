@@ -27,8 +27,9 @@ public class AdapterAutoReply extends BaseAdapter {
     ArrayList<ItemAutoReply> arraylist;
 
     private static final int resource = R.layout.item_list_auto_reply;
+
     public class ViewHolder {
-        TextView txtReply,txtCreated,txtKeyword,txtStatus;
+        TextView txtReply, txtCreated, txtKeyword, txtStatus;
         CheckBox chk1;
 
     }
@@ -81,15 +82,15 @@ public class AdapterAutoReply extends BaseAdapter {
 
         final ItemAutoReply item = listData.get(position);
         String pesan = item.getReply();
-        if (pesan.length()>100){
-            pesan = pesan.substring(0,100) + "...";
+        if (pesan.length() > 100) {
+            pesan = pesan.substring(0, 100) + "...";
         }
         String keyword = "";
         try {
             JSONArray jsonArray = new JSONArray(item.getKeyword());
-            for (int i=0;i<jsonArray.length();i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 keyword += jsonArray.getString(i);
-                if (i<jsonArray.length()-1){
+                if (i < jsonArray.length() - 1) {
                     keyword += ", ";
                 }
             }
@@ -103,14 +104,14 @@ public class AdapterAutoReply extends BaseAdapter {
         viewHolder.txtStatus.setText(item.getStatus());
         viewHolder.chk1.setChecked(item.isCheckbox());
 
-        if (item.getStatus().equals("aktif") ){
+        if (item.getStatus().equals("aktif")) {
             viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.md_green_600));
-        }else{
+        } else {
             viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.md_red_600));
         }
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
@@ -134,8 +135,7 @@ public class AdapterAutoReply extends BaseAdapter {
             for (ItemAutoReply postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getKeyword().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getReply().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getReply().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
                 }
             }

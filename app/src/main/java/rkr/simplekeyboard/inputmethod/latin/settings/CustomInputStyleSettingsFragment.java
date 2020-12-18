@@ -103,7 +103,7 @@ public final class CustomInputStyleSettingsFragment extends PreferenceFragment
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = super.onCreateView(inflater, container, savedInstanceState);
         // For correct display in RTL locales, we need to set the layout direction of the
         // fragment's top view.
@@ -241,8 +241,8 @@ public final class CustomInputStyleSettingsFragment extends PreferenceFragment
                         final Intent intent = IntentUtils.getInputLanguageSelectionIntent(
                                 imeId,
                                 Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-                                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         // TODO: Add newly adding subtype to extra value of the intent as a hint
                         // for the input language selection activity.
                         // intent.putExtra("newlyAddedSubtype", subtypePref.getSubtype());
@@ -272,7 +272,7 @@ public final class CustomInputStyleSettingsFragment extends PreferenceFragment
         for (int i = 0; i < count; i++) {
             final Preference pref = group.getPreference(i);
             if (pref instanceof CustomInputStylePreference) {
-                final CustomInputStylePreference subtypePref = (CustomInputStylePreference)pref;
+                final CustomInputStylePreference subtypePref = (CustomInputStylePreference) pref;
                 // We should not save newly adding subtype to preference because it is incomplete.
                 if (subtypePref.isIncomplete()) continue;
                 subtypes.add(subtypePref.getSubtype());

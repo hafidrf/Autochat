@@ -1,12 +1,5 @@
 package id.co.kamil.autochat.ui.pesan;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +17,13 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -82,12 +82,12 @@ public class FormAutoReplyActivity extends AppCompatActivity {
     private JSONArray dataKeyword = new JSONArray();
     private long id_tag = 0;
     private Spinner spinStatus;
-    private String[] dataStatus = {"aktif","tidak aktif"};
+    private String[] dataStatus = {"aktif", "tidak aktif"};
     private Spinner spinGrup;
 
     private String[] dataGrup = new String[]{};
     private String[] dataIdGrup = new String[]{};
-    private TextView txtSapaan, txtNamaDepan,txtNamaBelakang;
+    private TextView txtSapaan, txtNamaDepan, txtNamaBelakang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,10 +96,10 @@ public class FormAutoReplyActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tipeForm = getIntent().getStringExtra("tipe");
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             getSupportActionBar().setTitle("Edit Autoreply");
             autoreplyId = getIntent().getStringExtra("id");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Tambah Autoreply");
         }
         session = new SessionManager(this);
@@ -119,34 +119,34 @@ public class FormAutoReplyActivity extends AppCompatActivity {
         txtSapaan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtBalasan.getText().insert(edtBalasan.getSelectionStart(),"[sapaan] " );
+                edtBalasan.getText().insert(edtBalasan.getSelectionStart(), "[sapaan] ");
             }
         });
 
         txtNamaDepan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtBalasan.getText().insert(edtBalasan.getSelectionStart(),"[nama_depan] " );
+                edtBalasan.getText().insert(edtBalasan.getSelectionStart(), "[nama_depan] ");
             }
         });
         txtNamaBelakang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtBalasan.getText().insert(edtBalasan.getSelectionStart(),"[nama_belakang] " );
+                edtBalasan.getText().insert(edtBalasan.getSelectionStart(), "[nama_belakang] ");
             }
         });
         btnSimpan = (Button) findViewById(R.id.btnSimpan);
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listKeyword.size()<=0){
+                if (listKeyword.size() <= 0) {
                     Toast.makeText(FormAutoReplyActivity.this, "Keyword tidak boleh kosong", Toast.LENGTH_SHORT).show();
-                }else if(TextUtils.isEmpty(edtBalasan.getText().toString())){
+                } else if (TextUtils.isEmpty(edtBalasan.getText().toString())) {
                     edtBalasan.setError("Field ini tidak boleh kosong");
                     edtBalasan.requestFocus();
-                }else if(spinGrup.getSelectedItemPosition()<=0){
+                } else if (spinGrup.getSelectedItemPosition() <= 0) {
                     Toast.makeText(FormAutoReplyActivity.this, "Grup belum dipilih", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     simpanAutoreply();
                 }
             }
@@ -163,11 +163,11 @@ public class FormAutoReplyActivity extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gridKeyword);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         new LinearSnapHelper().attachToRecyclerView(recyclerView);
-        adapterTag = new RecylerTagAdapter(listKeyword, this,new RecylerTagAdapter.OnItemClickListener() {
+        adapterTag = new RecylerTagAdapter(listKeyword, this, new RecylerTagAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ItemRecyclerTag item) {
-                for(int i = 0; i< listKeyword.size(); i++){
-                    if (listKeyword.get(i).getId().equals(item.getId())){
+                for (int i = 0; i < listKeyword.size(); i++) {
+                    if (listKeyword.get(i).getId().equals(item.getId())) {
                         listKeyword.remove(i);
                         adapterTag.notifyDataSetChanged();
                         break;
@@ -177,22 +177,23 @@ public class FormAutoReplyActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapterTag);
 
-        recyclerView.setMinimumHeight((int) convertDpToPixel(35,this));
+        recyclerView.setMinimumHeight((int) convertDpToPixel(35, this));
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager();
         layoutManager.setFlexWrap(FlexWrap.WRAP);
         layoutManager.setFlexDirection(FlexDirection.ROW);
         recyclerView.setLayoutManager(layoutManager);
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(this,R.layout.item_spinner,dataStatus);
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.item_spinner, dataStatus);
         spinStatus.setAdapter(arrayAdapter);
 
         loadGrup();
 
     }
 
-    private void displayGrup(){
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(this,R.layout.item_spinner,dataGrup);
+    private void displayGrup() {
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.item_spinner, dataGrup);
         spinGrup.setAdapter(arrayAdapter);
     }
+
     private void loadGrup() {
         dataGrup = new String[]{};
         dataIdGrup = new String[]{};
@@ -211,23 +212,23 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        dataGrup = new String[data.length()+1];
-                        dataIdGrup = new String[data.length()+1];
+                        dataGrup = new String[data.length() + 1];
+                        dataIdGrup = new String[data.length() + 1];
                         dataGrup[0] = "PILIH";
                         dataIdGrup[0] = "";
-                        for (int i = 0;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
-                            dataGrup[i+1] = name;
-                            dataIdGrup[i+1] = id;
+                            dataGrup[i + 1] = name;
+                            dataIdGrup[i + 1] = id;
                         }
 
-                        if (tipeForm.equals("edit")){
+                        if (tipeForm.equals("edit")) {
                             loadData();
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormAutoReplyActivity.this)
                                 .setMessage(message)
                                 .setCancelable(false)
@@ -258,14 +259,14 @@ public class FormAutoReplyActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response.statusCode==403){
+                if (response.statusCode == 403) {
                     try {
                         JSONObject jsonObject = new JSONObject(new String(response.data));
                         final boolean status = jsonObject.getBoolean("status");
                         final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")){
+                        if (msg.trim().toLowerCase().equals("invalid api key")) {
                             new AlertDialog.Builder(FormAutoReplyActivity.this)
                                     .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                     .setCancelable(false)
@@ -278,7 +279,7 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                        }else{
+                        } else {
                             new AlertDialog.Builder(FormAutoReplyActivity.this)
                                     .setMessage(msg)
                                     .setCancelable(false)
@@ -294,7 +295,7 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
 
                     final String msg = getResources().getString(errorResponse(error));
                     new AlertDialog.Builder(FormAutoReplyActivity.this)
@@ -310,12 +311,12 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -325,12 +326,13 @@ public class FormAutoReplyActivity extends AppCompatActivity {
 
 
     }
+
     private void loadData() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",autoreplyId);
+            requestBody.put("id", autoreplyId);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -349,33 +351,33 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final JSONArray keyword = data.getJSONObject(i).getJSONArray("keyword");
                             final String balasan = data.getJSONObject(i).getString("reply");
                             final String status_pesan = data.getJSONObject(i).getString("status");
                             final String group_id = data.getJSONObject(i).getString("group_id");
-                            for (int a = 0 ;a<keyword.length();a++){
+                            for (int a = 0; a < keyword.length(); a++) {
                                 id_tag++;
                                 String tmptag = String.valueOf(id_tag);
-                                listKeyword.add(new ItemRecyclerTag(tmptag,keyword.getString(a)));
+                                listKeyword.add(new ItemRecyclerTag(tmptag, keyword.getString(a)));
                             }
                             adapterTag.notifyDataSetChanged();
                             edtBalasan.setText(balasan);
-                            if (status_pesan.equals("aktif")){
+                            if (status_pesan.equals("aktif")) {
                                 spinStatus.setSelection(0);
-                            }else{
+                            } else {
                                 spinStatus.setSelection(1);
                             }
-                            for (int a = 0 ;a<dataIdGrup.length;a++){
-                                if (dataIdGrup[a].equals(group_id)){
+                            for (int a = 0; a < dataIdGrup.length; a++) {
+                                if (dataIdGrup[a].equals(group_id)) {
                                     spinGrup.setSelection(a);
                                     break;
                                 }
                             }
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormAutoReplyActivity.this)
                                 .setMessage(message)
                                 .setCancelable(false)
@@ -405,14 +407,14 @@ public class FormAutoReplyActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response.statusCode==403){
+                if (response.statusCode == 403) {
                     try {
                         JSONObject jsonObject = new JSONObject(new String(response.data));
                         final boolean status = jsonObject.getBoolean("status");
                         final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")){
+                        if (msg.trim().toLowerCase().equals("invalid api key")) {
                             new AlertDialog.Builder(FormAutoReplyActivity.this)
                                     .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                     .setCancelable(false)
@@ -425,7 +427,7 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                        }else{
+                        } else {
                             new AlertDialog.Builder(FormAutoReplyActivity.this)
                                     .setMessage(msg)
                                     .setCancelable(false)
@@ -441,7 +443,7 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
 
                     final String msg = getResources().getString(errorResponse(error));
                     new AlertDialog.Builder(FormAutoReplyActivity.this)
@@ -457,12 +459,12 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -479,7 +481,7 @@ public class FormAutoReplyActivity extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setTitle("Form Keyword");
 
-        final EditText edtKeyword    = (EditText) dialogView.findViewById(R.id.edtKeyword);
+        final EditText edtKeyword = (EditText) dialogView.findViewById(R.id.edtKeyword);
 
         edtKeyword.setText("");
 
@@ -489,7 +491,7 @@ public class FormAutoReplyActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 id_tag++;
                 String tmpid = String.valueOf(id_tag);
-                listKeyword.add(new ItemRecyclerTag(tmpid,edtKeyword.getText().toString()));
+                listKeyword.add(new ItemRecyclerTag(tmpid, edtKeyword.getText().toString()));
                 adapterTag.notifyDataSetChanged();
                 dialog.dismiss();
 
@@ -506,9 +508,9 @@ public class FormAutoReplyActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void simpanAutoreply(){
+    private void simpanAutoreply() {
         dataKeyword = new JSONArray();
-        for (int i=0;i<listKeyword.size();i++){
+        for (int i = 0; i < listKeyword.size(); i++) {
             dataKeyword.put(listKeyword.get(i).getTitle());
         }
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -516,14 +518,14 @@ public class FormAutoReplyActivity extends AppCompatActivity {
         final JSONObject requestBody = new JSONObject();
         String url = "";
         try {
-            requestBody.put("status",dataStatus[spinStatus.getSelectedItemPosition()]);
-            requestBody.put("keyword",dataKeyword);
-            requestBody.put("reply",edtBalasan.getText().toString());
-            requestBody.put("group_id",dataIdGrup[spinGrup.getSelectedItemPosition()]);
-            if (tipeForm.equals("edit")){
+            requestBody.put("status", dataStatus[spinStatus.getSelectedItemPosition()]);
+            requestBody.put("keyword", dataKeyword);
+            requestBody.put("reply", edtBalasan.getText().toString());
+            requestBody.put("group_id", dataIdGrup[spinGrup.getSelectedItemPosition()]);
+            if (tipeForm.equals("edit")) {
                 url = URL_POST_UPDATE_AUTOREPLY;
-                requestBody.put("id",autoreplyId);
-            }else{
+                requestBody.put("id", autoreplyId);
+            } else {
                 url = URL_POST_CREATE_AUTOREPLY;
             }
         } catch (JSONException e) {
@@ -533,7 +535,7 @@ public class FormAutoReplyActivity extends AppCompatActivity {
         String uri = Uri.parse(url)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -544,21 +546,21 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(FormAutoReplyActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormAutoReplyActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormAutoReplyActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -566,14 +568,14 @@ public class FormAutoReplyActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response.statusCode==403){
+                if (response.statusCode == 403) {
                     try {
                         JSONObject jsonObject = new JSONObject(new String(response.data));
                         final boolean status = jsonObject.getBoolean("status");
                         final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")){
+                        if (msg.trim().toLowerCase().equals("invalid api key")) {
                             new AlertDialog.Builder(FormAutoReplyActivity.this)
                                     .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                     .setCancelable(false)
@@ -586,18 +588,18 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                        }else{
+                        } else {
                             new AlertDialog.Builder(FormAutoReplyActivity.this)
                                     .setMessage(msg)
                                     .setCancelable(false)
-                                    .setPositiveButton("OK",null)
+                                    .setPositiveButton("OK", null)
                                     .show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
 
                     final String msg = getResources().getString(errorResponse(error));
                     new AlertDialog.Builder(FormAutoReplyActivity.this)
@@ -608,12 +610,12 @@ public class FormAutoReplyActivity extends AppCompatActivity {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -629,7 +631,7 @@ public class FormAutoReplyActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

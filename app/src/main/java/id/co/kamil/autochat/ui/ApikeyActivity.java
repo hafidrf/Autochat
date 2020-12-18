@@ -1,8 +1,5 @@
 package id.co.kamil.autochat.ui;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -13,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -66,11 +66,7 @@ public class ApikeyActivity extends AppCompatActivity {
         userDetail = session.getUserDetails();
         token = userDetail.get(KEY_TOKEN);
 
-        if (userDetail.get(KEY_CUST_GROUP).equals("1") || userDetail.get(KEY_CUST_GROUP).equals(1)){
-            fitur_enabled = false;
-        }else{
-            fitur_enabled = true;
-        }
+        fitur_enabled = !userDetail.get(KEY_CUST_GROUP).equals("1") && !userDetail.get(KEY_CUST_GROUP).equals(1);
         edtUrlCallback = (EditText) findViewById(R.id.edtUrlCallback);
         edtApiKey = (EditText) findViewById(R.id.edtAPIKey);
         btnGenerate = (Button) findViewById(R.id.btnGenerate);
@@ -79,14 +75,14 @@ public class ApikeyActivity extends AppCompatActivity {
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setClipboard(ApikeyActivity.this,edtApiKey.getText().toString());
+                setClipboard(ApikeyActivity.this, edtApiKey.getText().toString());
                 Toast.makeText(ApikeyActivity.this, "API Key berhasil disalin", Toast.LENGTH_SHORT).show();
             }
         });
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fitur_enabled){
+                if (fitur_enabled) {
                     new AlertDialog.Builder(ApikeyActivity.this)
                             .setMessage("Apakah anda yakin akan generate API Key baru?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -103,7 +99,7 @@ public class ApikeyActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fitur_enabled){
+                if (fitur_enabled) {
                     new AlertDialog.Builder(ApikeyActivity.this)
                             .setMessage("Apakah anda yakin akan menyimpan Url Callback untuk Notifikasi?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -120,9 +116,9 @@ public class ApikeyActivity extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         btnCopy.setEnabled(fitur_enabled);
         btnGenerate.setEnabled(fitur_enabled);
-        if (fitur_enabled){
+        if (fitur_enabled) {
             loadApikey();
-        }else{
+        } else {
             new AlertDialog.Builder(this)
                     .setMessage("Fitur ini hanya untuk akun premium atau bisnis")
                     .setPositiveButton("OK", null)
@@ -132,8 +128,8 @@ public class ApikeyActivity extends AppCompatActivity {
 
     private void simpanUrlCallbak() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final HashMap<String,String> body = new HashMap<>();
-        body.put("url_reversal",edtUrlCallback.getText().toString());
+        final HashMap<String, String> body = new HashMap<>();
+        body.put("url_reversal", edtUrlCallback.getText().toString());
         JSONObject param = new JSONObject(body);
 
         final String uri = Uri.parse(URL_POST_URL_CALLBACK)
@@ -154,19 +150,19 @@ public class ApikeyActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if(status){
-                        session.setValue("url_reversal",edtUrlCallback.getText().toString());
+                    if (status) {
+                        session.setValue("url_reversal", edtUrlCallback.getText().toString());
                     }
                     new AlertDialog.Builder(ApikeyActivity.this)
                             .setMessage(message)
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(ApikeyActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -178,16 +174,16 @@ public class ApikeyActivity extends AppCompatActivity {
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(ApikeyActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .show();
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -198,7 +194,7 @@ public class ApikeyActivity extends AppCompatActivity {
 
     private void generateApiKey() {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final HashMap<String,String> body = new HashMap<>();
+        final HashMap<String, String> body = new HashMap<>();
 
 
         final String uri = Uri.parse(URL_POST_GENERATE_API_KEY)
@@ -220,14 +216,14 @@ public class ApikeyActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
 
                         final String apikey = response.getString("apikey");
                         edtApiKey.setText(apikey);
-                    }else{
+                    } else {
                         new AlertDialog.Builder(ApikeyActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
 
@@ -235,7 +231,7 @@ public class ApikeyActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(ApikeyActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -247,16 +243,16 @@ public class ApikeyActivity extends AppCompatActivity {
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(ApikeyActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .show();
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -265,10 +261,11 @@ public class ApikeyActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
 
     }
+
     private void loadApikey() {
         edtApiKey.setText("");
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final HashMap<String,String> body = new HashMap<>();
+        final HashMap<String, String> body = new HashMap<>();
 
 
         final String uri = Uri.parse(URL_GET_API_KEY)
@@ -290,16 +287,16 @@ public class ApikeyActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
 
                         final String apikey = response.getString("apikey");
                         final String url = response.getString("url_reversal");
                         edtApiKey.setText(apikey);
                         edtUrlCallback.setText(url);
-                    }else{
+                    } else {
                         new AlertDialog.Builder(ApikeyActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
 
@@ -307,7 +304,7 @@ public class ApikeyActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(ApikeyActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -319,16 +316,16 @@ public class ApikeyActivity extends AppCompatActivity {
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(ApikeyActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .show();
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -345,7 +342,7 @@ public class ApikeyActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

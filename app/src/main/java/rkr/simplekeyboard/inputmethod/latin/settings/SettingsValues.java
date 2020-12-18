@@ -67,7 +67,7 @@ public class SettingsValues {
     public final float mKeyboardHeightScale;
 
     public SettingsValues(final SharedPreferences prefs, final Resources res,
-            final InputAttributes inputAttributes) {
+                          final InputAttributes inputAttributes) {
         mLocale = res.getConfiguration().locale;
         // Get the resources
         mSpacingAndPunctuations = new SpacingAndPunctuations(res);

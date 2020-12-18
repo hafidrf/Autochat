@@ -3,9 +3,9 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemOperator {
-    String id,nama,email;
+    String id, nama, email;
     JSONObject jsonObject;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     @Override
     public String toString() {

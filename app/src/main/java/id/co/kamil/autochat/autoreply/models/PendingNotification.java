@@ -46,10 +46,10 @@ public class PendingNotification {
 
     @Override
     public boolean equals(Object o) {
-        if(VersionUtils.isJellyBean()) {
+        if (VersionUtils.isJellyBean()) {
             String group = NotificationCompat.getGroup(((PendingNotification) o).getSbn().getNotification());
             String thisGroup = NotificationCompat.getGroup(sbn.getNotification());
-            if(group == null || thisGroup == null)
+            if (group == null || thisGroup == null)
                 return false;
             return group.equals(thisGroup);
         } else

@@ -22,15 +22,18 @@ public class AdapterNotif extends BaseAdapter {
     ArrayList<ItemNotif> arraylist;
 
     private static final int resource = R.layout.item_list_notif;
+
     public class ViewHolder {
-        TextView txtJudul,txtBody;
+        TextView txtJudul, txtBody;
         CheckBox chk1;
 
     }
-    public void reloadArrayList(){
+
+    public void reloadArrayList() {
         arraylist = new ArrayList<ItemNotif>();
         arraylist.addAll(dataNotif);
     }
+
     public AdapterNotif(List<ItemNotif> apps, Context context) {
         this.dataNotif = apps;
         this.context = context;
@@ -77,17 +80,17 @@ public class AdapterNotif extends BaseAdapter {
 
         final ItemNotif item = dataNotif.get(position);
         String body = item.getBody();
-        if (body.length()>100){
-            body = body.substring(0,100) + "...";
+        if (body.length() > 100) {
+            body = body.substring(0, 100) + "...";
         }
         viewHolder.txtJudul.setText(item.getTitle());
         viewHolder.txtBody.setText(body);
         viewHolder.chk1.setChecked(item.isCheckbox());
 
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
@@ -111,8 +114,7 @@ public class AdapterNotif extends BaseAdapter {
             for (ItemNotif postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
                     dataNotif.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getBody().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getBody().toLowerCase(Locale.getDefault()).contains(charText)) {
                     dataNotif.add(postDetail);
                 }
             }

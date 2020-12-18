@@ -6,18 +6,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.dasbor.DasborFragment">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <Button
                     android:background="@drawable/btn_rect_default"
                     android:visibility="gone"
@@ -30,7 +34,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="30dp" />
+
                 <LinearLayout
                     android:background="@drawable/rectangle_white"
                     android:orientation="vertical"
@@ -38,10 +43,12 @@
                     android:layout_margin="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bulk Sender"/>
+                        android:text="Bulk Sender" />
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -55,14 +62,16 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
                             android:layout_marginRight="10dp"
-                            android:text="Status Bulk Sender"/>
+                            android:text="Status Bulk Sender" />
+
                         <Switch
                             android:id="@+id/switchEnabledBulkSender"
                             android:layout_alignTop="@id/labelStatusBulkSender"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="10dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
+
                         <TextView
                             android:id="@+id/labelAccessibility"
                             android:textSize="16sp"
@@ -72,20 +81,21 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:layout_marginRight="10dp"
-                            android:text="Aksesibilitas Wabot"/>
+                            android:text="Aksesibilitas Wabot" />
+
                         <Switch
                             android:id="@+id/switchAksesibilitas"
                             android:layout_alignTop="@id/labelAccessibility"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="10dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
                     </RelativeLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Options"/>
+                        android:text="Options" />
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -101,11 +111,12 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:text="Tombol Asisten"/>
+                            android:text="Tombol Asisten" />
+
                         <Switch
                             android:id="@+id/switchFloatingWidget"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
 
@@ -123,11 +134,12 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:text="Layar Selalu Menyala"/>
+                            android:text="Layar Selalu Menyala" />
+
                         <Switch
                             android:id="@+id/switchScreenAlwaysOn"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
 
@@ -145,14 +157,16 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:text="Wabot Selalu Aktif"/>
+                            android:text="Wabot Selalu Aktif" />
+
                         <Switch
                             android:id="@+id/switchEnableForegroundService"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:orientation="vertical"
                     android:padding="15dp"
@@ -163,15 +177,18 @@
                     android:background="@drawable/rectangle_orange"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:text="Sebelum menggunakan WABOT yuk seting dulu pengaturanya."
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
+
                     <LinearLayout
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <Button
                             android:background="@drawable/btn_rect_default"
                             android:id="@+id/btnPengaturan"
@@ -180,7 +197,7 @@
                             android:text="Pengaturan"
                             android:textSize="12sp"
                             android:layout_width="wrap_content"
-                            android:layout_height="25dp"/>
+                            android:layout_height="25dp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -192,7 +209,8 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <LinearLayout
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
@@ -201,6 +219,7 @@
                     android:background="@drawable/rectangle_grey"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:id="@+id/txtTypeAccount"
                         android:layout_marginTop="10dp"
@@ -209,15 +228,17 @@
                         android:layout_marginRight="20dp"
                         android:text="Type Account : "
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
+
                 <ImageView
                     android:id="@+id/imgPrice"
                     android:layout_margin="20dp"
                     android:scaleType="fitEnd"
                     android:adjustViewBounds="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <Button
                     android:id="@+id/btnUpgrade"
                     android:paddingLeft="15dp"
@@ -228,7 +249,8 @@
                     android:textSize="12sp"
                     android:background="@drawable/btn_rect_default"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="30dp" />
+
                 <LinearLayout
                     android:orientation="vertical"
                     android:padding="15dp"
@@ -236,15 +258,18 @@
                     android:background="@drawable/rectangle_orange"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:text="Yuk ajak dan referensikan teman dan kenalan Mu untuk menggunakan WABOT. Dan dapatkan penghasilan Rp.500/register atau per pendaftar. Komisi Sebesar 50% dari setiap user yang Upgrade Baru dan komisi 20% dari User yang perpanjang upgrade (renewal). "
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
+
                     <LinearLayout
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <Button
                             android:background="@drawable/btn_rect_default"
                             android:id="@+id/btnShare"
@@ -253,7 +278,8 @@
                             android:text="Share"
                             android:textSize="12sp"
                             android:layout_width="wrap_content"
-                            android:layout_height="25dp"/>
+                            android:layout_height="25dp" />
+
                         <Button
                             android:layout_marginLeft="10dp"
                             android:paddingLeft="10dp"
@@ -263,9 +289,10 @@
                             android:text="Lihat Link Referal"
                             android:textSize="12sp"
                             android:layout_width="wrap_content"
-                            android:layout_height="25dp"/>
+                            android:layout_height="25dp" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/txtInfo"
                     android:background="@drawable/rectangle_blue"
@@ -275,7 +302,8 @@
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/md_black_1000"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:id="@+id/txtJoin"
                     android:background="@drawable/rectangle_green"
@@ -285,7 +313,7 @@
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/md_black_1000"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
 
             </LinearLayout>

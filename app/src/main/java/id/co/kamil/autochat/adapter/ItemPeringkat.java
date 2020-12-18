@@ -1,9 +1,9 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemPeringkat {
-    String peringkat, email,nama,downline;
+    String peringkat, email, nama, downline;
 
-    public ItemPeringkat(String peringkat,String email, String nama, String downline) {
+    public ItemPeringkat(String peringkat, String email, String nama, String downline) {
         this.peringkat = peringkat;
         this.email = email;
         this.nama = nama;

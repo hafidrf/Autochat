@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
@@ -27,7 +26,7 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="8dp"
                 android:src="@mipmap/ic_launcher_round"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
             <!--Close button-->
             <ImageView
@@ -36,7 +35,7 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="40dp"
                 android:src="@drawable/ic_close_block"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
         </RelativeLayout>
 
         <!--View while view is expanded-->
@@ -58,7 +57,7 @@
                     android:id="@+id/open_button"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_open"/>
+                    android:src="@drawable/ic_open" />
 
                 <View
                     android:layout_width="0dp"
@@ -69,7 +68,7 @@
                     android:id="@+id/close_button"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_close_block"/>
+                    android:src="@drawable/ic_close_block" />
 
             </LinearLayout>
 
@@ -83,7 +82,7 @@
                 android:layout_marginVertical="4dp"
                 android:switchPadding="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/buttonMessagePending"
@@ -95,14 +94,14 @@
                     android:layout_marginVertical="4dp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/labelMessagePending"
                     android:text="0"
                     android:layout_marginVertical="4dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <View
                     android:layout_width="8dp"

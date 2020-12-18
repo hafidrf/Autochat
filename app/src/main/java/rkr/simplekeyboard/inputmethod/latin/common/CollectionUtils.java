@@ -28,13 +28,14 @@ public final class CollectionUtils {
 
     /**
      * Converts a sub-range of the given array to an ArrayList of the appropriate type.
+     *
      * @param array Array to be converted.
      * @param start First index inclusive to be converted.
-     * @param end Last index exclusive to be converted.
+     * @param end   Last index exclusive to be converted.
      * @throws IllegalArgumentException if start or end are out of range or start &gt; end.
      */
     public static <E> ArrayList<E> arrayAsList(final E[] array, final int start,
-            final int end) {
+                                               final int end) {
         if (start < 0 || start > end || end > array.length) {
             throw new IllegalArgumentException("Invalid start: " + start + " end: " + end
                     + " with array.length: " + array.length);

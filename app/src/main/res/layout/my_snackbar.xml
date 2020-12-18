@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/md_grey_800">
+
     <TextView
         android:id="@+id/txtMessage"
         android:layout_width="match_parent"
@@ -14,7 +15,7 @@
         android:paddingBottom="15dp"
         android:gravity="center_vertical"
         android:text="Please select any one"
-        android:textColor="@color/md_white_1000"/>
+        android:textColor="@color/md_white_1000" />
 
     <TextView
         android:id="@+id/txtOne"
@@ -24,7 +25,8 @@
         android:gravity="center"
         android:text="@string/snack_enable_service"
         android:layout_height="match_parent"
-        android:textColor="@color/md_red_700"/>
+        android:textColor="@color/md_red_700" />
+
     <ImageView
         android:id="@+id/imgClose"
         android:layout_gravity="center"
@@ -32,5 +34,5 @@
         android:layout_marginRight="10dp"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/ic_close_dark"/>
+        android:src="@drawable/ic_close_dark" />
 </LinearLayout>

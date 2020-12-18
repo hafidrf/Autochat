@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -36,13 +35,7 @@
     <string name="subtype_en_GB">"Ingelesa (Erresuma Batua)"</string>
     <string name="subtype_en_US">"Ingelesa (AEB)"</string>
     <string name="subtype_es_US">"Gaztelania (AEB)"</string>
-    <string name="subtype_hi_ZZ">"Hinglisha"</string>
     <string name="subtype_sr_ZZ">"Serbiarra (latindarra)"</string>
-    <string name="subtype_with_layout_en_GB">"Ingelesa (Erresuma Batua) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"Ingelesa (AEB) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"Gaztelania (AEB) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Hinglisha (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"Serbiarra (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (tradizionala)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (trinkoa)"</string>
     <string name="custom_input_styles_title">"Idazketa-estilo pertsonalizatuak"</string>
@@ -56,14 +49,8 @@
     <string name="enable">"Gaitu"</string>
     <string name="not_now">"Orain ez"</string>
     <string name="custom_input_style_already_exists">"Idazketa-estilo hori badago lehendik ere: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Tekla sakatzearen dardararen iraupena"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Tekla sakatzearen bolumena"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Luze sakatzearen atzerapena"</string>
     <string name="button_default">"Lehenetsia"</string>
-    <string name="prefs_keyboard_height_settings">Teklatuaren altuera</string>
-    <string name="keyboard_color">Ezarri teklatuaren kolore pertsonalizatua</string>
     <string name="hide_special_chars">Ezkutatu karaktere bereziak</string>
-    <string name="hide_language_switch_key">Ezkutatu hizkuntza aldatzeko tekla</string>
     <string name="show_number_row">Erakutsi aparteko zenbakien errenkada</string>
     <string name="space_swipe">Espazioan hatza pasatzean mugitu kurtsorea</string>
     <string name="delete_swipe">Ezabatzeko keinua</string>

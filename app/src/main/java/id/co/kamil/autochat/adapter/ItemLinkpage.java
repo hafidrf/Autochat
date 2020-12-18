@@ -4,10 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ItemLinkpage {
-    String id,name,domain_code,domain,created,url;
+    String id, name, domain_code, domain, created, url;
     JSONArray data;
     JSONObject jsonObject;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     public ItemLinkpage(String id, String name, String domain_code, String domain, String created, String url, JSONArray data, JSONObject jsonObject, boolean checkbox, boolean chkvisible) {
         this.id = id;

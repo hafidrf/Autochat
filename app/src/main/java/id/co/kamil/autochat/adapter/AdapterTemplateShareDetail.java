@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,6 +22,7 @@ public class AdapterTemplateShareDetail extends BaseAdapter {
     ArrayList<ItemTemplateShareDetail> arraylist;
 
     private static final int resource = R.layout.item_list_template_share_detail;
+
     public class ViewHolder {
         TextView txtEmail;
         CheckBox chk1;
@@ -77,9 +76,9 @@ public class AdapterTemplateShareDetail extends BaseAdapter {
         viewHolder.txtEmail.setText(item.getEmail());
         viewHolder.chk1.setChecked(item.isCheckbox());
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {

@@ -23,6 +23,7 @@ public interface MoreKeysPanel {
     interface Controller {
         /**
          * Add the {@link MoreKeysPanel} to the target view.
+         *
          * @param panel the panel to be shown.
          */
         void onShowMoreKeysPanel(final MoreKeysPanel panel);
@@ -40,11 +41,16 @@ public interface MoreKeysPanel {
 
     Controller EMPTY_CONTROLLER = new Controller() {
         @Override
-        public void onShowMoreKeysPanel(final MoreKeysPanel panel) {}
+        public void onShowMoreKeysPanel(final MoreKeysPanel panel) {
+        }
+
         @Override
-        public void onDismissMoreKeysPanel() {}
+        public void onDismissMoreKeysPanel() {
+        }
+
         @Override
-        public void onCancelMoreKeysPanel() {}
+        public void onCancelMoreKeysPanel() {
+        }
     };
 
     /**
@@ -53,10 +59,10 @@ public interface MoreKeysPanel {
      *
      * @param parentView the parent view of this {@link MoreKeysPanel}
      * @param controller the controller that can dismiss this {@link MoreKeysPanel}
-     * @param pointX x coordinate of this {@link MoreKeysPanel}
-     * @param pointY y coordinate of this {@link MoreKeysPanel}
-     * @param listener the listener that will receive keyboard action from this
-     * {@link MoreKeysPanel}.
+     * @param pointX     x coordinate of this {@link MoreKeysPanel}
+     * @param pointY     y coordinate of this {@link MoreKeysPanel}
+     * @param listener   the listener that will receive keyboard action from this
+     *                   {@link MoreKeysPanel}.
      */
     // TODO: Currently the MoreKeysPanel is inside a container view that is added to the parent.
     // Consider the simpler approach of placing the MoreKeysPanel itself into the parent view.
@@ -72,8 +78,8 @@ public interface MoreKeysPanel {
     /**
      * Process a move event on the more keys panel.
      *
-     * @param x translated x coordinate of the touch point
-     * @param y translated y coordinate of the touch point
+     * @param x         translated x coordinate of the touch point
+     * @param y         translated y coordinate of the touch point
      * @param pointerId pointer id touch point
      */
     void onMoveEvent(final int x, final int y, final int pointerId);
@@ -81,8 +87,8 @@ public interface MoreKeysPanel {
     /**
      * Process a down event on the more keys panel.
      *
-     * @param x translated x coordinate of the touch point
-     * @param y translated y coordinate of the touch point
+     * @param x         translated x coordinate of the touch point
+     * @param y         translated y coordinate of the touch point
      * @param pointerId pointer id touch point
      */
     void onDownEvent(final int x, final int y, final int pointerId);
@@ -90,8 +96,8 @@ public interface MoreKeysPanel {
     /**
      * Process an up event on the more keys panel.
      *
-     * @param x translated x coordinate of the touch point
-     * @param y translated y coordinate of the touch point
+     * @param x         translated x coordinate of the touch point
+     * @param y         translated y coordinate of the touch point
      * @param pointerId pointer id touch point
      */
     void onUpEvent(final int x, final int y, final int pointerId);

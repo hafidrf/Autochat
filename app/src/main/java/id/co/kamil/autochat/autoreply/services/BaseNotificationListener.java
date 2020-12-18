@@ -9,15 +9,8 @@ import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import androidx.core.app.NotificationCompat;
 
-import id.co.kamil.autochat.BuildConfig;
-import id.co.kamil.autochat.autoreply.NotificationListenerUtils;
-import id.co.kamil.autochat.autoreply.models.PendingNotification;
-import id.co.kamil.autochat.autoreply.NotificationContentUtils;
-import id.co.kamil.autochat.autoreply.NotificationUtils;
-import id.co.kamil.autochat.autoreply.VersionUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +19,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import id.co.kamil.autochat.BuildConfig;
+import id.co.kamil.autochat.autoreply.NotificationContentUtils;
+import id.co.kamil.autochat.autoreply.NotificationListenerUtils;
+import id.co.kamil.autochat.autoreply.NotificationUtils;
+import id.co.kamil.autochat.autoreply.VersionUtils;
+import id.co.kamil.autochat.autoreply.models.PendingNotification;
 
 
 @SuppressLint("NewApi")
@@ -104,8 +104,8 @@ public abstract class BaseNotificationListener extends NotificationListenerServi
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn, RankingMap rankingMap) {
-        if(shouldBeIgnored(sbn)) {
-            if(BuildConfig.DEBUG) {
+        if (shouldBeIgnored(sbn)) {
+            if (BuildConfig.DEBUG) {
                 Bundle extras = NotificationCompat.getExtras(sbn.getNotification());
                 String title = NotificationUtils.getTitle(extras);
                 String msg = NotificationUtils.getMessage(extras);
@@ -114,12 +114,12 @@ public abstract class BaseNotificationListener extends NotificationListenerServi
             return;
         }
 
-        if(shouldAppBeAnnounced(sbn, rankingMap))
+        if (shouldAppBeAnnounced(sbn, rankingMap))
             handleSbn(sbn);
     }
 
     private boolean shouldBeIgnored(StatusBarNotification sbn) {
-        if(!duplicateReplyPackages.contains(sbn.getPackageName()))
+        if (!duplicateReplyPackages.contains(sbn.getPackageName()))
             return false;
         int hashCode = getHashCode(sbn);
         return notifHandled.indexOf(hashCode) > -1 || previouslyDismissed.containsValue(hashCode);
@@ -127,7 +127,7 @@ public abstract class BaseNotificationListener extends NotificationListenerServi
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        if(shouldBeIgnored(sbn))
+        if (shouldBeIgnored(sbn))
             return;
 
         if (shouldAppBeAnnounced(sbn)) {
@@ -143,7 +143,7 @@ public abstract class BaseNotificationListener extends NotificationListenerServi
     }
 
     private void handleSbn(StatusBarNotification sbn) {
-        if(!lastRemovedKey.equals(getKey(sbn)))
+        if (!lastRemovedKey.equals(getKey(sbn)))
             postDelayed(sbn);
         lastRemovedKey = "";
     }
@@ -175,7 +175,7 @@ public abstract class BaseNotificationListener extends NotificationListenerServi
                 if (pending.size() > 0) {
                     PendingNotification pn = pending.get(0);
                     pending.remove(0);
-                    if(duplicateReplyPackages.contains(pn.getSbn().getPackageName()))
+                    if (duplicateReplyPackages.contains(pn.getSbn().getPackageName()))
                         notifHandled.add(getHashCode(pn.getSbn()));
                     onNotificationPosted(pn.getSbn(), pn.getDismissKey());
                 }
@@ -188,17 +188,17 @@ public abstract class BaseNotificationListener extends NotificationListenerServi
 
     @Override
     public void onNotificationRemoved(final StatusBarNotification sbn) {
-        if(sbn != null && duplicateReplyPackages.contains(sbn.getPackageName())) {
+        if (sbn != null && duplicateReplyPackages.contains(sbn.getPackageName())) {
             int hashCode = getHashCode(sbn);
             int indexOf = notifHandled.indexOf(hashCode);
             if (indexOf > -1) {
                 notifHandled.remove(indexOf);
                 Bundle extras = NotificationCompat.getExtras(sbn.getNotification());
                 String title = NotificationContentUtils.getTitle(extras);
-                if(TextUtils.isEmpty(title))
+                if (TextUtils.isEmpty(title))
                     return;
                 int titleHashcode = title.hashCode();
-                if(previouslyDismissed.containsKey(titleHashcode))
+                if (previouslyDismissed.containsKey(titleHashcode))
                     previouslyDismissed.put(titleHashcode, hashCode);
                 else {
                     if (previouslyDismissed.size() >= 5)
@@ -216,7 +216,9 @@ public abstract class BaseNotificationListener extends NotificationListenerServi
     protected boolean shouldAppBeAnnounced(StatusBarNotification sbn, RankingMap rankingMap) {
         return shouldAppBeAnnounced(sbn);
     }
+
     protected abstract boolean shouldAppBeAnnounced(StatusBarNotification sbn);
+
     protected abstract void onNotificationPosted(StatusBarNotification sbn, String dismissKey);
 
 }

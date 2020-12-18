@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -36,13 +35,7 @@
     <string name="subtype_en_GB">"englanti (Iso-Britannia)"</string>
     <string name="subtype_en_US">"englanti (Yhdysvallat)"</string>
     <string name="subtype_es_US">"espanja (Yhdysvallat)"</string>
-    <string name="subtype_hi_ZZ">"Hindienglanti"</string>
     <string name="subtype_sr_ZZ">"serbialainen (latinal.)"</string>
-    <string name="subtype_with_layout_en_GB">"englanti (UK) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"englanti (US) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"espanja (US) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Hindienglanti (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"serbialainen (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (perinteinen)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (tiivis)"</string>
     <string name="custom_input_styles_title">"Muokatut syöttötyylit"</string>
@@ -56,8 +49,5 @@
     <string name="enable">"Ota käyttöön"</string>
     <string name="not_now">"Ei nyt"</string>
     <string name="custom_input_style_already_exists">"Syöttötyyli on jo olemassa: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Painalluksen värinän kesto"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Näppäinpainalluksen äänenvoimakkuus"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Pitkän painalluksen viive"</string>
     <string name="button_default">"Oletusarvot"</string>
 </resources>

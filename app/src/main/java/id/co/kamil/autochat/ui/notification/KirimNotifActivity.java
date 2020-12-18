@@ -1,13 +1,5 @@
 package id.co.kamil.autochat.ui.notification;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,11 +9,18 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -100,14 +99,14 @@ public class KirimNotifActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(KirimNotifActivity.this, ListUserActivity.class);
-                i.putExtra("exclude",excludeContact.toString());
-                startActivityForResult(i,REQUEST_USER);
+                i.putExtra("exclude", excludeContact.toString());
+                startActivityForResult(i, REQUEST_USER);
             }
         });
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     new AlertDialog.Builder(KirimNotifActivity.this)
                             .setMessage("Apakah anda yakin akan kirim notif berikut ?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -116,7 +115,7 @@ public class KirimNotifActivity extends AppCompatActivity {
                                     sendNotif();
                                 }
                             })
-                            .setNegativeButton("Tidak",null)
+                            .setNegativeButton("Tidak", null)
                             .show();
 
                 }
@@ -126,11 +125,11 @@ public class KirimNotifActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.gridUser);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         new LinearSnapHelper().attachToRecyclerView(recyclerView);
-        adapterTag = new RecylerTagAdapter(listNoTujuan, this,new RecylerTagAdapter.OnItemClickListener() {
+        adapterTag = new RecylerTagAdapter(listNoTujuan, this, new RecylerTagAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ItemRecyclerTag item) {
-                for(int i=0;i<listNoTujuan.size();i++){
-                    if (listNoTujuan.get(i).getId().equals(item.getId())){
+                for (int i = 0; i < listNoTujuan.size(); i++) {
+                    if (listNoTujuan.get(i).getId().equals(item.getId())) {
                         listNoTujuan.remove(i);
                         adapterTag.notifyDataSetChanged();
                         break;
@@ -141,7 +140,7 @@ public class KirimNotifActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapterTag);
-        recyclerView.setMinimumHeight((int) convertDpToPixel(35,this));
+        recyclerView.setMinimumHeight((int) convertDpToPixel(35, this));
         reloadExcludeContact();
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager();
         layoutManager.setFlexWrap(FlexWrap.WRAP);
@@ -150,33 +149,34 @@ public class KirimNotifActivity extends AppCompatActivity {
 
     }
 
-    private void reloadExcludeContact(){
+    private void reloadExcludeContact() {
         excludeContact = new JSONArray();
         excludeId = new JSONArray();
-        for(int i = 0; i< listNoTujuan.size();i++){
+        for (int i = 0; i < listNoTujuan.size(); i++) {
             excludeContact.put(listNoTujuan.get(i).getId());
             excludeId.put(listNoTujuan.get(i).getFirebase());
         }
 
     }
+
     private boolean isRequired() {
-        if (TextUtils.isEmpty(edtJudul.getText())){
+        if (TextUtils.isEmpty(edtJudul.getText())) {
             edtJudul.setError("Field ini tidak boleh kosong");
             edtJudul.requestFocus();
             return false;
         }
-        if (TextUtils.isEmpty(edtPesan.getText())){
+        if (TextUtils.isEmpty(edtPesan.getText())) {
             edtPesan.setError("Field ini tidak boleh kosong");
             edtPesan.requestFocus();
             return false;
         }
-        if (excludeContact.length()<=0){
+        if (excludeContact.length() <= 0) {
             Toast.makeText(this, "Pengguna Tujuan belum dipilih", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
 
-    private void sendNotif(){
+    private void sendNotif() {
         JSONArray regId = excludeId;
 
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -184,19 +184,19 @@ public class KirimNotifActivity extends AppCompatActivity {
         final JSONObject requestBody = new JSONObject();
         String url = URL_POST_NOTIF_FIREBASE;
         String fieldUrl = edtUrl.getText().toString();
-        if(fieldUrl.isEmpty() || fieldUrl==null){
+        if (fieldUrl.isEmpty() || fieldUrl == null) {
 
-        }else{
+        } else {
             if (!fieldUrl.substring(0, 4).equals("http")) {
                 fieldUrl = "http://" + fieldUrl;
             }
         }
         try {
-            requestBody.put("message",edtPesan.getText().toString());
-            requestBody.put("title",edtJudul.getText().toString());
-            requestBody.put("push_type","individual");
-            requestBody.put("url",fieldUrl);
-            requestBody.put("regId",regId);
+            requestBody.put("message", edtPesan.getText().toString());
+            requestBody.put("title", edtJudul.getText().toString());
+            requestBody.put("push_type", "individual");
+            requestBody.put("url", fieldUrl);
+            requestBody.put("regId", regId);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -205,7 +205,7 @@ public class KirimNotifActivity extends AppCompatActivity {
         String uri = Uri.parse(url)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -216,21 +216,21 @@ public class KirimNotifActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(KirimNotifActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(KirimNotifActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(KirimNotifActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -238,11 +238,11 @@ public class KirimNotifActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
                     errorResponse(KirimNotifActivity.this, error);
-                }else {
+                } else {
                     if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
@@ -288,12 +288,12 @@ public class KirimNotifActivity extends AppCompatActivity {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -310,8 +310,8 @@ public class KirimNotifActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_USER){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_USER) {
+            if (resultCode == RESULT_OK) {
                 String dataId = data.getStringExtra("id");
                 String dataTitle = data.getStringExtra("title");
                 String dataNomor = data.getStringExtra("firebase");
@@ -319,8 +319,8 @@ public class KirimNotifActivity extends AppCompatActivity {
                     JSONArray jsonId = new JSONArray(dataId);
                     JSONArray jsonTitle = new JSONArray(dataTitle);
                     JSONArray jsonNomor = new JSONArray(dataNomor);
-                    for (int i = 0;i<jsonId.length();i++){
-                        listNoTujuan.add(new ItemRecyclerTag(jsonId.get(i).toString(),jsonTitle.get(i).toString(),"",jsonNomor.get(i).toString()));
+                    for (int i = 0; i < jsonId.length(); i++) {
+                        listNoTujuan.add(new ItemRecyclerTag(jsonId.get(i).toString(), jsonTitle.get(i).toString(), "", jsonNomor.get(i).toString()));
                         excludeContact.put(jsonId.getString(i));
                         excludeId.put(jsonNomor.getString(i));
                     }
@@ -336,7 +336,7 @@ public class KirimNotifActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

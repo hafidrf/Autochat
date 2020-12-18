@@ -22,6 +22,7 @@ public class RecyclerKontakAdapter extends RecyclerView.Adapter<RecyclerKontakAd
     public interface OnItemClickListener {
         void onItemClick(ItemRecyclerKontak item);
     }
+
     public RecyclerKontakAdapter(List<ItemRecyclerKontak> list, Context context, OnItemClickListener listener) {
         this.list = list;
         this.context = context;
@@ -45,7 +46,7 @@ public class RecyclerKontakAdapter extends RecyclerView.Adapter<RecyclerKontakAd
         return list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
 
@@ -53,6 +54,7 @@ public class RecyclerKontakAdapter extends RecyclerView.Adapter<RecyclerKontakAd
             super(itemView);
             imageView = itemView.findViewById(R.id.itemIcon);
         }
+
         public void bind(final ItemRecyclerKontak item, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

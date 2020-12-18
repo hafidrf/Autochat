@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,10 +29,11 @@ public class AdapterLinkpageData extends ArrayAdapter<JSONObject> {
     }
 
     public class ViewHolder {
-        TextView txtJudul,txtLink;
-        ImageButton btnHapus,btnEdit;
+        TextView txtJudul, txtLink;
+        ImageButton btnHapus, btnEdit;
 
     }
+
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
@@ -43,7 +43,7 @@ public class AdapterLinkpageData extends ArrayAdapter<JSONObject> {
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater)
                     getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(resource, parent,false);
+            rowView = inflater.inflate(resource, parent, false);
             // configure view holder
             viewHolder = new ViewHolder();
             viewHolder.txtJudul = (TextView) rowView.findViewById(R.id.judul);
@@ -60,8 +60,8 @@ public class AdapterLinkpageData extends ArrayAdapter<JSONObject> {
 
         try {
             String link = item.getString("link");
-            if (link.length()>100){
-                link = link.substring(0,100) + "...";
+            if (link.length() > 100) {
+                link = link.substring(0, 100) + "...";
             }
             viewHolder.txtJudul.setText(item.getString("judul"));
             viewHolder.txtLink.setText(link);
@@ -72,13 +72,13 @@ public class AdapterLinkpageData extends ArrayAdapter<JSONObject> {
         viewHolder.btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView) parent).performItemClick(view,position,0);
+                ((ListView) parent).performItemClick(view, position, 0);
             }
         });
         viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView) parent).performItemClick(view,position,0);
+                ((ListView) parent).performItemClick(view, position, 0);
             }
         });
         return rowView;

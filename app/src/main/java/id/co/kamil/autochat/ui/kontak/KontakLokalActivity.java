@@ -1,8 +1,5 @@
 package id.co.kamil.autochat.ui.kontak;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -17,8 +14,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +39,7 @@ public class KontakLokalActivity extends AppCompatActivity {
     private ListView listKontak;
     private AdapterKontak kontakAdapter;
     private List<ItemKontak> dataKontak = new ArrayList<>();
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Phone.NUMBER
@@ -67,9 +64,9 @@ public class KontakLokalActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.putExtra("title",dataKontak.get(i).getJudul());
-                intent.putExtra("nomor",dataKontak.get(i).getNomorhp());
-                setResult(RESULT_OK,intent);
+                intent.putExtra("title", dataKontak.get(i).getJudul());
+                intent.putExtra("nomor", dataKontak.get(i).getNomorhp());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -84,7 +81,7 @@ public class KontakLokalActivity extends AppCompatActivity {
                 try {
                     kontakAdapter.filter(edtCari.getText().toString().trim());
                     listKontak.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -108,7 +105,8 @@ public class KontakLokalActivity extends AppCompatActivity {
             }
         });
     }
-    private void loadKontak(){
+
+    private void loadKontak() {
         dataKontak.clear();
         String selection = String.format("%s > 0", ContactsContract.Contacts.HAS_PHONE_NUMBER);
         ContentResolver cr = getContentResolver();
@@ -123,7 +121,7 @@ public class KontakLokalActivity extends AppCompatActivity {
                 while (cursor.moveToNext()) {
                     name = cursor.getString(nameIndex);
                     number = cursor.getString(numberIndex);
-                    dataKontak.add(new ItemKontak(String.valueOf(i),name,number,false));
+                    dataKontak.add(new ItemKontak(String.valueOf(i), name, number, false));
                     i++;
                 }
             } finally {
@@ -139,12 +137,13 @@ public class KontakLokalActivity extends AppCompatActivity {
     }
 
     private void displayKontak() {
-        kontakAdapter = new AdapterKontak(dataKontak,this);
+        kontakAdapter = new AdapterKontak(dataKontak, this);
         listKontak.setAdapter(kontakAdapter);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

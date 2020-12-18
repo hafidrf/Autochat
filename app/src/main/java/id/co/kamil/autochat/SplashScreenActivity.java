@@ -1,11 +1,5 @@
 package id.co.kamil.autochat;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.Manifest;
 import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
@@ -27,6 +21,12 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.installreferrer.api.InstallReferrerClient;
 import com.android.installreferrer.api.InstallReferrerStateListener;
@@ -100,7 +100,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private int dbVersionCode;
     private String affiliation;
 
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Phone.NUMBER
@@ -154,12 +154,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                             long appInstallTime = response.getInstallBeginTimestampSeconds();
                             boolean instantExperienceLaunched = response.getGooglePlayInstantParam();
 
-                            Log.i(TAG,"referrerUrl:" + referrerUrl);
-                            Log.i(TAG,"referrerClickTime:" + referrerClickTime);
-                            Log.i(TAG,"appInstallTime:" + appInstallTime);
-                            Log.i(TAG,"instantExperienceLaunched:" + instantExperienceLaunched);
+                            Log.i(TAG, "referrerUrl:" + referrerUrl);
+                            Log.i(TAG, "referrerClickTime:" + referrerClickTime);
+                            Log.i(TAG, "appInstallTime:" + appInstallTime);
+                            Log.i(TAG, "instantExperienceLaunched:" + instantExperienceLaunched);
 
-                            sharePref.createSession(REFERRER_URL,referrerUrl);
+                            sharePref.createSession(REFERRER_URL, referrerUrl);
                             Bundle params = new Bundle();
                             params.putString("referrerUrl", referrerUrl);
                             mFirebaseAnalytics.logEvent("SplashReferrerUrl", params);
@@ -203,12 +203,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     }
 
-    private void checkVersion(){
+    private void checkVersion() {
 
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final String url = Uri.parse(URL_GET_VERSION)
                 .buildUpon()
-                .appendQueryParameter("version",currentVersion)
+                .appendQueryParameter("version", currentVersion)
                 .toString();
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -238,41 +238,41 @@ public class SplashScreenActivity extends AppCompatActivity {
                     final String limit_template_basic = response.getString("limit_template_basic");
                     final String limit_template_premium = response.getString("limit_template_premium");
 
-                    sharePref.createSession(LINK_TIMWABOT,link_timwabot);
-                    sharePref.createSession(LINK_ECOURSE,link_ecourse);
-                    sharePref.createSession(LINK_TUTORIAL,link_tutorial);
-                    sharePref.createSession(LINK_MARKETING_TOOL,link_marketing_tool);
-                    sharePref.createSession(LINK_AKUN,link_akun);
-                    sharePref.createSession(LINK_PULSA,link_pulsa);
-                    sharePref.createSession(LINK_KURIR,link_kurir);
+                    sharePref.createSession(LINK_TIMWABOT, link_timwabot);
+                    sharePref.createSession(LINK_ECOURSE, link_ecourse);
+                    sharePref.createSession(LINK_TUTORIAL, link_tutorial);
+                    sharePref.createSession(LINK_MARKETING_TOOL, link_marketing_tool);
+                    sharePref.createSession(LINK_AKUN, link_akun);
+                    sharePref.createSession(LINK_PULSA, link_pulsa);
+                    sharePref.createSession(LINK_KURIR, link_kurir);
 
-                    sharePref.createSession(KEY_LIMIT_KONTAK,limit_kontak);
-                    sharePref.createSession(KEY_LIMIT_SHORTEN,limit_shorten);
-                    sharePref.createSession(KEY_LIMIT_AUTO_REPLY,limit_auto_reply);
-                    sharePref.createSession(KEY_LIMIT_PESAN,limit_pesan);
-                    sharePref.createSession(KEY_LIMIT_LEAD_MAGNET_BASIC,limit_lead_magnet_basic);
-                    sharePref.createSession(KEY_LIMIT_LEAD_MAGNET_PREMIUM,limit_lead_magnet_premium);
-                    sharePref.createSession(KEY_LIMIT_WAFORM_BASIC,limit_waform_basic);
-                    sharePref.createSession(KEY_LIMIT_WAFORM_PREMIUM,limit_waform_premium);
-                    sharePref.createSession(KEY_LIMIT_LINKPAGE_BASIC,limit_linkpage_basic);
-                    sharePref.createSession(KEY_LIMIT_LINKPAGE_PREMIUM,limit_linkpage_premium);
-                    sharePref.createSession(KEY_LIMIT_TEMPLATE_BASIC,limit_template_basic);
-                    sharePref.createSession(KEY_LIMIT_TEMPLATE_PREMIUM,limit_template_premium);
+                    sharePref.createSession(KEY_LIMIT_KONTAK, limit_kontak);
+                    sharePref.createSession(KEY_LIMIT_SHORTEN, limit_shorten);
+                    sharePref.createSession(KEY_LIMIT_AUTO_REPLY, limit_auto_reply);
+                    sharePref.createSession(KEY_LIMIT_PESAN, limit_pesan);
+                    sharePref.createSession(KEY_LIMIT_LEAD_MAGNET_BASIC, limit_lead_magnet_basic);
+                    sharePref.createSession(KEY_LIMIT_LEAD_MAGNET_PREMIUM, limit_lead_magnet_premium);
+                    sharePref.createSession(KEY_LIMIT_WAFORM_BASIC, limit_waform_basic);
+                    sharePref.createSession(KEY_LIMIT_WAFORM_PREMIUM, limit_waform_premium);
+                    sharePref.createSession(KEY_LIMIT_LINKPAGE_BASIC, limit_linkpage_basic);
+                    sharePref.createSession(KEY_LIMIT_LINKPAGE_PREMIUM, limit_linkpage_premium);
+                    sharePref.createSession(KEY_LIMIT_TEMPLATE_BASIC, limit_template_basic);
+                    sharePref.createSession(KEY_LIMIT_TEMPLATE_PREMIUM, limit_template_premium);
 
                     kontakWabot = new String[kontak.length()][2];
-                    for(int i =0;i<kontak.length();i++){
+                    for (int i = 0; i < kontak.length(); i++) {
                         kontakWabot[i][0] = kontak.getJSONObject(i).getString("nomor");
                         kontakWabot[i][1] = kontak.getJSONObject(i).getString("nama");
                     }
-                    for(int i =0;i<kontak.length();i++){
-                        Log.i(TAG,"kontakWabot:" + kontakWabot[i][0] + " - " + kontakWabot[i][1]);
+                    for (int i = 0; i < kontak.length(); i++) {
+                        Log.i(TAG, "kontakWabot:" + kontakWabot[i][0] + " - " + kontakWabot[i][1]);
                     }
                     //Log.i(TAG,"kontakWabot:" + kontakWabot.toString());
-                    if (status){
+                    if (status) {
                         final String data = response.getString("data");
-                        if (!currentVersion.equals(data)){
-                            if (try_again_version==0 || try_again_version >=10){
-                                if (skip){
+                        if (!currentVersion.equals(data)) {
+                            if (try_again_version == 0 || try_again_version >= 10) {
+                                if (skip) {
                                     new AlertDialog.Builder(SplashScreenActivity.this)
                                             .setMessage(message)
                                             .setPositiveButton("Update", new DialogInterface.OnClickListener() {
@@ -285,17 +285,17 @@ public class SplashScreenActivity extends AppCompatActivity {
                                             .setNegativeButton("Lain kali", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    if (try_again_version>=10){
+                                                    if (try_again_version >= 10) {
                                                         try_again_version = 0;
                                                     }
                                                     try_again_version++;
-                                                    sharePref.createSession("try_again_version",try_again_version);
+                                                    sharePref.createSession("try_again_version", try_again_version);
                                                     singkron();
                                                 }
                                             })
                                             .setCancelable(false)
                                             .show();
-                                }else{
+                                } else {
                                     new AlertDialog.Builder(SplashScreenActivity.this)
                                             .setMessage(message)
                                             .setPositiveButton("Update", new DialogInterface.OnClickListener() {
@@ -309,21 +309,21 @@ public class SplashScreenActivity extends AppCompatActivity {
                                             .show();
                                 }
 
-                            }else{
+                            } else {
                                 try_again_version++;
-                                sharePref.createSession("try_again_version",try_again_version);
+                                sharePref.createSession("try_again_version", try_again_version);
                                 singkron();
                             }
-                            Log.i(TAG,"try:" + try_again_version);
+                            Log.i(TAG, "try:" + try_again_version);
 
-                        }else{
+                        } else {
                             singkron();
 
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.i(TAG,"Error Response : " + e.getMessage());
+                    Log.i(TAG, "Error Response : " + e.getMessage());
                     new AlertDialog.Builder(SplashScreenActivity.this)
                             .setMessage(e.getMessage())
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -339,7 +339,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(final VolleyError error) {
-                Log.i(TAG,"Volley Error : " + error.getMessage());
+                Log.i(TAG, "Volley Error : " + error.getMessage());
                 //errorResponse(getApplicationContext(),error);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -382,17 +382,17 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (session.isLoggedIn()){
+                if (session.isLoggedIn()) {
                     //sync db
                     token = userDetail.get(KEY_TOKEN);
                     syncDatabase();
-                }else{
+                } else {
                     startActivity(new
-                            Intent(SplashScreenActivity.this,LoginActivity.class));
+                            Intent(SplashScreenActivity.this, LoginActivity.class));
                     finish();
                 }
             }
-        },1000);
+        }, 1000);
     }
 
     private void callRequestPermission() {
@@ -415,22 +415,22 @@ public class SplashScreenActivity extends AppCompatActivity {
             Uri lookupUri = Uri.withAppendedPath(
                     ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                     Uri.encode(number));
-            String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
-            Cursor cur = context.getContentResolver().query(lookupUri,mPhoneNumberProjection, selection, null, null);
+            String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+            Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null);
             try {
                 if (cur.moveToFirst()) {
                     return true;
                 }
-            }
-            finally {
+            } finally {
                 if (cur != null)
                     cur.close();
             }
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
 
         }
         return false;
     }
+
     private void checkContactWabot() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CONTACTS)
@@ -439,33 +439,33 @@ public class SplashScreenActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED) {
             // Permission has already been granted
             List<Integer> indexKontak = new ArrayList<>();
-            for(int x=0;x<kontakWabot.length;x++){
+            for (int x = 0; x < kontakWabot.length; x++) {
 
-                if (contactExists(this,kontakWabot[x][0])){
+                if (contactExists(this, kontakWabot[x][0])) {
                     indexKontak.add(x);
                 }
             }
 
-            if (indexKontak.size() == kontakWabot.length){
-                Log.i(TAG,"Kontak CS sudah terdaftar");
-            }else{
+            if (indexKontak.size() == kontakWabot.length) {
+                Log.i(TAG, "Kontak CS sudah terdaftar");
+            } else {
                 boolean add = true;
-                for(int a = 0;a<kontakWabot.length;a++){
+                for (int a = 0; a < kontakWabot.length; a++) {
                     add = true;
-                    for(int x = 0;x<indexKontak.size();x++){
-                        if (a==indexKontak.get(x)){
+                    for (int x = 0; x < indexKontak.size(); x++) {
+                        if (a == indexKontak.get(x)) {
                             add = false;
                             break;
                         }
                     }
-                    if (add){
-                        saveLocalContact(kontakWabot[a][1],kontakWabot[a][0]);
-                        Log.i(TAG,"Add Kontak : " + kontakWabot[a][1]);
+                    if (add) {
+                        saveLocalContact(kontakWabot[a][1], kontakWabot[a][0]);
+                        Log.i(TAG, "Add Kontak : " + kontakWabot[a][1]);
                     }
                 }
             }
 
-        }else{
+        } else {
             Toast.makeText(this, "Membutuhkan Permission Kontak", Toast.LENGTH_SHORT).show();
 
         }
@@ -480,41 +480,37 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID,rawContactInsertIndex)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, nama) // Name of the person
                 .build());
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(
-                        ContactsContract.Data.RAW_CONTACT_ID,   rawContactInsertIndex)
+                        ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, nomor) // Number of the person
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); // Type of mobile number
-        try
-        {
+        try {
             ContentProviderResult[] res = getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        }
-        catch (RemoteException e)
-        {
+        } catch (RemoteException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        catch (OperationApplicationException e)
-        {
+        } catch (OperationApplicationException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
     private void updateData() {
         affiliation = Application.getReferrerDataRaw(this);
-        if (affiliation.contains("Undefined")){
+        if (affiliation.contains("Undefined")) {
             affiliation = "";
         }
-        if (affiliation.contains("utm_source") || affiliation.contains("utm_medium")){
+        if (affiliation.contains("utm_source") || affiliation.contains("utm_medium")) {
             affiliation = "";
         }
 
 //        session.setValue(KEY_AFFILIATION,affiliation);
-        Log.i(TAG,"affiliation: " + affiliation);
+        Log.i(TAG, "affiliation: " + affiliation);
     }
 
     private void syncDatabase() {
@@ -523,7 +519,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("currentVersion",dbVersionCode);
+            requestBody.put("currentVersion", dbVersionCode);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -532,7 +528,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .buildUpon()
                 .toString();
 
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
 
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
@@ -541,25 +537,25 @@ public class SplashScreenActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
+                    Log.i(TAG, message);
+                    if (status) {
                         final boolean uptodate = response.getBoolean("is_uptodate");
                         final String url_reversal = response.getString("url_reversal");
-                        Log.e(TAG,"url_reversal"+url_reversal);
-                        session.setValue("url_reversal",url_reversal);
-                        if (uptodate){
-                            startActivity(new Intent(SplashScreenActivity.this,MainActivity.class));
+                        Log.e(TAG, "url_reversal" + url_reversal);
+                        session.setValue("url_reversal", url_reversal);
+                        if (uptodate) {
+                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
                             finish();
-                        }else{
+                        } else {
                             final String versionCode = response.getString("version_code");
                             final JSONArray autoreply = response.getJSONArray("autoreply");
                             //final JSONArray outbox = response.getJSONArray("outbox");
                             dbHelper.deleteAllAutoReply();
-                            if (autoreply.length()>0){
-                                for(int i=0;i<autoreply.length();i++){
+                            if (autoreply.length() > 0) {
+                                for (int i = 0; i < autoreply.length(); i++) {
                                     final String keyword = autoreply.getJSONObject(i).getString("keyword");
                                     final String balasan = autoreply.getJSONObject(i).getString("balasan");
-                                    dbHelper.insertAutoReply(keyword,balasan);
+                                    dbHelper.insertAutoReply(keyword, balasan);
                                 }
                             }
                             dbHelper.updateDBVersion(versionCode);
@@ -572,10 +568,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 //                                    dbHelper.insertOutbox(id,destination_number,message_outbox);
 //                                }
 //                            }
-                            startActivity(new Intent(SplashScreenActivity.this,MainActivity.class));
+                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
                             finish();
                         }
-                    }else {
+                    } else {
                         new AlertDialog.Builder(SplashScreenActivity.this)
                                 .setMessage(message)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -604,19 +600,19 @@ public class SplashScreenActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(SplashScreenActivity.this,error);
-                }else{
+                if (response == null) {
+                    errorResponse(SplashScreenActivity.this, error);
+                } else {
 
-                    Log.i(TAG,"Status Code : " + response.statusCode);
-                    if (response.statusCode==403){
+                    Log.i(TAG, "Status Code : " + response.statusCode);
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(SplashScreenActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -629,7 +625,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(SplashScreenActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -645,7 +641,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(SplashScreenActivity.this)
@@ -661,13 +657,13 @@ public class SplashScreenActivity extends AppCompatActivity {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };

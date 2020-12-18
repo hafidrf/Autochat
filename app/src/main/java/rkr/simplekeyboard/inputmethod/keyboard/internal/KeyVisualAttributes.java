@@ -51,30 +51,31 @@ public final class KeyVisualAttributes {
     public final float mHintLabelOffCenterRatio;
 
     private static final int[] VISUAL_ATTRIBUTE_IDS = {
-        R.styleable.Keyboard_Key_keyTypeface,
-        R.styleable.Keyboard_Key_keyLetterSize,
-        R.styleable.Keyboard_Key_keyLabelSize,
-        R.styleable.Keyboard_Key_keyLargeLetterRatio,
-        R.styleable.Keyboard_Key_keyHintLetterRatio,
-        R.styleable.Keyboard_Key_keyShiftedLetterHintRatio,
-        R.styleable.Keyboard_Key_keyHintLabelRatio,
-        R.styleable.Keyboard_Key_keyPreviewTextRatio,
-        R.styleable.Keyboard_Key_keyTextColor,
-        R.styleable.Keyboard_Key_keyTextInactivatedColor,
-        R.styleable.Keyboard_Key_keyTextShadowColor,
-        R.styleable.Keyboard_Key_functionalTextColor,
-        R.styleable.Keyboard_Key_keyHintLetterColor,
-        R.styleable.Keyboard_Key_keyHintLabelColor,
-        R.styleable.Keyboard_Key_keyShiftedLetterHintInactivatedColor,
-        R.styleable.Keyboard_Key_keyShiftedLetterHintActivatedColor,
-        R.styleable.Keyboard_Key_keyPreviewTextColor,
-        R.styleable.Keyboard_Key_keyHintLabelVerticalAdjustment,
-        R.styleable.Keyboard_Key_keyLabelOffCenterRatio,
-        R.styleable.Keyboard_Key_keyHintLabelOffCenterRatio
+            R.styleable.Keyboard_Key_keyTypeface,
+            R.styleable.Keyboard_Key_keyLetterSize,
+            R.styleable.Keyboard_Key_keyLabelSize,
+            R.styleable.Keyboard_Key_keyLargeLetterRatio,
+            R.styleable.Keyboard_Key_keyHintLetterRatio,
+            R.styleable.Keyboard_Key_keyShiftedLetterHintRatio,
+            R.styleable.Keyboard_Key_keyHintLabelRatio,
+            R.styleable.Keyboard_Key_keyPreviewTextRatio,
+            R.styleable.Keyboard_Key_keyTextColor,
+            R.styleable.Keyboard_Key_keyTextInactivatedColor,
+            R.styleable.Keyboard_Key_keyTextShadowColor,
+            R.styleable.Keyboard_Key_functionalTextColor,
+            R.styleable.Keyboard_Key_keyHintLetterColor,
+            R.styleable.Keyboard_Key_keyHintLabelColor,
+            R.styleable.Keyboard_Key_keyShiftedLetterHintInactivatedColor,
+            R.styleable.Keyboard_Key_keyShiftedLetterHintActivatedColor,
+            R.styleable.Keyboard_Key_keyPreviewTextColor,
+            R.styleable.Keyboard_Key_keyHintLabelVerticalAdjustment,
+            R.styleable.Keyboard_Key_keyLabelOffCenterRatio,
+            R.styleable.Keyboard_Key_keyHintLabelOffCenterRatio
     };
     private static final SparseIntArray sVisualAttributeIds = new SparseIntArray();
     private static final int ATTR_DEFINED = 1;
     private static final int ATTR_NOT_FOUND = 0;
+
     static {
         for (final int attrId : VISUAL_ATTRIBUTE_IDS) {
             sVisualAttributeIds.put(attrId, ATTR_DEFINED);

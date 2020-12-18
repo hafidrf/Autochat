@@ -1,7 +1,7 @@
 package id.co.kamil.autochat.database;
 
 public class Kontak {
-    String id,phone,sapaan,firstname,lastname;
+    String id, phone, sapaan, firstname, lastname;
 
     public Kontak() {
     }

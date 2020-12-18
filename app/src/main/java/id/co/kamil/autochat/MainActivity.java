@@ -4,8 +4,6 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,10 +13,33 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.ContactsContract;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,45 +51,11 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import android.os.Handler;
-import android.os.RemoteException;
-import android.provider.ContactsContract;
-import android.provider.Settings;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,11 +63,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.zip.GZIPOutputStream;
 
 import id.co.kamil.autochat.autoreply.MyNotifiService;
-import id.co.kamil.autochat.bulksender.WASendService;
 import id.co.kamil.autochat.firebase.app.Config;
 import id.co.kamil.autochat.firebase.util.NotificationUtils;
 import id.co.kamil.autochat.ui.AffiliasiActivity;
@@ -99,7 +85,6 @@ import static id.co.kamil.autochat.utils.API.URL_DIRECT_LINK_UPGRADE;
 import static id.co.kamil.autochat.utils.API.URL_POST_LOGOUT;
 import static id.co.kamil.autochat.utils.API.URL_POST_UPDATE_TOKEN_FIREBASE;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CHILD;
-import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_GROUP;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_EMAIL;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_FIRSTNAME;
@@ -110,7 +95,6 @@ import static id.co.kamil.autochat.utils.SharPref.LINK_ECOURSE;
 import static id.co.kamil.autochat.utils.SharPref.LINK_MARKETING_TOOL;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TIMWABOT;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TUTORIAL;
-import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FOREGROUND_SERVICE;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_SCREEN_ALWAYS_ON;
@@ -129,20 +113,23 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private View navHeader;
-    private TextView txtNama,txtEmail;
+    private TextView txtNama, txtEmail;
     private ImageView imgProfile;
     private SessionManager session;
     private HashMap<String, String> userDetail;
     private RelativeLayout mainLayout;
     private ProgressDialog pDialog;
     private String token;
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Phone.NUMBER
     };
     private final String[][] kontakWabot = {
-            {"083128302901","WABOT"}, {"085314855832","CS WABOT 1 (Mita)"},{"085759730309","CS WABOT 2 (Dela)"},{"081394565865","CS WABOT 3 (Hendi)"},
+            {"083128302901", "WABOT"},
+            {"085314855832", "CS WABOT 1 (Mita)"},
+            {"085759730309", "CS WABOT 2 (Dela)"},
+            {"081394565865", "CS WABOT 3 (Hendi)"},
     };
     private SharPref sharePref;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
@@ -150,26 +137,38 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getStringExtra("action");
-            if (action.equals("kontak")){
-                navController.navigate(R.id.nav_kontak);
-            }else if (action.equals("antrian")) {
-                navController.navigate(R.id.nav_antrian_pesan);
-            }else if (action.equals("jadwal")) {
-                navController.navigate(R.id.nav_kirim_terjadwal);
-            }else if (action.equals("terkirim")) {
-                navController.navigate(R.id.nav_pesan_terkirim);
-            } else if (action.equals("enableAlwaysScreenOn")) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            } else if (action.equals("disableAlwaysScreenOn")) {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            } else if (action.equals("enableForegroundService")) {
-                Intent intent1 = new Intent(MainActivity.this,ServiceSync.class);
-                intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, true);
-                startService(intent1);
-            } else if (action.equals("disableForegroundService")) {
-                Intent intent1 = new Intent(MainActivity.this,ServiceSync.class);
-                intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, false);
-                startService(intent1);
+            switch (action) {
+                case "kontak":
+                    navController.navigate(R.id.nav_kontak);
+                    break;
+                case "antrian":
+                    navController.navigate(R.id.nav_antrian_pesan);
+                    break;
+                case "jadwal":
+                    navController.navigate(R.id.nav_kirim_terjadwal);
+                    break;
+                case "terkirim":
+                    navController.navigate(R.id.nav_pesan_terkirim);
+                    break;
+                case "enableAlwaysScreenOn":
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    break;
+                case "disableAlwaysScreenOn":
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    break;
+                case "enableForegroundService":
+                    Intent intent1 = new Intent(MainActivity.this, ServiceSync.class);
+                    intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, true);
+                    startService(intent1);
+                    break;
+                case "disableForegroundService":
+                    intent1 = new Intent(MainActivity.this, ServiceSync.class);
+                    intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, false);
+                    startService(intent1);
+                    break;
+                case "mainScreenSynced":
+                    hidePdialog();
+                    break;
             }
         }
     };
@@ -199,19 +198,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView ) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home,R.id.nav_kontak,R.id.nav_antrian_pesan,R.id.nav_linkpage,R.id.nav_template_share,R.id.nav_waform, R.id.nav_template,R.id.nav_template_dictionary,
-                R.id.nav_wa_generator,R.id.nav_pesan_terkirim,R.id.nav_autoreply,R.id.nav_group,R.id.nav_group_autotext,
-                R.id.nav_autotext,R.id.nav_kirim_terjadwal,R.id.nav_operator,R.id.nav_leadmagnet,R.id.nav_group_autoreply,R.id.nav_notification)
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_kontak, R.id.nav_antrian_pesan, R.id.nav_linkpage, R.id.nav_template_share, R.id.nav_waform, R.id.nav_template, R.id.nav_template_dictionary,
+                R.id.nav_wa_generator, R.id.nav_pesan_terkirim, R.id.nav_autoreply, R.id.nav_group, R.id.nav_group_autotext,
+                R.id.nav_autotext, R.id.nav_kirim_terjadwal, R.id.nav_operator, R.id.nav_leadmagnet, R.id.nav_group_autoreply, R.id.nav_notification)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        if (userDetail.get(KEY_CHILD).equals(true) || userDetail.get(KEY_CHILD).equals("true")){
+        if ("true".equals(userDetail.get(KEY_CHILD))) {
             Menu menuNav = navigationView.getMenu();
             menuNav.findItem(R.id.nav_operator).setVisible(false);
             menuNav.findItem(R.id.nav_apikey).setVisible(false);
@@ -221,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 //            Menu menuNav = navigationView.getMenu();
 //            //menuNav.findItem(R.id.nav_apikey).setVisible(false);
 //        }
-        if (userDetail.get(KEY_CUST_ID) != null){
+        if (userDetail.get(KEY_CUST_ID) != null) {
 //            if (userDetail.get(KEY_CUST_ID).equals("5187")){
 //                Menu menuNav = navigationView.getMenu();
 //                menuNav.findItem(R.id.nav_notification).setVisible(true);
@@ -229,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 //                Menu menuNav = navigationView.getMenu();
 //                menuNav.findItem(R.id.nav_notification).setVisible(false);
 //            }
-        }else{
+        } else {
             Menu menuNav = navigationView.getMenu();
             menuNav.findItem(R.id.nav_notification).setVisible(false);
         }
@@ -238,7 +237,10 @@ public class MainActivity extends AppCompatActivity {
         txtEmail = (TextView) navHeader.findViewById(R.id.txtEmail);
         imgProfile = (ImageView) navHeader.findViewById(R.id.imgProfile);
 
-        txtNama.setText(userDetail.get(KEY_FIRSTNAME) + " " + userDetail.get(KEY_LASTNAME));
+        txtNama.setText(String.format(Locale.getDefault(), "%s %s",
+                userDetail.get(KEY_FIRSTNAME),
+                userDetail.get(KEY_LASTNAME)
+        ));
         txtEmail.setText(userDetail.get(KEY_EMAIL));
 
         loadService();
@@ -250,14 +252,14 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
 
                 // checking for type intent filter
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                if (Config.REGISTRATION_COMPLETE.equals(intent.getAction())) {
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
 
                     displayFirebaseRegId();
 
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                } else if (Config.PUSH_NOTIFICATION.equals(intent.getAction())) {
                     // new push notification is received
 
                     String message = intent.getStringExtra("message");
@@ -277,26 +279,32 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         // Get new Instance ID token
-                        String token = task.getResult().getToken();
+                        InstanceIdResult result = task.getResult();
+                        if (result == null) return;
+                        String token = result.getToken();
                         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("regId", token);
-                        editor.commit();
+                        editor.apply();
                         displayFirebaseRegId();
                     }
                 });
         final String intentFragment = getIntent().getStringExtra("fragment");
-        if(intentFragment !=null){
-            if (intentFragment.equals("kontak")){
-                navController.navigate(R.id.nav_kontak);
-            }else if (intentFragment.equals("broadcast")) {
-                MenuItem menuNav = navigationView.getMenu().findItem(R.id.nav_kirim_pesan);
-                showKirimPesan(menuNav);
-            }else if (intentFragment.equals("autotext")) {
-                navController.navigate(R.id.nav_autotext);
-            }else if (intentFragment.equals("templatepromosi")) {
-                navController.navigate(R.id.nav_template);
-
+        if (intentFragment != null) {
+            switch (intentFragment) {
+                case "kontak":
+                    navController.navigate(R.id.nav_kontak);
+                    break;
+                case "broadcast":
+                    MenuItem menuNav = navigationView.getMenu().findItem(R.id.nav_kirim_pesan);
+                    showKirimPesan(menuNav);
+                    break;
+                case "autotext":
+                    navController.navigate(R.id.nav_autotext);
+                    break;
+                case "templatepromosi":
+                    navController.navigate(R.id.nav_template);
+                    break;
             }
         }
 
@@ -308,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
         boolean screen_always_on = sharePref.getSessionBool(STATUS_SCREEN_ALWAYS_ON);
         if (screen_always_on) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        } else  {
+        } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
@@ -319,15 +327,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadService() {
+        showPdialog("Menginisiasi Servis Wabot");
         try {
             Intent intent = new Intent(MainActivity.this, MyNotifiService.class);//启动服务
             startService(intent);//Start service
 
-            Intent intent1 = new Intent(MainActivity.this,ServiceSync.class);
+            Intent intent1 = new Intent(MainActivity.this, ServiceSync.class);
             boolean foreground_service = sharePref.getSessionBool(STATUS_FOREGROUND_SERVICE);
             intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, foreground_service);
+            intent1.putExtra(SharPref.STATUS_SYNC_SERVICE, true);
             startService(intent1);
-        }catch (Exception e){
+        } catch (Exception e) {
+            hidePdialog();
             new AlertDialog.Builder(this)
                     .setMessage("Gagal Load Service, coba lagi?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -347,25 +358,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     public boolean contactExists(Context context, String number) {
 /// number is the phone number
         String selection = String.format("%s > 0", ContactsContract.Contacts.HAS_PHONE_NUMBER);
         Uri lookupUri = Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));
-        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
-        Cursor cur = context.getContentResolver().query(lookupUri,mPhoneNumberProjection, selection, null, null);
+        String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null);
+        if (cur == null) return false;
+
         try {
             if (cur.moveToFirst()) {
                 return true;
             }
-        }
-        finally {
-            if (cur != null)
-                cur.close();
+        } finally {
+            cur.close();
         }
         return false;
     }
+
     private void checkContactWabot() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CONTACTS)
@@ -375,36 +388,35 @@ public class MainActivity extends AppCompatActivity {
             // Permission has already been granted
             try {
                 List<Integer> indexKontak = new ArrayList<>();
-                for(int x=0;x<kontakWabot.length;x++){
-                    if (contactExists(this,kontakWabot[x][0])){
+                for (int x = 0; x < kontakWabot.length; x++) {
+                    if (contactExists(this, kontakWabot[x][0])) {
                         indexKontak.add(x);
                     }
                 }
-                if (indexKontak.size() == kontakWabot.length){
-
-                }else{
-                    boolean add = true;
-                    for(int a = 0;a<kontakWabot.length;a++){
+                if (indexKontak.size() != kontakWabot.length) {
+                    boolean add;
+                    for (int a = 0; a < kontakWabot.length; a++) {
                         add = true;
-                        for(int x = 0;x<indexKontak.size();x++){
-                            if (a==indexKontak.get(x)){
+                        for (int x = 0; x < indexKontak.size(); x++) {
+                            if (a == indexKontak.get(x)) {
                                 add = false;
                                 break;
                             }
                         }
-                        if (add){
-                            saveLocalContact(kontakWabot[a][1],kontakWabot[a][0]);
-                            Log.i(TAG,"Add Kontak : " + kontakWabot[a][1]);
+                        if (add) {
+                            saveLocalContact(kontakWabot[a][1], kontakWabot[a][0]);
+                            Log.i(TAG, "Add Kontak : " + kontakWabot[a][1]);
                         }
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception ignored) {
 
             }
-        }else{
+        } else {
             cekPermission();
         }
     }
+
     private void cekPermission() {
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
@@ -457,8 +469,9 @@ public class MainActivity extends AppCompatActivity {
             // Permission has already been granted
         }
     }
+
     private void saveLocalContact(String nama, String nomor) {
-        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         int rawContactInsertIndex = ops.size();
 
         ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
@@ -466,31 +479,25 @@ public class MainActivity extends AppCompatActivity {
                 .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID,rawContactInsertIndex)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, nama) // Name of the person
                 .build());
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(
-                        ContactsContract.Data.RAW_CONTACT_ID,   rawContactInsertIndex)
+                        ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, nomor) // Number of the person
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); // Type of mobile number
-        try
-        {
-            ContentProviderResult[] res = getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        }
-        catch (RemoteException e)
-        {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        catch (OperationApplicationException e)
-        {
+        try {
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (RemoteException | OperationApplicationException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-    public void doLogout(MenuItem item){
+
+    public void doLogout(MenuItem item) {
         new AlertDialog.Builder(this)
                 .setMessage("Apakah anda yakin akan keluar dari Aplikasi ?")
                 .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -499,55 +506,62 @@ public class MainActivity extends AppCompatActivity {
                         logout_service();
                     }
                 })
-                .setNegativeButton("Tidak",null)
+                .setNegativeButton("Tidak", null)
                 .show();
 
 
     }
-    public void doMarketingTool(MenuItem item){
+
+    public void doMarketingTool(MenuItem item) {
         String url = sharePref.getSessionStr(LINK_MARKETING_TOOL);
         Intent intent2 = new Intent(Intent.ACTION_VIEW);
         intent2.setData(Uri.parse(url));
         startActivity(intent2);
     }
-    public void doAkun(MenuItem item){
+
+    public void doAkun(MenuItem item) {
         String url = sharePref.getSessionStr(LINK_AKUN);
         Intent intent2 = new Intent(Intent.ACTION_VIEW);
         intent2.setData(Uri.parse(url));
         startActivity(intent2);
     }
-    public void doFollowup(MenuItem item){
+
+    public void doFollowup(MenuItem item) {
         startActivity(new Intent(this, MainFollowupActivity.class));
     }
 
-    public void doTutorial(MenuItem item){
+    public void doTutorial(MenuItem item) {
         String url = sharePref.getSessionStr(LINK_TUTORIAL);
         Intent intent2 = new Intent(Intent.ACTION_VIEW);
         intent2.setData(Uri.parse(url));
         startActivity(intent2);
     }
-    public void doHelp(MenuItem item){
+
+    public void doHelp(MenuItem item) {
         String url = sharePref.getSessionStr(LINK_TIMWABOT);
         Intent intent2 = new Intent(Intent.ACTION_VIEW);
         intent2.setData(Uri.parse(url));
         startActivity(intent2);
     }
-    public void doEcourse(MenuItem item){
+
+    public void doEcourse(MenuItem item) {
         String url = sharePref.getSessionStr(LINK_ECOURSE);
         Intent intent2 = new Intent(Intent.ACTION_VIEW);
         intent2.setData(Uri.parse(url));
         startActivity(intent2);
     }
-    public void doApikey(MenuItem item){
+
+    public void doApikey(MenuItem item) {
         startActivity(new Intent(this, ApikeyActivity.class));
     }
-    public void doAffiliasi(MenuItem item){
+
+    public void doAffiliasi(MenuItem item) {
         startActivity(new Intent(this, AffiliasiActivity.class));
     }
-    public void doUpgrade(MenuItem item){
-        String url = URL_DIRECT_LINK_UPGRADE;
+
+    public void doUpgrade(MenuItem item) {
         Intent intent2 = new Intent(Intent.ACTION_VIEW);
-        intent2.setData(Uri.parse(url));
+        intent2.setData(Uri.parse(URL_DIRECT_LINK_UPGRADE));
         startActivity(intent2);
     }
 
@@ -569,7 +583,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 hidePdialog();
                 session.clearData();
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
             }
         }, new Response.ErrorListener() {
@@ -583,19 +597,19 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 session.clearData();
-                                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                                 finish();
                             }
                         })
                         .show();
 
             }
-        }){
+        }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -604,39 +618,50 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+    private void showPdialog(String title) {
+        if (pDialog.isShowing()) return;
+        if (title == null) title = "Loading...";
+        pDialog.setTitle(title);
+        pDialog.show();
+    }
+
     private void hidePdialog() {
-        if(pDialog.isShowing()){
+        if (pDialog.isShowing()) {
             pDialog.dismiss();
         }
     }
-    public void doLog(MenuItem item){
+
+    public void doLog(MenuItem item) {
         Intent intent = new Intent(this, LogActivity.class);
         startActivity(intent);
     }
-    public void doSetting(MenuItem item){
+
+    public void doSetting(MenuItem item) {
         Intent intent = new Intent(this, PengaturanActivity.class);
         startActivity(intent);
     }
-    public void doLinkpage(MenuItem item){
+
+    public void doLinkpage(MenuItem item) {
         Intent intent = new Intent(this, FormLinkPageActivity.class);
         startActivity(intent);
     }
-    public void showKirimPesan(MenuItem item){
+
+    public void showKirimPesan(MenuItem item) {
         String[] arr = {"Kirim per Grup Kontak", "Kirim per Kontak"};
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setItems(arr, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
-                switch (which){
+                switch (which) {
                     case 0:
                         Intent intent = new Intent(MainActivity.this, FormKirimPesanActivity.class);
-                        intent.putExtra("tipe","grup");
-                        startActivityForResult(intent,REQUEST_ADD);
+                        intent.putExtra("tipe", "grup");
+                        startActivityForResult(intent, REQUEST_ADD);
                         break;
                     case 1:
                         Intent intent2 = new Intent(MainActivity.this, FormKirimPesanActivity.class);
-                        intent2.putExtra("tipe","kontak");
-                        startActivityForResult(intent2,REQUEST_ADD);
+                        intent2.putExtra("tipe", "kontak");
+                        startActivityForResult(intent2, REQUEST_ADD);
                         break;
                 }
             }
@@ -651,6 +676,7 @@ public class MainActivity extends AppCompatActivity {
         //getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -669,8 +695,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             } else { //Permission is not available
                 Toast.makeText(this,
-                    "Draw over other app permission not available.",
-                    Toast.LENGTH_SHORT).show();
+                        "Draw over other app permission not available.",
+                        Toast.LENGTH_SHORT).show();
             }
             return;
         }
@@ -691,7 +717,7 @@ public class MainActivity extends AppCompatActivity {
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("token",regId);
+            requestBody.put("token", regId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -700,32 +726,32 @@ public class MainActivity extends AppCompatActivity {
                 .buildUpon()
                 .toString();
 
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,"updateToken:" + message);
+                    Log.i(TAG, "updateToken:" + message);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e(TAG,"updateToken:" + e.getMessage());
+                    Log.e(TAG, "updateToken:" + e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                errorResponse(getApplicationContext(),error);
+                errorResponse(getApplicationContext(), error);
 
             }
-        }){
+        }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token_id);
+                header.put("x-api-key", token_id);
                 return header;
             }
         };

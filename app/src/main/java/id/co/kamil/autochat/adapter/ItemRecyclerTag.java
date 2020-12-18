@@ -1,7 +1,7 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemRecyclerTag {
-    private String id,title,tipe,firebase;
+    private String id, title, tipe, firebase;
 
     public ItemRecyclerTag(String id, String title) {
         this.id = id;

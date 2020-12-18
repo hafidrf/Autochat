@@ -24,8 +24,9 @@ public class AdapterPesan extends BaseAdapter {
     ArrayList<ItemPesan> arraylist;
 
     private static final int resource = R.layout.item_list_pesan;
+
     public class ViewHolder {
-        TextView txtJudul,txtTanggal,txtPesan,txtStatus,txtNomor,txtError;
+        TextView txtJudul, txtTanggal, txtPesan, txtStatus, txtNomor, txtError;
         CheckBox chk1;
 
     }
@@ -37,10 +38,12 @@ public class AdapterPesan extends BaseAdapter {
         arraylist.addAll(listData);
 
     }
-    public void addListItemToAdapter(List<ItemPesan> list){
+
+    public void addListItemToAdapter(List<ItemPesan> list) {
         this.listData.addAll(list);
         this.arraylist.addAll(list);
     }
+
     @Override
     public int getCount() {
         return listData.size();
@@ -83,8 +86,8 @@ public class AdapterPesan extends BaseAdapter {
 
         final ItemPesan item = listData.get(position);
         String pesan = item.getPesan();
-        if (pesan.length()>100){
-            pesan = pesan.substring(0,100) + "...";
+        if (pesan.length() > 100) {
+            pesan = pesan.substring(0, 100) + "...";
         }
         viewHolder.txtJudul.setText(item.getNama());
         viewHolder.txtNomor.setText(item.getNomor());
@@ -92,23 +95,23 @@ public class AdapterPesan extends BaseAdapter {
         viewHolder.txtPesan.setText(pesan);
         viewHolder.txtStatus.setText(item.getStatus());
         viewHolder.chk1.setChecked(item.isCheckbox());
-        if (item.getError_again() == null){
+        if (item.getError_again() == null) {
             viewHolder.txtError.setVisibility(View.GONE);
-        }else{
+        } else {
             viewHolder.txtError.setText(item.getError_again() + "x percobaan");
             viewHolder.txtError.setVisibility(View.VISIBLE);
         }
 
-        if (item.getStatus().equals("terkirim") || item.getStatus().equals("active") || item.getStatus().equals("success")){
+        if (item.getStatus().equals("terkirim") || item.getStatus().equals("active") || item.getStatus().equals("success")) {
             viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.md_green_600));
-        }else if (item.getStatus().equals("pending")) {
+        } else if (item.getStatus().equals("pending")) {
             viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.md_orange_600));
-        }else{
+        } else {
             viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.md_red_600));
         }
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
@@ -132,17 +135,13 @@ public class AdapterPesan extends BaseAdapter {
             for (ItemPesan postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getNama().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getNomor().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getNomor().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getPesan().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getPesan().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getTglpesan().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getTglpesan().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getJadwalkirim().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getJadwalkirim().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
                 }
             }

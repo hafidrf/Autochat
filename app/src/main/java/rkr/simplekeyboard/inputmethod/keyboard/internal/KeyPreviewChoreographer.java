@@ -40,7 +40,7 @@ public final class KeyPreviewChoreographer {
     private final ArrayDeque<KeyPreviewView> mFreeKeyPreviewViews = new ArrayDeque<>();
     // Map from {@link Key} to {@link KeyPreviewView} that is currently being displayed as key
     // preview.
-    private final HashMap<Key,KeyPreviewView> mShowingKeyPreviewViews = new HashMap<>();
+    private final HashMap<Key, KeyPreviewView> mShowingKeyPreviewViews = new HashMap<>();
 
     private final KeyPreviewDrawParams mParams;
 
@@ -75,7 +75,7 @@ public final class KeyPreviewChoreographer {
         final Object tag = keyPreviewView.getTag();
         if (withAnimation) {
             if (tag instanceof KeyPreviewAnimators) {
-                final KeyPreviewAnimators animators = (KeyPreviewAnimators)tag;
+                final KeyPreviewAnimators animators = (KeyPreviewAnimators) tag;
                 animators.startDismiss();
                 return;
             }
@@ -83,7 +83,7 @@ public final class KeyPreviewChoreographer {
         // Dismiss preview without animation.
         mShowingKeyPreviewViews.remove(key);
         if (tag instanceof Animator) {
-            ((Animator)tag).cancel();
+            ((Animator) tag).cancel();
         }
         keyPreviewView.setTag(null);
         keyPreviewView.setVisibility(View.INVISIBLE);
@@ -91,8 +91,8 @@ public final class KeyPreviewChoreographer {
     }
 
     public void placeAndShowKeyPreview(final Key key, final KeyboardIconsSet iconsSet,
-            final KeyDrawParams drawParams, final int[] keyboardOrigin,
-            final ViewGroup placerView, final boolean withAnimation) {
+                                       final KeyDrawParams drawParams, final int[] keyboardOrigin,
+                                       final ViewGroup placerView, final boolean withAnimation) {
         final KeyPreviewView keyPreviewView = getKeyPreviewView(key, placerView);
         placeKeyPreview(
                 key, keyPreviewView, iconsSet, drawParams, keyboardOrigin);
@@ -100,8 +100,8 @@ public final class KeyPreviewChoreographer {
     }
 
     private void placeKeyPreview(final Key key, final KeyPreviewView keyPreviewView,
-            final KeyboardIconsSet iconsSet, final KeyDrawParams drawParams,
-            final int[] originCoords) {
+                                 final KeyboardIconsSet iconsSet, final KeyDrawParams drawParams,
+                                 final int[] originCoords) {
         keyPreviewView.setPreviewVisual(key, iconsSet, drawParams);
         keyPreviewView.measure(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -126,7 +126,7 @@ public final class KeyPreviewChoreographer {
     }
 
     void showKeyPreview(final Key key, final KeyPreviewView keyPreviewView,
-            final boolean withAnimation) {
+                        final boolean withAnimation) {
         if (!withAnimation) {
             keyPreviewView.setVisibility(View.VISIBLE);
             mShowingKeyPreviewViews.put(key, keyPreviewView);

@@ -27,6 +27,7 @@ import android.preference.PreferenceActivity;
 public abstract class InputMethodSettingsActivity extends PreferenceActivity
         implements InputMethodSettingsInterface {
     private final InputMethodSettingsImpl mSettings = new InputMethodSettingsImpl();
+
     @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {

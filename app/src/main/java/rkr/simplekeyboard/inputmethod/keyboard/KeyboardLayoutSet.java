@@ -85,7 +85,9 @@ public final class KeyboardLayoutSet {
     private static final class ElementParams {
         int mKeyboardXmlId;
         boolean mAllowRedundantMoreKeys;
-        public ElementParams() {}
+
+        public ElementParams() {
+        }
     }
 
     public static final class Params {
@@ -125,22 +127,22 @@ public final class KeyboardLayoutSet {
     public Keyboard getKeyboard(final int baseKeyboardLayoutSetElementId) {
         final int keyboardLayoutSetElementId;
         switch (mParams.mMode) {
-        case KeyboardId.MODE_PHONE:
-            if (baseKeyboardLayoutSetElementId == KeyboardId.ELEMENT_SYMBOLS) {
-                keyboardLayoutSetElementId = KeyboardId.ELEMENT_PHONE_SYMBOLS;
-            } else {
-                keyboardLayoutSetElementId = KeyboardId.ELEMENT_PHONE;
-            }
-            break;
-        case KeyboardId.MODE_NUMBER:
-        case KeyboardId.MODE_DATE:
-        case KeyboardId.MODE_TIME:
-        case KeyboardId.MODE_DATETIME:
-            keyboardLayoutSetElementId = KeyboardId.ELEMENT_NUMBER;
-            break;
-        default:
-            keyboardLayoutSetElementId = baseKeyboardLayoutSetElementId;
-            break;
+            case KeyboardId.MODE_PHONE:
+                if (baseKeyboardLayoutSetElementId == KeyboardId.ELEMENT_SYMBOLS) {
+                    keyboardLayoutSetElementId = KeyboardId.ELEMENT_PHONE_SYMBOLS;
+                } else {
+                    keyboardLayoutSetElementId = KeyboardId.ELEMENT_PHONE;
+                }
+                break;
+            case KeyboardId.MODE_NUMBER:
+            case KeyboardId.MODE_DATE:
+            case KeyboardId.MODE_TIME:
+            case KeyboardId.MODE_DATETIME:
+                keyboardLayoutSetElementId = KeyboardId.ELEMENT_NUMBER;
+                break;
+            default:
+                keyboardLayoutSetElementId = baseKeyboardLayoutSetElementId;
+                break;
         }
 
         ElementParams elementParams = mParams.mKeyboardLayoutSetElementIdToParamsMap.get(
@@ -333,33 +335,33 @@ public final class KeyboardLayoutSet {
             final int variation = inputType & InputType.TYPE_MASK_VARIATION;
 
             switch (inputType & InputType.TYPE_MASK_CLASS) {
-            case InputType.TYPE_CLASS_NUMBER:
-                return KeyboardId.MODE_NUMBER;
-            case InputType.TYPE_CLASS_DATETIME:
-                switch (variation) {
-                case InputType.TYPE_DATETIME_VARIATION_DATE:
-                    return KeyboardId.MODE_DATE;
-                case InputType.TYPE_DATETIME_VARIATION_TIME:
-                    return KeyboardId.MODE_TIME;
-                default: // InputType.TYPE_DATETIME_VARIATION_NORMAL
-                    return KeyboardId.MODE_DATETIME;
-                }
-            case InputType.TYPE_CLASS_PHONE:
-                return KeyboardId.MODE_PHONE;
-            case InputType.TYPE_CLASS_TEXT:
-                if (InputTypeUtils.isEmailVariation(variation)) {
-                    return KeyboardId.MODE_EMAIL;
-                } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
-                    return KeyboardId.MODE_URL;
-                } else if (variation == InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE) {
-                    return KeyboardId.MODE_IM;
-                } else if (variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
+                case InputType.TYPE_CLASS_NUMBER:
+                    return KeyboardId.MODE_NUMBER;
+                case InputType.TYPE_CLASS_DATETIME:
+                    switch (variation) {
+                        case InputType.TYPE_DATETIME_VARIATION_DATE:
+                            return KeyboardId.MODE_DATE;
+                        case InputType.TYPE_DATETIME_VARIATION_TIME:
+                            return KeyboardId.MODE_TIME;
+                        default: // InputType.TYPE_DATETIME_VARIATION_NORMAL
+                            return KeyboardId.MODE_DATETIME;
+                    }
+                case InputType.TYPE_CLASS_PHONE:
+                    return KeyboardId.MODE_PHONE;
+                case InputType.TYPE_CLASS_TEXT:
+                    if (InputTypeUtils.isEmailVariation(variation)) {
+                        return KeyboardId.MODE_EMAIL;
+                    } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
+                        return KeyboardId.MODE_URL;
+                    } else if (variation == InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE) {
+                        return KeyboardId.MODE_IM;
+                    } else if (variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
+                        return KeyboardId.MODE_TEXT;
+                    } else {
+                        return KeyboardId.MODE_TEXT;
+                    }
+                default:
                     return KeyboardId.MODE_TEXT;
-                } else {
-                    return KeyboardId.MODE_TEXT;
-                }
-            default:
-                return KeyboardId.MODE_TEXT;
             }
         }
     }

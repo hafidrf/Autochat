@@ -31,7 +31,7 @@ public final class ViewLayoutUtils {
     }
 
     public static MarginLayoutParams newLayoutParam(final ViewGroup placer, final int width,
-            final int height) {
+                                                    final int height) {
         if (placer instanceof FrameLayout) {
             return new FrameLayout.LayoutParams(width, height);
         } else if (placer instanceof RelativeLayout) {
@@ -45,10 +45,10 @@ public final class ViewLayoutUtils {
     }
 
     public static void placeViewAt(final View view, final int x, final int y, final int w,
-            final int h) {
+                                   final int h) {
         final ViewGroup.LayoutParams lp = view.getLayoutParams();
         if (lp instanceof MarginLayoutParams) {
-            final MarginLayoutParams marginLayoutParams = (MarginLayoutParams)lp;
+            final MarginLayoutParams marginLayoutParams = (MarginLayoutParams) lp;
             marginLayoutParams.width = w;
             marginLayoutParams.height = h;
             marginLayoutParams.setMargins(x, y, -50, 0);
@@ -74,13 +74,13 @@ public final class ViewLayoutUtils {
     public static void updateLayoutGravityOf(final View view, final int layoutGravity) {
         final ViewGroup.LayoutParams lp = view.getLayoutParams();
         if (lp instanceof LinearLayout.LayoutParams) {
-            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)lp;
+            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lp;
             if (params.gravity != layoutGravity) {
                 params.gravity = layoutGravity;
                 view.setLayoutParams(params);
             }
         } else if (lp instanceof FrameLayout.LayoutParams) {
-            final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)lp;
+            final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) lp;
             if (params.gravity != layoutGravity) {
                 params.gravity = layoutGravity;
                 view.setLayoutParams(params);

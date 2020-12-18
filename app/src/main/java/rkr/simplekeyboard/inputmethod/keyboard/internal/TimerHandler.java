@@ -49,25 +49,25 @@ public final class TimerHandler extends LeakGuardHandlerWrapper<DrawingProxy>
             return;
         }
         switch (msg.what) {
-        case MSG_REPEAT_KEY:
-            final PointerTracker tracker1 = (PointerTracker) msg.obj;
-            tracker1.onKeyRepeat(msg.arg1 /* code */, msg.arg2 /* repeatCount */);
-            break;
-        case MSG_LONGPRESS_KEY:
-        case MSG_LONGPRESS_SHIFT_KEY:
-            cancelLongPressTimers();
-            final PointerTracker tracker2 = (PointerTracker) msg.obj;
-            tracker2.onLongPressed();
-            break;
-        case MSG_DISMISS_KEY_PREVIEW:
-            drawingProxy.onKeyReleased((Key) msg.obj, false /* withAnimation */);
-            break;
+            case MSG_REPEAT_KEY:
+                final PointerTracker tracker1 = (PointerTracker) msg.obj;
+                tracker1.onKeyRepeat(msg.arg1 /* code */, msg.arg2 /* repeatCount */);
+                break;
+            case MSG_LONGPRESS_KEY:
+            case MSG_LONGPRESS_SHIFT_KEY:
+                cancelLongPressTimers();
+                final PointerTracker tracker2 = (PointerTracker) msg.obj;
+                tracker2.onLongPressed();
+                break;
+            case MSG_DISMISS_KEY_PREVIEW:
+                drawingProxy.onKeyReleased((Key) msg.obj, false /* withAnimation */);
+                break;
         }
     }
 
     @Override
     public void startKeyRepeatTimerOf(final PointerTracker tracker, final int repeatCount,
-            final int delay) {
+                                      final int delay) {
         final Key key = tracker.getKey();
         if (key == null || delay == 0) {
             return;

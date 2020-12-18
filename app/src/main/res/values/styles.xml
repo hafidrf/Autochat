@@ -17,23 +17,12 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="spinner_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/spinner_style</item>
 
     </style>
-    <style name="AppToolbar.Light" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:textColorPrimary">@color/md_white_1000</item>
-        <item name="android:textColorSecondary">@color/md_white_1000</item>
-    </style>
-    <style name="myDialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-    <style name="AppTheme.MaterialDialogTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
 
-    </style>
 </resources>

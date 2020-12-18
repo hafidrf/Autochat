@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layMaster"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.autotext.FormAutoTextActivity">
+
     <ScrollView
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/layUmum"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:fontFamily="@font/font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="25dp"
-                android:text="Shorcut"/>
+                android:text="Shorcut" />
+
             <EditText
                 android:id="@+id/edtShorcut"
                 android:layout_marginTop="5dp"
@@ -38,7 +41,7 @@
                 android:inputType="text"
                 android:hint="Shorcut"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
 
             <TextView
@@ -47,7 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="10dp"
-                android:text="Grup"/>
+                android:text="Grup" />
+
             <Spinner
                 android:id="@+id/spinGrup"
                 style="@style/spinner_style"
@@ -55,14 +59,16 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:fontFamily="@font/font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="10dp"
-                android:text="Template"/>
+                android:text="Template" />
+
             <EditText
                 android:id="@+id/edtTemplate"
                 android:layout_marginTop="5dp"
@@ -78,14 +84,16 @@
                 android:layout_marginBottom="20dp"
                 android:hint="Isi Template Pesan"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"/>
+                android:layout_height="400dp" />
 
         </LinearLayout>
     </ScrollView>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_100"/>
+        android:background="@color/md_blue_grey_100" />
+
     <Button
         android:id="@+id/btnSimpan"
         android:layout_marginTop="10dp"
@@ -97,5 +105,5 @@
         android:textColor="@color/md_white_1000"
         android:text="Simpan"
         android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        android:layout_height="40dp" />
 </androidx.appcompat.widget.LinearLayoutCompat>

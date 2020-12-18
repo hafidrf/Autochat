@@ -1,9 +1,5 @@
 package id.co.kamil.autochat.ui.linkpage;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -23,6 +19,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -108,7 +108,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRequired()){
+                if (isRequired()) {
                     simpanLinkpage();
                 }
             }
@@ -128,12 +128,12 @@ public class FormLinkPageActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (tipeForm.equals("add")){
+                if (tipeForm.equals("add")) {
                     checkAvailable(edtDomain.getText().toString());
-                }else if (lastSubdomain.equals(edtDomain.getText().toString())){
+                } else if (lastSubdomain.equals(edtDomain.getText().toString())) {
                     txtLoading.setText("Subdomain Tersedia");
                     txtLoading.setTextColor(Color.BLUE);
-                }else{
+                } else {
                     checkAvailable(edtDomain.getText().toString());
                 }
             }
@@ -141,8 +141,8 @@ public class FormLinkPageActivity extends AppCompatActivity {
         btnTambahField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(FormLinkPageActivity.this,FormLinkPageAddFieldActivity.class);
-                i.putExtra("tipe","add");
+                Intent i = new Intent(FormLinkPageActivity.this, FormLinkPageAddFieldActivity.class);
+                i.putExtra("tipe", "add");
                 startActivityForResult(i, REQUEST_ADD_FIELD);
 
             }
@@ -150,7 +150,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
         listLinkpage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if (view.getId() == R.id.btnHapus){
+                if (view.getId() == R.id.btnHapus) {
                     new AlertDialog.Builder(FormLinkPageActivity.this)
                             .setMessage("Apakah anda yakin akan menghapus item tersebut?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -161,15 +161,15 @@ public class FormLinkPageActivity extends AppCompatActivity {
                                     Toast.makeText(FormLinkPageActivity.this, "Item berhasil dihapus", Toast.LENGTH_SHORT).show();
                                 }
                             })
-                            .setNegativeButton("Tidak",null)
+                            .setNegativeButton("Tidak", null)
                             .show();
 
-                }else if (view.getId() == R.id.btnEdit){
-                    Intent i = new Intent(FormLinkPageActivity.this,FormLinkPageAddFieldActivity.class);
-                    i.putExtra("tipe","edit");
+                } else if (view.getId() == R.id.btnEdit) {
+                    Intent i = new Intent(FormLinkPageActivity.this, FormLinkPageAddFieldActivity.class);
+                    i.putExtra("tipe", "edit");
                     try {
-                        i.putExtra("judul",dataField.get(position).getString("judul"));
-                        i.putExtra("link",dataField.get(position).getString("link"));
+                        i.putExtra("judul", dataField.get(position).getString("judul"));
+                        i.putExtra("link", dataField.get(position).getString("link"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -178,15 +178,16 @@ public class FormLinkPageActivity extends AppCompatActivity {
 
             }
         });
-        if (tipeForm.equals("edit")){
+        if (tipeForm.equals("edit")) {
             getData();
         }
     }
-    private void checkAvailable(String subdomain){
+
+    private void checkAvailable(String subdomain) {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("domain",subdomain);
+            requestBody.put("domain", subdomain);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -196,7 +197,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
         txtLoading.setText("Cek ketersediaan subdomain...");
         txtLoading.setTextColor(Color.GREEN);
 
-        Log.i(TAG,requestBody.toString());
+        Log.i(TAG, requestBody.toString());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -204,10 +205,10 @@ public class FormLinkPageActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         txtLoading.setTextColor(Color.BLUE);
                         txtLoading.setText(message);
-                    }else{
+                    } else {
                         txtLoading.setTextColor(Color.RED);
                         txtLoading.setText(message);
                     }
@@ -225,13 +226,13 @@ public class FormLinkPageActivity extends AppCompatActivity {
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
                     errorResponse(FormLinkPageActivity.this, error);
-                }else {
-                    if (response.statusCode==403){
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormLinkPageActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -244,7 +245,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormLinkPageActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -255,23 +256,23 @@ public class FormLinkPageActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
                         final String msg = getResources().getString(errorResponse(error));
                         txtLoading.setTextColor(Color.RED);
                         txtLoading.setText(msg);
-                        Log.i(TAG,errorResponseString(error));
+                        Log.i(TAG, errorResponseString(error));
                     }
 
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
+                Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","multipart/form-data");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
 
@@ -280,21 +281,23 @@ public class FormLinkPageActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void visibleMenu(boolean visible){
-        if (menuTop != null){
+
+    private void visibleMenu(boolean visible) {
+        if (menuTop != null) {
             menuTop.findItem(R.id.actBagikan).setVisible(visible);
             menuTop.findItem(R.id.actSalin).setVisible(visible);
             menuTop.findItem(R.id.actOpen).setVisible(visible);
         }
     }
-    private void getData(){
+
+    private void getData() {
         dataField.clear();
         visibleMenu(false);
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",idLinkPage);
+            requestBody.put("id", idLinkPage);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -302,7 +305,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
                 .buildUpon()
                 .toString();
 
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -313,7 +316,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final JSONObject data = response.getJSONObject("data");
                         final String domain = data.getString("domain");
                         final String name = data.getString("name");
@@ -322,19 +325,19 @@ public class FormLinkPageActivity extends AppCompatActivity {
                         lastSubdomain = domain;
                         edtName.setText(name);
                         edtDomain.setText(domain);
-                        for (int i=0;i<field.length();i++){
+                        for (int i = 0; i < field.length(); i++) {
                             final String judul = field.getJSONObject(i).getString("judul");
                             final String link = field.getJSONObject(i).getString("link");
                             JSONObject jsonObj = new JSONObject();
-                            jsonObj.put("judul",judul);
-                            jsonObj.put("link",link);
+                            jsonObj.put("judul", judul);
+                            jsonObj.put("link", link);
 
                             dataField.add(jsonObj);
 
                         }
                         displayDataField();
                         visibleMenu(true);
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormLinkPageActivity.this)
                                 .setMessage(message)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -347,7 +350,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT);
                     visibleMenu(false);
                 }
             }
@@ -356,17 +359,17 @@ public class FormLinkPageActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
                 visibleMenu(false);
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormLinkPageActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormLinkPageActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormLinkPageActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -379,7 +382,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormLinkPageActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -395,7 +398,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormLinkPageActivity.this)
@@ -408,13 +411,13 @@ public class FormLinkPageActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -422,9 +425,10 @@ public class FormLinkPageActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
+
     private void simpanLinkpage() {
         JSONArray field = new JSONArray();
-        for (int i = 0; i< dataField.size(); i++){
+        for (int i = 0; i < dataField.size(); i++) {
             JSONObject obj = new JSONObject();
             try {
                 obj.put("judul", dataField.get(i).getString("judul"));
@@ -438,10 +442,10 @@ public class FormLinkPageActivity extends AppCompatActivity {
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("id",idLinkPage);
-            requestBody.put("name",edtName.getText().toString());
-            requestBody.put("domain",edtDomain.getText().toString());
-            requestBody.put("data",field);
+            requestBody.put("id", idLinkPage);
+            requestBody.put("name", edtName.getText().toString());
+            requestBody.put("domain", edtDomain.getText().toString());
+            requestBody.put("data", field);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -449,7 +453,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
         String uri = Uri.parse(URL_POST_CREATE_LINKPAGE)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -460,21 +464,21 @@ public class FormLinkPageActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(FormLinkPageActivity.this, message, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(FormLinkPageActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(FormLinkPageActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -482,17 +486,17 @@ public class FormLinkPageActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(FormLinkPageActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(FormLinkPageActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(FormLinkPageActivity.this)
                                         .setMessage("Session telah habias / akun telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -505,7 +509,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(FormLinkPageActivity.this)
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -521,7 +525,7 @@ public class FormLinkPageActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(FormLinkPageActivity.this)
@@ -534,13 +538,13 @@ public class FormLinkPageActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -551,16 +555,16 @@ public class FormLinkPageActivity extends AppCompatActivity {
     }
 
     private void hidePdialog() {
-        if(pDialog.isShowing())
+        if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
     private boolean isRequired() {
-       if (TextUtils.isEmpty(edtDomain.getText())){
+        if (TextUtils.isEmpty(edtDomain.getText())) {
             edtDomain.setError("Field ini tidak boleh kosong");
             edtDomain.requestFocus();
             return false;
-        }else if(dataField.size()<=0){
+        } else if (dataField.size() <= 0) {
             Toast.makeText(this, "Field Linkpage tidak boleh kosong", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -570,25 +574,25 @@ public class FormLinkPageActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode== REQUEST_ADD_FIELD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD_FIELD) {
+            if (resultCode == RESULT_OK) {
                 String tipeForm = data.getStringExtra("tipeForm");
                 String judul = data.getStringExtra("judul");
                 String link = data.getStringExtra("link");
-                int positionList = data.getIntExtra("positionList",0);
+                int positionList = data.getIntExtra("positionList", 0);
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("judul",judul);
-                    jsonObject.put("link",link);
+                    jsonObject.put("judul", judul);
+                    jsonObject.put("link", link);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (tipeForm.equals("add")){
+                if (tipeForm.equals("add")) {
 
                     dataField.add(jsonObject);
-                }else{
+                } else {
                     dataField.remove(positionList);
-                    dataField.add(positionList,jsonObject);
+                    dataField.add(positionList, jsonObject);
                 }
                 displayDataField();
             }
@@ -603,32 +607,32 @@ public class FormLinkPageActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
-        }else if(item.getItemId()==R.id.actOpen){
+        } else if (item.getItemId() == R.id.actOpen) {
             String url = urlLinkPage;
             Intent intent2 = new Intent(Intent.ACTION_VIEW);
             intent2.setData(Uri.parse(url));
             startActivity(intent2);
-        }else if(item.getItemId()==R.id.actSalin){
-            setClipboard(this,urlLinkPage);
+        } else if (item.getItemId() == R.id.actSalin) {
+            setClipboard(this, urlLinkPage);
             Toast.makeText(this, "berhasil disalin", Toast.LENGTH_SHORT).show();
-        }else if(item.getItemId()==R.id.actBagikan){
+        } else if (item.getItemId() == R.id.actBagikan) {
             String konten = urlLinkPage;
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
             shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            shareIntent.putExtra(Intent.EXTRA_TEXT,konten);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, konten);
             shareIntent.setType("text/plain");
-            startActivity(Intent.createChooser(shareIntent,"Bagikan lewat"));
+            startActivity(Intent.createChooser(shareIntent, "Bagikan lewat"));
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menuTop  = menu;
-        getMenuInflater().inflate(R.menu.linkpage,menuTop);
+        menuTop = menu;
+        getMenuInflater().inflate(R.menu.linkpage, menuTop);
         return super.onCreateOptionsMenu(menu);
     }
 

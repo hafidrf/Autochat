@@ -1,12 +1,7 @@
 package id.co.kamil.autochat.ui;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -51,7 +50,6 @@ import id.co.kamil.autochat.adapter.ItemPeringkat;
 import id.co.kamil.autochat.utils.ExpandableHeightListView;
 import id.co.kamil.autochat.utils.SessionManager;
 
-import static id.co.kamil.autochat.utils.API.DESKRIPSI_INFO;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.TEMPLATE_SHARE;
 import static id.co.kamil.autochat.utils.API.URL_DOWNLINE;
@@ -68,7 +66,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
     private EditText edtLinkPlaystore;
     private EditText edtLinkWeb;
     private ImageButton btnBagikanWeb;
-    private ImageButton btnCopyPlaystore,btnCopyWeb;
+    private ImageButton btnCopyPlaystore, btnCopyWeb;
     private TextView txtInfo;
     private ImageButton btnShareKode;
     private ImageButton btnCopyKode;
@@ -107,8 +105,8 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
         edtLinkPlaystore = (EditText) findViewById(R.id.edtPlaystore);
         edtLinkWeb = (EditText) findViewById(R.id.edtLinkWeb);
 
-        listPeringkat =  (ExpandableHeightListView) findViewById(R.id.listPeringkat);
-        btnShareKode =  (ImageButton) findViewById(R.id.btnShareKode);
+        listPeringkat = (ExpandableHeightListView) findViewById(R.id.listPeringkat);
+        btnShareKode = (ImageButton) findViewById(R.id.btnShareKode);
         btnCopyKode = (ImageButton) findViewById(R.id.btnCopyKode);
         btnCopyPlaystore = (ImageButton) findViewById(R.id.btnCopyPlaystore);
         btnCopyWeb = (ImageButton) findViewById(R.id.btnCopyWeb);
@@ -118,7 +116,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
         btnCopyPlaystore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setClipboard(AffiliasiActivity.this,edtLinkPlaystore.getText().toString());
+                setClipboard(AffiliasiActivity.this, edtLinkPlaystore.getText().toString());
                 Toast.makeText(AffiliasiActivity.this, "link berhasil disalin", Toast.LENGTH_SHORT).show();
             }
         });
@@ -134,7 +132,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -142,7 +140,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
         btnCopyKode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setClipboard(AffiliasiActivity.this,edtKodeReferal.getText().toString());
+                setClipboard(AffiliasiActivity.this, edtKodeReferal.getText().toString());
                 Toast.makeText(AffiliasiActivity.this, "link berhasil disalin", Toast.LENGTH_SHORT).show();
             }
         });
@@ -150,7 +148,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
             @Override
             public void onClick(View v) {
 
-                setClipboard(AffiliasiActivity.this,edtLinkWeb.getText().toString());
+                setClipboard(AffiliasiActivity.this, edtLinkWeb.getText().toString());
                 Toast.makeText(AffiliasiActivity.this, "link berhasil disalin", Toast.LENGTH_SHORT).show();
             }
         });
@@ -159,8 +157,8 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
             public void onClick(View v) {
                 try {
                     String konten = template_share;
-                    konten = konten.replace("[linklanding]",edtLinkPlaystore.getText().toString());
-                    konten = konten.replace("[linkweb]",edtLinkWeb.getText().toString());
+                    konten = konten.replace("[linklanding]", edtLinkPlaystore.getText().toString());
+                    konten = konten.replace("[linkweb]", edtLinkWeb.getText().toString());
 
                     String appId = getPackageName();
                     Intent i = new Intent(Intent.ACTION_SEND);
@@ -169,7 +167,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -179,8 +177,8 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
             public void onClick(View v) {
                 try {
                     String konten = template_share;
-                    konten = konten.replace("[linklanding]",edtLinkPlaystore.getText().toString());
-                    konten = konten.replace("[linkweb]",edtLinkWeb.getText().toString());
+                    konten = konten.replace("[linklanding]", edtLinkPlaystore.getText().toString());
+                    konten = konten.replace("[linkweb]", edtLinkWeb.getText().toString());
 
                     String appId = getPackageName();
                     Intent i = new Intent(Intent.ACTION_SEND);
@@ -189,7 +187,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -222,7 +220,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -232,7 +230,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
         dataPeringkat.clear();
         template_share = TEMPLATE_SHARE;
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final HashMap<String,String> body = new HashMap<>();
+        final HashMap<String, String> body = new HashMap<>();
 
 
         final String uri = Uri.parse(URL_POST_REFERAL)
@@ -256,41 +254,41 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
 
                         final String kode_referal = response.getString("kode_referal");
                         final String template = response.getString("template");
                         final String info = response.getString("info");
                         final JSONArray dataPeringkat = response.getJSONArray("dataPeringkat");
 
-                        setTextViewHTML(txtInfo,info);
+                        setTextViewHTML(txtInfo, info);
 
-                        if (dataPeringkat.length()>0){
-                            for(int i =0;i<dataPeringkat.length();i++){
+                        if (dataPeringkat.length() > 0) {
+                            for (int i = 0; i < dataPeringkat.length(); i++) {
                                 final String itemPeringkat = dataPeringkat.getJSONObject(i).getString("peringkat");
                                 final String itemNama = dataPeringkat.getJSONObject(i).getString("nama");
                                 final String itemEmail = dataPeringkat.getJSONObject(i).getString("email");
                                 final String itemDownline = dataPeringkat.getJSONObject(i).getString("downline");
 
-                                AffiliasiActivity.this.dataPeringkat.add(new ItemPeringkat(itemPeringkat,itemEmail,itemNama,itemDownline));
+                                AffiliasiActivity.this.dataPeringkat.add(new ItemPeringkat(itemPeringkat, itemEmail, itemNama, itemDownline));
                             }
                         }
-                        template_share  = template;
+                        template_share = template;
                         edtKodeReferal.setText(kode_referal);
                         String url_track_web = Uri.parse(URL_LANDING_PAGE)
                                 .buildUpon()
-                                .appendQueryParameter("tracking",edtKodeReferal.getText().toString())
+                                .appendQueryParameter("tracking", edtKodeReferal.getText().toString())
                                 .toString();
                         edtLinkWeb.setText(url_track_web);
                         String url_track_playstore = Uri.parse("https://play.google.com/store/apps/details?id=id.co.kamil.autochat")
                                 .buildUpon()
-                                .appendQueryParameter("referrer",edtKodeReferal.getText().toString())
+                                .appendQueryParameter("referrer", edtKodeReferal.getText().toString())
                                 .toString();
                         edtLinkPlaystore.setText(url_track_playstore);
-                    }else{
+                    } else {
                         new AlertDialog.Builder(AffiliasiActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                     displayPeringkat();
@@ -298,7 +296,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
                     e.printStackTrace();
                     new AlertDialog.Builder(AffiliasiActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -311,16 +309,16 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
                 final String msg = getResources().getString(errorResponse(error));
                 new AlertDialog.Builder(AffiliasiActivity.this)
                         .setMessage(msg)
-                        .setPositiveButton("OK",null)
+                        .setPositiveButton("OK", null)
                         .show();
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -331,7 +329,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
     }
 
     private void displayPeringkat() {
-        final AdapterPeringkat adapterPeringkat = new AdapterPeringkat(this,R.layout.item_list_peringkat, dataPeringkat);
+        final AdapterPeringkat adapterPeringkat = new AdapterPeringkat(this, R.layout.item_list_peringkat, dataPeringkat);
         listPeringkat.setAdapter(adapterPeringkat);
         listPeringkat.setExpanded(true);
     }
@@ -341,8 +339,7 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
             pDialog.dismiss();
     }
 
-    protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span)
-    {
+    protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
         int start = strBuilder.getSpanStart(span);
         int end = strBuilder.getSpanEnd(span);
         int flags = strBuilder.getSpanFlags(span);
@@ -359,17 +356,17 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
         strBuilder.removeSpan(span);
     }
 
-    protected void setTextViewHTML(TextView text, String html)
-    {
+    protected void setTextViewHTML(TextView text, String html) {
         CharSequence sequence = Html.fromHtml(html);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
         URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
-        for(URLSpan span : urls) {
+        for (URLSpan span : urls) {
             makeLinkClickable(strBuilder, span);
         }
         text.setText(strBuilder);
         text.setMovementMethod(LinkMovementMethod.getInstance());
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -381,13 +378,14 @@ public class AffiliasiActivity extends AppCompatActivity implements ViewTreeObse
         super.onStop();
         scrollView.getViewTreeObserver().removeOnScrollChangedListener(this);
     }
+
     @Override
     public void onScrollChanged() {
         int scrollY = scrollView.getScrollY();
-        if (scrollY==0){
+        if (scrollY == 0) {
             swipe_refresh.setEnabled(true);
-        }else {
-            if (!swipe_refresh.isRefreshing()){
+        } else {
+            if (!swipe_refresh.isRefreshing()) {
                 swipe_refresh.setEnabled(false);
             }
         }

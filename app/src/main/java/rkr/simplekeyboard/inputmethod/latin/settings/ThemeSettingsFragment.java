@@ -79,7 +79,7 @@ public final class ThemeSettingsFragment extends SubScreenFragment
     @Override
     public void onRadioButtonClicked(final RadioButtonPreference preference) {
         if (preference instanceof KeyboardThemePreference) {
-            final KeyboardThemePreference pref = (KeyboardThemePreference)preference;
+            final KeyboardThemePreference pref = (KeyboardThemePreference) preference;
             mSelectedThemeId = pref.mThemeId;
             updateSelected();
         }
@@ -104,7 +104,7 @@ public final class ThemeSettingsFragment extends SubScreenFragment
         for (int index = 0; index < count; index++) {
             final Preference preference = screen.getPreference(index);
             if (preference instanceof KeyboardThemePreference) {
-                final KeyboardThemePreference pref = (KeyboardThemePreference)preference;
+                final KeyboardThemePreference pref = (KeyboardThemePreference) preference;
                 final boolean selected = (mSelectedThemeId == pref.mThemeId);
                 pref.setSelected(selected);
             }

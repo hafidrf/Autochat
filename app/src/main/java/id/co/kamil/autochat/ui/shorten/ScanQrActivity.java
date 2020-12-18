@@ -1,16 +1,15 @@
 package id.co.kamil.autochat.ui.shorten;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.zxing.Result;
 
-import id.co.kamil.autochat.R;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class ScanQrActivity extends AppCompatActivity  implements ZXingScannerView.ResultHandler   {
+public class ScanQrActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private boolean onpause;
 
@@ -35,8 +34,7 @@ public class ScanQrActivity extends AppCompatActivity  implements ZXingScannerVi
     @Override
     protected void onResume() {
         super.onResume();
-        if (onpause)
-        {
+        if (onpause) {
             onpause = false;
             mScannerView.setResultHandler(this);
             mScannerView.startCamera();
@@ -46,8 +44,8 @@ public class ScanQrActivity extends AppCompatActivity  implements ZXingScannerVi
     @Override
     public void handleResult(Result result) {
         Intent intent = new Intent();
-        intent.putExtra("result",result.getText());
-        setResult(RESULT_OK,intent);
+        intent.putExtra("result", result.getText());
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

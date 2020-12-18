@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <ScrollView
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:paddingBottom="10dp"
             android:orientation="vertical"
@@ -20,13 +20,15 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="25dp"
-                    android:text="Label"/>
+                    android:text="Label" />
+
                 <EditText
                     android:id="@+id/edtLabel"
                     android:singleLine="true"
@@ -42,14 +44,16 @@
                     android:inputType="text"
                     android:hint="Nama Label"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:fontFamily="@font/font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="15dp"
-                    android:text="Tipe"/>
+                    android:text="Tipe" />
+
                 <Spinner
                     android:id="@+id/spinTipe"
                     android:layout_marginTop="5dp"
@@ -57,7 +61,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:fontFamily="@font/font"
@@ -66,7 +70,8 @@
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="15dp"
                     android:textStyle="bold"
-                    android:text="Atribut"/>
+                    android:text="Atribut" />
+
                 <CheckBox
                     android:id="@+id/chkRequired"
                     android:layout_marginLeft="15dp"
@@ -74,7 +79,8 @@
                     android:layout_marginRight="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Required"/>
+                    android:text="Required" />
+
                 <LinearLayout
                     android:id="@+id/layInput"
                     android:orientation="vertical"
@@ -87,7 +93,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:layout_marginTop="15dp"
-                        android:text="Input Type"/>
+                        android:text="Input Type" />
+
                     <Spinner
                         android:id="@+id/spinInputType"
                         android:layout_marginTop="5dp"
@@ -95,14 +102,16 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
+
                     <TextView
                         android:fontFamily="@font/font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:layout_marginTop="15dp"
-                        android:text="Placeholder"/>
+                        android:text="Placeholder" />
+
                     <EditText
                         android:id="@+id/edtPlaceholder"
                         android:singleLine="true"
@@ -119,8 +128,9 @@
                         android:inputType="text"
                         android:hint="Masukan Placeholder"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/layCombo"
                     android:visibility="gone"
@@ -137,7 +147,8 @@
                         android:textColor="@color/md_black_1000"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Data List"/>
+                        android:text="Data List" />
+
                     <Button
                         android:id="@+id/btnTambah"
                         android:layout_marginTop="10dp"
@@ -151,22 +162,25 @@
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"/>
+                        android:layout_height="40dp" />
+
                     <id.co.kamil.autochat.utils.ExpandableHeightListView
                         android:id="@+id/listCombo"
                         android:dividerHeight="0dp"
                         android:divider="@null"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_100"/>
+        android:background="@color/md_blue_grey_100" />
+
     <Button
         android:id="@+id/btnSimpan"
         android:layout_marginTop="10dp"
@@ -178,5 +192,5 @@
         android:textColor="@color/md_white_1000"
         android:text="Simpan"
         android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        android:layout_height="40dp" />
 </LinearLayout>

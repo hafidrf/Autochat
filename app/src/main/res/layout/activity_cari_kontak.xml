@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.kontak.CariKontakActivity">
+
     <EditText
         android:id="@+id/edtCari"
         android:hint="Cari"
@@ -20,18 +21,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rectangle_grey"
-        android:drawableLeft="@drawable/ic_search_light"/>
+        android:drawableLeft="@drawable/ic_search_light" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ListView
             android:id="@+id/listKontak"
             android:dividerHeight="0dp"
             android:divider="@null"
             android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

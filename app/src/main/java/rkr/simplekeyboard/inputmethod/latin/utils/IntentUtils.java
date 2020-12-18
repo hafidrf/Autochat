@@ -30,7 +30,7 @@ public final class IntentUtils {
     }
 
     public static Intent getInputLanguageSelectionIntent(final String inputMethodId,
-            final int flagsForSubtypeSettings) {
+                                                         final int flagsForSubtypeSettings) {
         // Refer to android.provider.Settings.ACTION_INPUT_METHOD_SUBTYPE_SETTINGS
         final String action = INPUT_METHOD_SUBTYPE_SETTINGS;
         final Intent intent = new Intent(action);

@@ -3,9 +3,9 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemGrup {
-    String id,judul,deskripsi;
+    String id, judul, deskripsi;
     JSONObject jsonObject;
-    boolean checkbox,chkvisible;
+    boolean checkbox, chkvisible;
 
     public ItemGrup() {
 

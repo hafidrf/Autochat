@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.grup.ListGrupKontakActivity">
+
     <LinearLayout
         android:id="@+id/layUmum"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:fontFamily="@font/font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="25dp"
-            android:text="Grup"/>
+            android:text="Grup" />
+
         <TextView
             android:id="@+id/txtGrup"
             android:fontFamily="@font/font"
@@ -25,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:textColor="@color/md_black_1000"
-            android:text="-"/>
+            android:text="-" />
 
         <TextView
             android:fontFamily="@font/font"
@@ -33,7 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            android:text="Deskripsi"/>
+            android:text="Deskripsi" />
+
         <TextView
             android:id="@+id/txtDeskripsi"
             android:fontFamily="@font/font"
@@ -41,7 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:textColor="@color/md_black_1000"
-            android:text="-"/>
+            android:text="-" />
+
         <Button
             android:id="@+id/btnEditGrup"
             android:fontFamily="@font/font"
@@ -52,8 +56,9 @@
             android:background="@drawable/btn_rect_primary"
             android:text="Edit Grup"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp" />
     </LinearLayout>
+
     <TextView
         android:fontFamily="@font/font"
         android:layout_marginLeft="20dp"
@@ -63,7 +68,8 @@
         android:textColor="@color/md_black_1000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Data Kontak"/>
+        android:text="Data Kontak" />
+
     <EditText
         android:id="@+id/edtCari"
         android:hint="Cari"
@@ -79,12 +85,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rectangle_grey"
-        android:drawableLeft="@drawable/ic_search_light"/>
+        android:drawableLeft="@drawable/ic_search_light" />
+
     <ListView
         android:id="@+id/listKontak"
         android:dividerHeight="0dp"
         android:divider="@null"
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

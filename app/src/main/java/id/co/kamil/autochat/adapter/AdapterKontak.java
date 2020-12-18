@@ -22,6 +22,7 @@ public class AdapterKontak extends BaseAdapter {
     public ArrayList<ItemKontak> arraylist;
 
     private static final int resource = R.layout.item_list_kontak;
+
     public class ViewHolder {
         TextView txtJudul;
         CheckBox chk1;
@@ -74,30 +75,30 @@ public class AdapterKontak extends BaseAdapter {
 
         final ItemKontak item = listKontak.get(position);
         viewHolder.txtJudul.setText(item.getJudul());
-        if (item.getId().equals("grupku")){
+        if (item.getId().equals("grupku")) {
             viewHolder.chk1.setChecked(false);
-        }else{
+        } else {
             viewHolder.chk1.setChecked(item.isCheckbox());
         }
 
 
-        if (item.isChkvisible() && !item.getId().equals("grupku")){
+        if (item.isChkvisible() && !item.getId().equals("grupku")) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (int i=0;i<arraylist.size();i++){
-                    if (arraylist.get(i).getId().equals(item.getId())){
+                for (int i = 0; i < arraylist.size(); i++) {
+                    if (arraylist.get(i).getId().equals(item.getId())) {
                         arraylist.get(i).setCheckbox(viewHolder.chk1.isChecked());
                         //listKontak.get(position).setCheckbox(viewHolder.chk1.isChecked());
                         break;
                     }
                 }
-                for (int i=0;i<listKontak.size();i++){
-                    if (listKontak.get(i).getId().equals(item.getId())){
+                for (int i = 0; i < listKontak.size(); i++) {
+                    if (listKontak.get(i).getId().equals(item.getId())) {
                         listKontak.get(i).setCheckbox(viewHolder.chk1.isChecked());
                         break;
                     }
@@ -119,8 +120,7 @@ public class AdapterKontak extends BaseAdapter {
             for (ItemKontak postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getJudul().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listKontak.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getNomorhp().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getNomorhp().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listKontak.add(postDetail);
                 }
             }

@@ -40,7 +40,7 @@ public final class MoreKeysKeyboard extends Keyboard {
 
     static class MoreKeysKeyboardParams extends KeyboardParams {
         public boolean mIsMoreKeysFixedOrder;
-        /* package */int mTopRowAdjustment;
+        /* package */ int mTopRowAdjustment;
         public int mNumRows;
         public int mNumColumns;
         public int mTopKeys;
@@ -55,22 +55,22 @@ public final class MoreKeysKeyboard extends Keyboard {
         /**
          * Set keyboard parameters of more keys keyboard.
          *
-         * @param numKeys number of keys in this more keys keyboard.
-         * @param numColumn number of columns of this more keys keyboard.
-         * @param keyWidth more keys keyboard key width in pixel, including horizontal gap.
-         * @param rowHeight more keys keyboard row height in pixel, including vertical gap.
-         * @param coordXInParent coordinate x of the key preview in parent keyboard.
-         * @param parentKeyboardWidth parent keyboard width in pixel.
+         * @param numKeys               number of keys in this more keys keyboard.
+         * @param numColumn             number of columns of this more keys keyboard.
+         * @param keyWidth              more keys keyboard key width in pixel, including horizontal gap.
+         * @param rowHeight             more keys keyboard row height in pixel, including vertical gap.
+         * @param coordXInParent        coordinate x of the key preview in parent keyboard.
+         * @param parentKeyboardWidth   parent keyboard width in pixel.
          * @param isMoreKeysFixedColumn true if more keys keyboard should have
-         *   <code>numColumn</code> columns. Otherwise more keys keyboard should have
-         *   <code>numColumn</code> columns at most.
-         * @param isMoreKeysFixedOrder true if the order of more keys is determined by the order in
-         *   the more keys' specification. Otherwise the order of more keys is automatically
-         *   determined.
+         *                              <code>numColumn</code> columns. Otherwise more keys keyboard should have
+         *                              <code>numColumn</code> columns at most.
+         * @param isMoreKeysFixedOrder  true if the order of more keys is determined by the order in
+         *                              the more keys' specification. Otherwise the order of more keys is automatically
+         *                              determined.
          */
         public void setParameters(final int numKeys, final int numColumn, final int keyWidth,
-                final int rowHeight, final int coordXInParent, final int parentKeyboardWidth,
-                final boolean isMoreKeysFixedColumn, final boolean isMoreKeysFixedOrder) {
+                                  final int rowHeight, final int coordXInParent, final int parentKeyboardWidth,
+                                  final boolean isMoreKeysFixedColumn, final boolean isMoreKeysFixedOrder) {
             mIsMoreKeysFixedOrder = isMoreKeysFixedOrder;
             if (parentKeyboardWidth / keyWidth < Math.min(numKeys, numColumn)) {
                 throw new IllegalArgumentException("Keyboard is too small to hold more keys: "
@@ -130,7 +130,7 @@ public final class MoreKeysKeyboard extends Keyboard {
 
         private int getFixedOrderTopRowAdjustment() {
             if (mNumRows == 1 || mTopKeys % 2 == 1 || mTopKeys == mNumColumns
-                    || mLeftKeys == 0  || mRightKeys == 1) {
+                    || mLeftKeys == 0 || mRightKeys == 1) {
                 return 0;
             }
             return -1;
@@ -254,18 +254,19 @@ public final class MoreKeysKeyboard extends Keyboard {
 
         /**
          * The builder of MoreKeysKeyboard.
-         * @param context the context of {@link MoreKeysKeyboardView}.
-         * @param key the {@link Key} that invokes more keys keyboard.
-         * @param keyboard the {@link Keyboard} that contains the parentKey.
+         *
+         * @param context                    the context of {@link MoreKeysKeyboardView}.
+         * @param key                        the {@link Key} that invokes more keys keyboard.
+         * @param keyboard                   the {@link Keyboard} that contains the parentKey.
          * @param isSingleMoreKeyWithPreview true if the <code>key</code> has just a single
-         *        "more key" and its key popup preview is enabled.
-         * @param keyPreviewVisibleWidth the width of visible part of key popup preview.
-         * @param keyPreviewVisibleHeight the height of visible part of key popup preview
-         * @param paintToMeasure the {@link Paint} object to measure a "more key" width
+         *                                   "more key" and its key popup preview is enabled.
+         * @param keyPreviewVisibleWidth     the width of visible part of key popup preview.
+         * @param keyPreviewVisibleHeight    the height of visible part of key popup preview
+         * @param paintToMeasure             the {@link Paint} object to measure a "more key" width
          */
         public Builder(final Context context, final Key key, final Keyboard keyboard,
-                final boolean isSingleMoreKeyWithPreview, final int keyPreviewVisibleWidth,
-                final int keyPreviewVisibleHeight, final Paint paintToMeasure) {
+                       final boolean isSingleMoreKeyWithPreview, final int keyPreviewVisibleWidth,
+                       final int keyPreviewVisibleHeight, final Paint paintToMeasure) {
             super(context, new MoreKeysKeyboardParams());
             load(keyboard.mMoreKeysTemplate, keyboard.mId);
 
@@ -290,7 +291,7 @@ public final class MoreKeysKeyboard extends Keyboard {
                 final float padding = context.getResources().getDimension(
                         R.dimen.config_more_keys_keyboard_key_horizontal_padding)
                         + (key.hasLabelsInMoreKeys()
-                                ? mParams.mDefaultKeyWidth * LABEL_PADDING_RATIO : 0.0f);
+                        ? mParams.mDefaultKeyWidth * LABEL_PADDING_RATIO : 0.0f);
                 keyWidth = getMaxKeyWidth(key, mParams.mDefaultKeyWidth, padding, paintToMeasure);
                 rowHeight = keyboard.mMostCommonKeyHeight;
             }
@@ -301,14 +302,14 @@ public final class MoreKeysKeyboard extends Keyboard {
         }
 
         private static int getMaxKeyWidth(final Key parentKey, final int minKeyWidth,
-                final float padding, final Paint paint) {
+                                          final float padding, final Paint paint) {
             int maxWidth = minKeyWidth;
             for (final MoreKeySpec spec : parentKey.getMoreKeys()) {
                 final String label = spec.mLabel;
                 // If the label is single letter, minKeyWidth is enough to hold the label.
                 if (label != null && StringUtils.codePointCount(label) > 1) {
                     maxWidth = Math.max(maxWidth,
-                            (int)(TypefaceUtils.getStringWidth(label, paint) + padding));
+                            (int) (TypefaceUtils.getStringWidth(label, paint) + padding));
                 }
             }
             return maxWidth;

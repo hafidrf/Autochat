@@ -58,9 +58,12 @@ import android.util.Log;
     @Override
     protected String toString(int state) {
         switch (state) {
-        case PRESSING_ON_SHIFTED: return "PRESSING_ON_SHIFTED";
-        case IGNORING: return "IGNORING";
-        default: return super.toString(state);
+            case PRESSING_ON_SHIFTED:
+                return "PRESSING_ON_SHIFTED";
+            case IGNORING:
+                return "IGNORING";
+            default:
+                return super.toString(state);
         }
     }
 }

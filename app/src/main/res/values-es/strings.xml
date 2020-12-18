@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -36,13 +35,7 @@
     <string name="subtype_en_GB">"inglés (Reino Unido)"</string>
     <string name="subtype_en_US">"inglés (EE.UU.)"</string>
     <string name="subtype_es_US">"Español (EE.UU.)"</string>
-    <string name="subtype_hi_ZZ">"Hinglish"</string>
     <string name="subtype_sr_ZZ">"Serbio (latino)"</string>
-    <string name="subtype_with_layout_en_GB">"Inglés (Reino Unido) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"Inglés (EE.UU.) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"Español (EE.UU.) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"Hinglish (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"Serbio (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (tradicional)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (compacto)"</string>
     <string name="custom_input_styles_title">"Estilos de entrada personalizados"</string>
@@ -56,14 +49,8 @@
     <string name="enable">"Habilitar"</string>
     <string name="not_now">"Ahora no"</string>
     <string name="custom_input_style_already_exists">"Ya existe el estilo de entrada <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>."</string>
-    <string name="prefs_keypress_vibration_duration_settings">"Duración de la vibración al pulsar"</string>
-    <string name="prefs_keypress_sound_volume_settings">"Volumen de sonido al pulsar tecla"</string>
-    <string name="prefs_key_longpress_timeout_settings">"Retraso al mantener pulsado"</string>
     <string name="button_default">"Predeterminado"</string>
-    <string name="prefs_keyboard_height_settings">Altura del teclado</string>
-    <string name="keyboard_color">Establecer color personalizado del teclado</string>
     <string name="hide_special_chars">Ocultar caracteres especiales</string>
-    <string name="hide_language_switch_key">Ocultar tecla de cambio de idioma</string>
     <string name="show_number_row">Mostrar la fila de dígitos separada</string>
     <string name="space_swipe">Desplazamiento del cursor del espacio</string>
     <string name="delete_swipe">Eliminar deslizar</string>

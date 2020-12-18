@@ -1,8 +1,8 @@
 package id.co.kamil.autochat.adapter;
 
 public class ItemAutoReply {
-    String id,created_at,keyword,reply,status;
-    boolean checkbox,chkvisible;
+    String id, created_at, keyword, reply, status;
+    boolean checkbox, chkvisible;
 
     public boolean isCheckbox() {
         return checkbox;
@@ -79,7 +79,6 @@ public class ItemAutoReply {
     public void setStatus(String status) {
         this.status = status;
     }
-
 
 
 }

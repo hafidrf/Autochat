@@ -52,18 +52,18 @@ public class TwoStatePreferenceHelper {
         for (int index = 0; index < count; index++) {
             final Preference preference = preferences.get(index);
             if (preference instanceof CheckBoxPreference) {
-                addSwitchPreferenceBasedOnCheckBoxPreference((CheckBoxPreference)preference, group);
+                addSwitchPreferenceBasedOnCheckBoxPreference((CheckBoxPreference) preference, group);
             } else {
                 group.addPreference(preference);
                 if (preference instanceof PreferenceGroup) {
-                    replaceAllCheckBoxPreferencesBySwitchPreferences((PreferenceGroup)preference);
+                    replaceAllCheckBoxPreferencesBySwitchPreferences((PreferenceGroup) preference);
                 }
             }
         }
     }
 
     static void addSwitchPreferenceBasedOnCheckBoxPreference(final CheckBoxPreference checkBox,
-            final PreferenceGroup group) {
+                                                             final PreferenceGroup group) {
         final SwitchPreference switchPref = new SwitchPreference(checkBox.getContext());
         switchPref.setTitle(checkBox.getTitle());
         switchPref.setKey(checkBox.getKey());

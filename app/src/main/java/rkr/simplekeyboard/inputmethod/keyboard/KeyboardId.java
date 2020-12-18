@@ -84,7 +84,7 @@ public final class KeyboardId {
     }
 
     private static int computeHashCode(final KeyboardId id) {
-        return Arrays.hashCode(new Object[] {
+        return Arrays.hashCode(new Object[]{
                 id.mElementId,
                 id.mMode,
                 id.mWidth,
@@ -190,32 +190,53 @@ public final class KeyboardId {
 
     public static String elementIdToName(final int elementId) {
         switch (elementId) {
-        case ELEMENT_ALPHABET: return "alphabet";
-        case ELEMENT_ALPHABET_MANUAL_SHIFTED: return "alphabetManualShifted";
-        case ELEMENT_ALPHABET_AUTOMATIC_SHIFTED: return "alphabetAutomaticShifted";
-        case ELEMENT_ALPHABET_SHIFT_LOCKED: return "alphabetShiftLocked";
-        case ELEMENT_ALPHABET_SHIFT_LOCK_SHIFTED: return "alphabetShiftLockShifted";
-        case ELEMENT_SYMBOLS: return "symbols";
-        case ELEMENT_SYMBOLS_SHIFTED: return "symbolsShifted";
-        case ELEMENT_PHONE: return "phone";
-        case ELEMENT_PHONE_SYMBOLS: return "phoneSymbols";
-        case ELEMENT_NUMBER: return "number";
-        default: return null;
+            case ELEMENT_ALPHABET:
+                return "alphabet";
+            case ELEMENT_ALPHABET_MANUAL_SHIFTED:
+                return "alphabetManualShifted";
+            case ELEMENT_ALPHABET_AUTOMATIC_SHIFTED:
+                return "alphabetAutomaticShifted";
+            case ELEMENT_ALPHABET_SHIFT_LOCKED:
+                return "alphabetShiftLocked";
+            case ELEMENT_ALPHABET_SHIFT_LOCK_SHIFTED:
+                return "alphabetShiftLockShifted";
+            case ELEMENT_SYMBOLS:
+                return "symbols";
+            case ELEMENT_SYMBOLS_SHIFTED:
+                return "symbolsShifted";
+            case ELEMENT_PHONE:
+                return "phone";
+            case ELEMENT_PHONE_SYMBOLS:
+                return "phoneSymbols";
+            case ELEMENT_NUMBER:
+                return "number";
+            default:
+                return null;
         }
     }
 
     public static String modeName(final int mode) {
         switch (mode) {
-        case MODE_TEXT: return "text";
-        case MODE_URL: return "url";
-        case MODE_EMAIL: return "email";
-        case MODE_IM: return "im";
-        case MODE_PHONE: return "phone";
-        case MODE_NUMBER: return "number";
-        case MODE_DATE: return "date";
-        case MODE_TIME: return "time";
-        case MODE_DATETIME: return "datetime";
-        default: return null;
+            case MODE_TEXT:
+                return "text";
+            case MODE_URL:
+                return "url";
+            case MODE_EMAIL:
+                return "email";
+            case MODE_IM:
+                return "im";
+            case MODE_PHONE:
+                return "phone";
+            case MODE_NUMBER:
+                return "number";
+            case MODE_DATE:
+                return "date";
+            case MODE_TIME:
+                return "time";
+            case MODE_DATETIME:
+                return "datetime";
+            default:
+                return null;
         }
     }
 

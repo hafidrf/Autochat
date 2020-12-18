@@ -6,15 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -35,6 +26,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -51,7 +48,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -150,7 +146,7 @@ public class AutoReplyFragment extends Fragment {
         dbHelper = new DBHelper(getContext());
 
         limit_auto_reply = Integer.parseInt(sharePref.getSessionStr(SharPref.KEY_LIMIT_AUTO_REPLY));
-        if (limit_auto_reply<=0){
+        if (limit_auto_reply <= 0) {
             limit_auto_reply = LIMIT_AUTO_REPLY;
         }
 
@@ -158,10 +154,10 @@ public class AutoReplyFragment extends Fragment {
         labelStorage = (TextView) view.findViewById(R.id.labelStorage);
         progressStorage = (ProgressBar) view.findViewById(R.id.progressStorage);
 
-        if (type.equals("1")){ // basic
+        if (type.equals("1")) { // basic
             progressStorage.setVisibility(View.VISIBLE);
             labelStorage.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             progressStorage.setVisibility(View.GONE);
             labelStorage.setVisibility(View.GONE);
         }
@@ -190,10 +186,10 @@ public class AutoReplyFragment extends Fragment {
         listPesan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getContext(),FormAutoReplyActivity.class);
-                intent.putExtra("tipe","edit");
-                intent.putExtra("id",dataAutoReply.get(i).getId());
-                startActivityForResult(intent,REQUEST_ADD);
+                Intent intent = new Intent(getContext(), FormAutoReplyActivity.class);
+                intent.putExtra("tipe", "edit");
+                intent.putExtra("id", dataAutoReply.get(i).getId());
+                startActivityForResult(intent, REQUEST_ADD);
             }
         });
         edtCari.addTextChangedListener(new TextWatcher() {
@@ -207,7 +203,7 @@ public class AutoReplyFragment extends Fragment {
                 try {
                     pesanAdapter.filter(edtCari.getText().toString().trim());
                     listPesan.invalidate();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
 
                 }
             }
@@ -226,7 +222,7 @@ public class AutoReplyFragment extends Fragment {
             @Override
             public void onScroll(AbsListView absListView, int i, int i1, int i2) {
                 int topRowVerticalPosition =
-                        (listPesan== null || listPesan.getChildCount() == 0) ?
+                        (listPesan == null || listPesan.getChildCount() == 0) ?
                                 0 : listPesan.getChildAt(0).getTop();
                 swipe_refresh.setEnabled(i == 0 && topRowVerticalPosition >= 0);
             }
@@ -253,14 +249,14 @@ public class AutoReplyFragment extends Fragment {
         }
         return view;
     }
-    public void showSnackBar(View llShow)
-    {
+
+    public void showSnackBar(View llShow) {
         // Create the Snackbar
         LinearLayout.LayoutParams objLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final Snackbar snackbar = Snackbar.make(llShow, "", Snackbar.LENGTH_INDEFINITE);
         // Get the Snackbar's layout view
         Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
-        layout.setPadding(0,0,0,0);
+        layout.setPadding(0, 0, 0, 0);
         // Hide the text
         TextView textView = (TextView) layout.findViewById(R.id.snackbar_text);
         textView.setVisibility(View.INVISIBLE);
@@ -294,11 +290,12 @@ public class AutoReplyFragment extends Fragment {
         // Show the Snackbar
         snackbar.show();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadData();
             }
         }
@@ -311,6 +308,7 @@ public class AutoReplyFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -320,26 +318,28 @@ public class AutoReplyFragment extends Fragment {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
     }
-    private void listDefault(){
-        for (int i = 0; i < dataAutoReply.size(); i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataAutoReply.size(); i++) {
             ItemAutoReply ikontak = dataAutoReply.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataAutoReply.set(i,ikontak);
+            dataAutoReply.set(i, ikontak);
         }
         pesanAdapter.notifyDataSetChanged();
-        if (dataAutoReply.size()==0){
+        if (dataAutoReply.size() == 0) {
             loadData();
         }
     }
-    private void loadData(){
+
+    private void loadData() {
         JSONObject parameter = new JSONObject();
         try {
-            parameter.put("status","pending");
+            parameter.put("status", "pending");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -347,7 +347,7 @@ public class AutoReplyFragment extends Fragment {
         final String uri = Uri.parse(URL_POST_LIST_AUTO_REPLY)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataAutoReply.clear();
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, parameter, new Response.Listener<JSONObject>() {
@@ -359,25 +359,25 @@ public class AutoReplyFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
 
                             final String id = data.getJSONObject(i).getString("id");
                             final String created_at = data.getJSONObject(i).getString("created");
                             final JSONArray keyword = data.getJSONObject(i).getJSONArray("keyword");
                             final String reply = data.getJSONObject(i).getString("reply");
                             final String status_pesan = data.getJSONObject(i).getString("status");
-                            dataAutoReply.add(new ItemAutoReply(id,created_at,keyword.toString(),reply,status_pesan,false,false));
+                            dataAutoReply.add(new ItemAutoReply(id, created_at, keyword.toString(), reply, status_pesan, false, false));
                         }
-                    }else{
-                        Log.i(TAG,response.toString());
-                        showError(true,message,false);
+                    } else {
+                        Log.i(TAG, response.toString());
+                        showError(true, message, false);
                     }
                     displayPesan();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -386,15 +386,15 @@ public class AutoReplyFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -407,28 +407,28 @@ public class AutoReplyFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
-                                showError(true,msg,true);
+                            } else {
+                                showError(true, msg, true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
-                        showError(true,msg,true);
+                        showError(true, msg, true);
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -436,37 +436,40 @@ public class AutoReplyFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listPesan.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listPesan.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayPesan() {
-        pesanAdapter = new AdapterAutoReply(dataAutoReply,getContext());
+        pesanAdapter = new AdapterAutoReply(dataAutoReply, getContext());
         listPesan.setAdapter(pesanAdapter);
         adapterInstance = true;
         labelStorage.setText("Penyimpanan (Akun Basic) : " + dataAutoReply.size() + " s.d " + limit_auto_reply);
-        if (dataAutoReply.size()<limit_auto_reply){
+        if (dataAutoReply.size() < limit_auto_reply) {
             progressStorage.setProgress((dataAutoReply.size() * 100) / limit_auto_reply);
-        }else{
+        } else {
             progressStorage.setProgress(100);
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
-            if (type.equals("1")){ // basic
-                if (dataAutoReply.size()>=limit_auto_reply){
+        if (item.getItemId() == R.id.actTambah) {
+            if (type.equals("1")) { // basic
+                if (dataAutoReply.size() >= limit_auto_reply) {
                     new android.app.AlertDialog.Builder(getContext())
                             .setMessage("Kuota Penyimpanan telah penuh, silahkan upgrade Akun Premium")
                             .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
@@ -478,39 +481,39 @@ public class AutoReplyFragment extends Fragment {
                                     startActivity(intent2);
                                 }
                             })
-                            .setNegativeButton("Batal",null)
+                            .setNegativeButton("Batal", null)
                             .show();
                     return false;
                 }
             }
-            Intent intent = new Intent(getContext(),FormAutoReplyActivity.class);
-            intent.putExtra("tipe","tambah");
-            startActivityForResult(intent,REQUEST_ADD);
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataAutoReply.size()>0){
+            Intent intent = new Intent(getContext(), FormAutoReplyActivity.class);
+            intent.putExtra("tipe", "tambah");
+            startActivityForResult(intent, REQUEST_ADD);
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataAutoReply.size() > 0) {
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
                 menuTop.findItem(R.id.actSemua).setVisible(true);
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0; i < dataAutoReply.size(); i++){
+                for (int i = 0; i < dataAutoReply.size(); i++) {
                     ItemAutoReply ikontak = dataAutoReply.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataAutoReply.set(i,ikontak);
+                    dataAutoReply.set(i, ikontak);
                 }
                 pesanAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data Autoreply tidak tersedia", Toast.LENGTH_SHORT).show();
             }
 
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actSemua).setVisible(false);
             menuTop.findItem(R.id.actEdit).setVisible(true);
             menuTop.findItem(R.id.actTambah).setVisible(true);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(getContext())
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -519,35 +522,36 @@ public class AutoReplyFragment extends Fragment {
                             hapusPesan();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0; i < dataAutoReply.size(); i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataAutoReply.size(); i++) {
                 ItemAutoReply ikontak = dataAutoReply.get(i);
                 ikontak.setCheckbox(true);
-                dataAutoReply.set(i,ikontak);
+                dataAutoReply.set(i, ikontak);
             }
             pesanAdapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void hapusPesan() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final JSONArray jsonArray = new JSONArray();
 
-        for (int i = 0; i < dataAutoReply.size(); i++){
-            if (dataAutoReply.get(i).isCheckbox() ){
+        for (int i = 0; i < dataAutoReply.size(); i++) {
+            if (dataAutoReply.get(i).isCheckbox()) {
                 jsonArray.put(Integer.parseInt(dataAutoReply.get(i).getId()));
             }
         }
         final JSONObject request_body = new JSONObject();
         try {
-            request_body.put("id",jsonArray);
+            request_body.put("id", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i(TAG,request_body.toString());
+        Log.i(TAG, request_body.toString());
         final String uri = Uri.parse(URL_POST_HAPUS_AUTO_REPLY)
                 .buildUpon()
                 .toString();
@@ -555,7 +559,7 @@ public class AutoReplyFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body , new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -563,10 +567,10 @@ public class AutoReplyFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
-                        for (int i = 0; i < dataAutoReply.size(); i++){
-                            if (dataAutoReply.get(i).isCheckbox()){
+                    Log.i(TAG, message);
+                    if (status) {
+                        for (int i = 0; i < dataAutoReply.size(); i++) {
+                            if (dataAutoReply.get(i).isCheckbox()) {
                                 dataAutoReply.remove(i);
                                 i = i - 1;
                             }
@@ -579,17 +583,17 @@ public class AutoReplyFragment extends Fragment {
                         menuTop.findItem(R.id.actTambah).setVisible(true);
                         listDefault();
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -598,17 +602,17 @@ public class AutoReplyFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -621,34 +625,34 @@ public class AutoReplyFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
                                 .setMessage(msg)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 }
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };

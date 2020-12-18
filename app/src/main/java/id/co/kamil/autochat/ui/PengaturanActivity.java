@@ -1,20 +1,11 @@
 package id.co.kamil.autochat.ui;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.KeyguardManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,14 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -82,10 +74,10 @@ public class PengaturanActivity extends AppCompatActivity {
     private Switch switchToolbar;
     private Button btnPengaturanKeyboard;
     private SharPref sharePref;
-    private Switch switchOnScreen,switchEnabledBulkSender,switchAksesibilitas;
+    private Switch switchOnScreen, switchEnabledBulkSender, switchAksesibilitas;
     private boolean status_aksesibilitas;
     private Button btnPengaturanAutoReply;
-    private Switch switchPersonal,switchBusiness;
+    private Switch switchPersonal, switchBusiness;
     private EditText edtTryAgain;
     private Switch siwtchOnOffError;
     private Button btnKeyboardPref;
@@ -145,36 +137,36 @@ public class PengaturanActivity extends AppCompatActivity {
         switchBusiness.setChecked(autoreply_business);
         switchPersonal.setChecked(autoreply_personal);
 
-        if(delayBulkSender.isEmpty() || delayBulkSender.equals("")){
+        if (delayBulkSender.isEmpty() || delayBulkSender.equals("")) {
             delayBulkSender = "0";
         }
-        if(try_again.isEmpty() || try_again.equals("")){
+        if (try_again.isEmpty() || try_again.equals("")) {
             try_again = "0";
         }
-        if (Integer.parseInt(delayBulkSender)==0){
+        if (Integer.parseInt(delayBulkSender) == 0) {
             edtDelayBulkSender.setText("5");
-        }else{
+        } else {
             edtDelayBulkSender.setText(delayBulkSender);
         }
-        if (Integer.parseInt(try_again)==0){
+        if (Integer.parseInt(try_again) == 0) {
             edtTryAgain.setText("5");
-        }else{
+        } else {
             edtTryAgain.setText(try_again);
         }
 
-        if (status_error_try_again){
+        if (status_error_try_again) {
             edtTryAgain.setEnabled(true);
-        }else{
+        } else {
             edtTryAgain.setEnabled(false);
         }
         // listener
         siwtchOnOffError.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_ERROR_TRY_AGAIN,isChecked);
-                if (isChecked){
+                sharePref.createSession(STATUS_ERROR_TRY_AGAIN, isChecked);
+                if (isChecked) {
                     edtTryAgain.setEnabled(true);
-                }else{
+                } else {
                     edtTryAgain.setEnabled(false);
                 }
             }
@@ -194,7 +186,7 @@ public class PengaturanActivity extends AppCompatActivity {
         switchEnabledBulkSender.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_BULK_SENDER,isChecked);
+                sharePref.createSession(STATUS_BULK_SENDER, isChecked);
             }
         });
         switchAksesibilitas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -208,19 +200,19 @@ public class PengaturanActivity extends AppCompatActivity {
         switchOnScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(BULK_SENDER_ON_SCREEN,isChecked);
+                sharePref.createSession(BULK_SENDER_ON_SCREEN, isChecked);
             }
         });
         switchPersonal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(AUTOREPLY_PERSONAL,isChecked);
+                sharePref.createSession(AUTOREPLY_PERSONAL, isChecked);
             }
         });
         switchBusiness.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(AUTOREPLY_BUSINESS,isChecked);
+                sharePref.createSession(AUTOREPLY_BUSINESS, isChecked);
             }
         });
         edtDelayBulkSender.addTextChangedListener(new TextWatcher() {
@@ -236,7 +228,7 @@ public class PengaturanActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                sharePref.createSession(DELAY_BULK_SENDER,edtDelayBulkSender.getText().toString());
+                sharePref.createSession(DELAY_BULK_SENDER, edtDelayBulkSender.getText().toString());
             }
         });
 
@@ -253,19 +245,19 @@ public class PengaturanActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                sharePref.createSession(TRY_AGAIN_BULKSENDER,edtTryAgain.getText().toString());
+                sharePref.createSession(TRY_AGAIN_BULKSENDER, edtTryAgain.getText().toString());
             }
         });
         switchAutoText.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_AUTOTEXT,isChecked);
+                sharePref.createSession(STATUS_AUTOTEXT, isChecked);
             }
         });
         switchToolbar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_TOOLBAR,isChecked);
+                sharePref.createSession(STATUS_TOOLBAR, isChecked);
             }
         });
         btnPengaturanKeyboard.setOnClickListener(new View.OnClickListener() {
@@ -302,27 +294,27 @@ public class PengaturanActivity extends AppCompatActivity {
         txtSapaan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtContent.getText().insert(edtContent.getSelectionStart(),"[sapaan] " );
+                edtContent.getText().insert(edtContent.getSelectionStart(), "[sapaan] ");
             }
         });
 
         txtNamaDepan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtContent.getText().insert(edtContent.getSelectionStart(),"[nama_depan] " );
+                edtContent.getText().insert(edtContent.getSelectionStart(), "[nama_depan] ");
             }
         });
         txtNamaBelakang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtContent.getText().insert(edtContent.getSelectionStart(),"[nama_belakang] " );
+                edtContent.getText().insert(edtContent.getSelectionStart(), "[nama_belakang] ");
             }
         });
         dialog.setPositiveButton("Simpan", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                simpanRedaksiultah(edtContent.getText().toString(),dialog);
+                simpanRedaksiultah(edtContent.getText().toString(), dialog);
 
             }
         });
@@ -337,13 +329,14 @@ public class PengaturanActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
     private void loadRedaksi(final EditText edtContent) {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         String url = URL_POST_GET_SETTINGS;
         try {
-            requestBody.put("key","redaksi_ultah");
+            requestBody.put("key", "redaksi_ultah");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -351,7 +344,7 @@ public class PengaturanActivity extends AppCompatActivity {
         String uri = Uri.parse(url)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -363,7 +356,7 @@ public class PengaturanActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         final String konten = response.getString("value");
                         edtContent.setText(konten);
                     }
@@ -371,7 +364,7 @@ public class PengaturanActivity extends AppCompatActivity {
                     e.printStackTrace();
                     new AlertDialog.Builder(PengaturanActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -379,11 +372,11 @@ public class PengaturanActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
                     errorResponse(PengaturanActivity.this, error);
-                }else {
+                } else {
                     if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
@@ -429,12 +422,12 @@ public class PengaturanActivity extends AppCompatActivity {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -442,14 +435,15 @@ public class PengaturanActivity extends AppCompatActivity {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
+
     private void simpanRedaksiultah(String value, final DialogInterface dialog) {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JSONObject requestBody = new JSONObject();
         String url = URL_POST_CREATE_SETTINGS;
         try {
-            requestBody.put("key","redaksi_ultah");
-            requestBody.put("value",value);
+            requestBody.put("key", "redaksi_ultah");
+            requestBody.put("value", value);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -457,7 +451,7 @@ public class PengaturanActivity extends AppCompatActivity {
         String uri = Uri.parse(url)
                 .buildUpon()
                 .toString();
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
@@ -469,20 +463,20 @@ public class PengaturanActivity extends AppCompatActivity {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         Toast.makeText(PengaturanActivity.this, message, Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(PengaturanActivity.this)
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(PengaturanActivity.this)
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             }
@@ -490,11 +484,11 @@ public class PengaturanActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
                 if (response == null) {
                     errorResponse(PengaturanActivity.this, error);
-                }else {
+                } else {
                     if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
@@ -540,12 +534,12 @@ public class PengaturanActivity extends AppCompatActivity {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -561,7 +555,7 @@ public class PengaturanActivity extends AppCompatActivity {
 
     private boolean isAccessibilityEnabled() {
         int enabled = 0;
-        final String service = getPackageName() +"/"+ WASendService.class.getCanonicalName();
+        final String service = getPackageName() + "/" + WASendService.class.getCanonicalName();
 
         try {
             enabled = Settings.Secure.getInt(getApplicationContext().getContentResolver()
@@ -586,9 +580,10 @@ public class PengaturanActivity extends AppCompatActivity {
 
         return false;
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

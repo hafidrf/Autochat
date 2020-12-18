@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ItemWaformData {
-    String id,type,label;
+    String id, type, label;
     JSONObject attr;
     JSONArray list;
 

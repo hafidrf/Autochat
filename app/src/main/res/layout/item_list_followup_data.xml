@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_gravity="center"
         android:orientation="vertical"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/judul"
             android:text="ABC"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
@@ -27,7 +32,8 @@
                 android:layout_marginRight="10dp"
                 android:src="@drawable/ic_schedule"
                 android:layout_width="20dp"
-                android:layout_height="20dp"/>
+                android:layout_height="20dp" />
+
             <TextView
                 android:id="@+id/schedule"
                 android:layout_marginTop="5dp"
@@ -35,10 +41,11 @@
                 android:text="ABC"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_gravity="center"
         android:orientation="vertical"
@@ -51,14 +58,15 @@
             android:id="@+id/btnEdit"
             android:src="@drawable/ic_edit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:id="@+id/btnHapus"
             android:src="@drawable/ic_trash"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

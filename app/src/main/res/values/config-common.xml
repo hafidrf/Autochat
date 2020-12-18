@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2013, The Android Open Source Project
@@ -30,12 +29,8 @@
     <integer name="config_key_preview_linger_timeout">53</integer>
 
     <bool name="config_default_vibration_enabled">false</bool>
-    <integer name="config_max_vibration_duration">100</integer>
 
     <integer name="config_default_longpress_key_timeout">300</integer>
-    <integer name="config_max_longpress_timeout">700</integer>
-    <integer name="config_min_longpress_timeout">100</integer>
-    <integer name="config_longpress_timeout_step">10</integer>
     <integer name="config_max_more_keys_column">5</integer>
 
     <!-- Long pressing shift will invoke caps-lock if > 0, never invoke caps-lock if == 0 -->
@@ -64,7 +59,4 @@
     <dimen name="config_keyboard_vertical_correction">0.0dp</dimen>
 
     <!-- Keyboard height -->
-    <integer name="config_max_keyboar_height">150</integer>
-    <integer name="config_min_keyboar_height">50</integer>
-    <integer name="config_keyboar_height_step">5</integer>
 </resources>

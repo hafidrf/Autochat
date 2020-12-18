@@ -29,8 +29,9 @@ public class AdapterTemplatePromosi extends BaseAdapter {
     ArrayList<ItemTemplatePromosi> arraylist;
 
     private static final int resource = R.layout.item_list_template_promosi;
+
     public class ViewHolder {
-        TextView txtName,txtContent,txtCreated,txtTags,txtStatusImage;
+        TextView txtName, txtContent, txtCreated, txtTags, txtStatusImage;
         ImageView imgShare;
         CheckBox chk1;
 
@@ -86,31 +87,31 @@ public class AdapterTemplatePromosi extends BaseAdapter {
 
         final ItemTemplatePromosi item = listData.get(position);
         String content = item.getContent();
-        if (content.length()>100){
-            content = content.substring(0,100) + "...";
+        if (content.length() > 100) {
+            content = content.substring(0, 100) + "...";
         }
         String tags = "";
         try {
             JSONArray jsonArray = new JSONArray(item.getTags());
-            for (int i=0;i<jsonArray.length();i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 tags += jsonArray.getString(i);
-                if (i<jsonArray.length()-1){
+                if (i < jsonArray.length() - 1) {
                     tags += ", ";
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (item.isOwner()){
+        if (item.isOwner()) {
             viewHolder.imgShare.setVisibility(View.GONE);
-        }else{
+        } else {
             viewHolder.imgShare.setVisibility(View.VISIBLE);
         }
-        if (item.getStatus_image().equals("tersedia")){
+        if (item.getStatus_image().equals("tersedia")) {
             viewHolder.txtStatusImage.setTextColor(Color.GREEN);
-        }else if (item.getStatus_image().equals("sedang didownload")) {
+        } else if (item.getStatus_image().equals("sedang didownload")) {
             viewHolder.txtStatusImage.setTextColor(Color.BLUE);
-        }else  {
+        } else {
             viewHolder.txtStatusImage.setTextColor(Color.RED);
         }
         viewHolder.txtStatusImage.setText(item.getStatus_image());
@@ -120,9 +121,9 @@ public class AdapterTemplatePromosi extends BaseAdapter {
         viewHolder.txtTags.setText(tags);
         viewHolder.chk1.setChecked(item.isCheckbox());
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
@@ -146,11 +147,9 @@ public class AdapterTemplatePromosi extends BaseAdapter {
             for (ItemTemplatePromosi postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getTags().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getContent().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getContent().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
                 }
             }

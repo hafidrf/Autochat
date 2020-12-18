@@ -26,8 +26,11 @@ public final class PointerTrackerQueue {
 
     public interface Element {
         boolean isModifier();
+
         boolean isInDraggingFinger();
+
         void onPhantomUpEvent(long eventTime);
+
         void cancelTrackingForAction();
     }
 

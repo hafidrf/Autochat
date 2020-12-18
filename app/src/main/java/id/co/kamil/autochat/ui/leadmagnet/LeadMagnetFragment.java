@@ -8,11 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,6 +28,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -91,7 +90,7 @@ public class LeadMagnetFragment extends Fragment {
     private String mParam2;
     private SessionManager session;
     private HashMap<String, String> userDetail;
-    private String token,type;
+    private String token, type;
     private ProgressDialog pDialog;
     private LinearLayout layMessage;
     private TextView lblMessage;
@@ -146,10 +145,10 @@ public class LeadMagnetFragment extends Fragment {
 
         limit_lead_basic = Integer.parseInt(sharePref.getSessionStr(SharPref.KEY_LIMIT_LEAD_MAGNET_BASIC));
         limit_lead_premium = Integer.parseInt(sharePref.getSessionStr(SharPref.KEY_LIMIT_LEAD_MAGNET_PREMIUM));
-        if (limit_lead_basic<=0){
+        if (limit_lead_basic <= 0) {
             limit_lead_basic = LIMIT_LEAD_MAGNET_BASIC;
         }
-        if (limit_lead_premium<=0){
+        if (limit_lead_premium <= 0) {
             limit_lead_premium = LIMIT_LEAD_MAGNET_PREMIUM;
         }
 
@@ -157,10 +156,10 @@ public class LeadMagnetFragment extends Fragment {
         labelStorage = (TextView) view.findViewById(R.id.labelStorage);
         progressStorage = (ProgressBar) view.findViewById(R.id.progressStorage);
 
-        if (!(type.equals("6")  || type.equals(6))){ // selain bisnis
+        if (!(type.equals("6") || type.equals(6))) { // selain bisnis
             progressStorage.setVisibility(View.VISIBLE);
             labelStorage.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             progressStorage.setVisibility(View.GONE);
             labelStorage.setVisibility(View.GONE);
         }
@@ -180,18 +179,18 @@ public class LeadMagnetFragment extends Fragment {
         listLead.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                String[] arr = {"Edit", "Buka link","Salin Link","Tampilkan QR-Code"};
+                String[] arr = {"Edit", "Buka link", "Salin Link", "Tampilkan QR-Code"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setItems(arr, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-                        switch (which){
+                        switch (which) {
                             case 0:
                                 Intent intent = new Intent(getContext(), FormLeadMagnetActivity.class);
                                 intent.putExtra("id", dataLead.get(i).getId());
-                                intent.putExtra("tipe","edit");
+                                intent.putExtra("tipe", "edit");
                                 intent.putExtra("data", dataLead.get(i).getJson().toString());
-                                startActivityForResult(intent,REQUEST_ADD);
+                                startActivityForResult(intent, REQUEST_ADD);
                                 break;
                             case 1:
                                 String url = dataLead.get(i).getDomain() + dataLead.get(i).getSub_domain();
@@ -200,7 +199,7 @@ public class LeadMagnetFragment extends Fragment {
                                 startActivity(intent2);
                                 break;
                             case 2:
-                                setClipboard(getContext(),dataLead.get(i).getDomain() + dataLead.get(i).getSub_domain());
+                                setClipboard(getContext(), dataLead.get(i).getDomain() + dataLead.get(i).getSub_domain());
                                 Toast.makeText(getContext(), "berhasil disalin", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
@@ -208,7 +207,7 @@ public class LeadMagnetFragment extends Fragment {
                                 final LayoutInflater inflater = getLayoutInflater();
                                 final View dialogLayout = inflater.inflate(R.layout.item_qrcode, null);
                                 final String loc_qrcode = dataLead.get(i).getUrl_qrcode();
-                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) convertDpToPixel(200,getContext()));
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) convertDpToPixel(200, getContext()));
                                 ImageView img = (ImageView) dialogLayout.findViewById(R.id.imageView);
 
                                 Picasso.with(getContext()).load(loc_qrcode).placeholder(R.drawable.ic_image).error(R.drawable.ic_image).into(img);
@@ -225,7 +224,7 @@ public class LeadMagnetFragment extends Fragment {
                                                 startActivity(intent2);
                                             }
                                         })
-                                        .setPositiveButton("OK",null)
+                                        .setPositiveButton("OK", null)
                                         .show();
                                 break;
                         }
@@ -261,8 +260,8 @@ public class LeadMagnetFragment extends Fragment {
                 try {
                     leadAdapter.filter(edtCari.getText().toString().trim());
                     listLead.invalidate();
-                }catch (NullPointerException e){
-                    Log.i(TAG,e.getMessage());
+                } catch (NullPointerException e) {
+                    Log.i(TAG, e.getMessage());
                 }
             }
 
@@ -287,12 +286,13 @@ public class LeadMagnetFragment extends Fragment {
         });
         return view;
     }
-    private void loadKontak(){
+
+    private void loadKontak() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final String uri = Uri.parse(URL_POST_LIST_LEAD_MAGNET)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataLead.clear();
         //dataLead.add(new ItemKontak("grupku","Grup Kontak","",false));
@@ -305,9 +305,9 @@ public class LeadMagnetFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
                             final String field = data.getJSONObject(i).getString("field");
@@ -321,16 +321,16 @@ public class LeadMagnetFragment extends Fragment {
                             final String url_qrcode = data.getJSONObject(i).getString("url_qrcode");
                             final String url_download = data.getJSONObject(i).getString("url_download");
 
-                            dataLead.add(new ItemLeadmagnet(id,name,field,domain,sub_domain,respon,group_contact,status_lm,klik,submit,url_qrcode,url_download,data.getJSONObject(i),false,false));
+                            dataLead.add(new ItemLeadmagnet(id, name, field, domain, sub_domain, respon, group_contact, status_lm, klik, submit, url_qrcode, url_download, data.getJSONObject(i), false, false));
                         }
                         //Log.i(TAG,"data:" + data.toString());
-                    }else{
-                        showError(true,message,false);
+                    } else {
+                        showError(true, message, false);
                     }
                     displayKontak();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -339,12 +339,12 @@ public class LeadMagnetFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response.statusCode==403){
+                if (response.statusCode == 403) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.data.toString());
                         final boolean status = jsonObject.getBoolean("status");
                         final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")){
+                        if (msg.trim().toLowerCase().equals("invalid api key")) {
                             new androidx.appcompat.app.AlertDialog.Builder(getContext())
                                     .setMessage("Session telah habias / telah login di perangkat lain.")
                                     .setCancelable(false)
@@ -357,26 +357,26 @@ public class LeadMagnetFragment extends Fragment {
                                         }
                                     })
                                     .show();
-                        }else{
-                            showError(true,msg,true);
+                        } else {
+                            showError(true, msg, true);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                }else{
+                } else {
 
                     final String msg = getResources().getString(errorResponse(error));
-                    showError(true,msg,true);
+                    showError(true, msg, true);
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("X-API-KEY",token);
+                header.put("X-API-KEY", token);
                 return header;
             }
 
@@ -385,37 +385,39 @@ public class LeadMagnetFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listLead.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listLead.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayKontak() {
-        leadAdapter = new AdapterLeadmagnet(dataLead,getContext());
+        leadAdapter = new AdapterLeadmagnet(dataLead, getContext());
         listLead.setAdapter(leadAdapter);
         adapterInstance = true;
-        if (type.equals("1") || type.equals(1)){
+        if (type.equals("1") || type.equals(1)) {
             labelStorage.setText("Penyimpanan (akun basic) : " + dataLead.size() + " s.d " + limit_lead_basic);
-            if (dataLead.size()<limit_lead_basic){
-                progressStorage.setProgress((dataLead.size()* 100 ) /limit_lead_basic);
-            }else{
+            if (dataLead.size() < limit_lead_basic) {
+                progressStorage.setProgress((dataLead.size() * 100) / limit_lead_basic);
+            } else {
                 progressStorage.setProgress(100);
             }
-        }else if (!(type.equals("6") || type.equals(6))) {
+        } else if (!(type.equals("6") || type.equals(6))) {
             labelStorage.setText("Penyimpanan (akun premium) : " + dataLead.size() + " s.d " + limit_lead_premium);
-            if (dataLead.size()<limit_lead_premium){
-                progressStorage.setProgress((dataLead.size()* 100 ) /limit_lead_premium);
-            }else{
+            if (dataLead.size() < limit_lead_premium) {
+                progressStorage.setProgress((dataLead.size() * 100) / limit_lead_premium);
+            } else {
                 progressStorage.setProgress(100);
             }
         }
@@ -433,22 +435,24 @@ public class LeadMagnetFragment extends Fragment {
         menu.findItem(R.id.actBatal).setVisible(false);
         menu.findItem(R.id.actHapus).setVisible(false);
         menu.findItem(R.id.actSemua).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
     }
-    private void listDefault(){
-        for (int i = 0; i < dataLead.size(); i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataLead.size(); i++) {
             ItemLeadmagnet ikontak = dataLead.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataLead.set(i,ikontak);
+            dataLead.set(i, ikontak);
         }
         leadAdapter.notifyDataSetChanged();
-        if (dataLead.size()==0){
+        if (dataLead.size() == 0) {
             loadKontak();
         }
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menuTop = menu;
@@ -457,11 +461,12 @@ public class LeadMagnetFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
-            if (type.equals("1") || type.equals(1)){ // basic
-                if (dataLead.size()>=limit_lead_basic){
+        if (item.getItemId() == R.id.actTambah) {
+            if (type.equals("1") || type.equals(1)) { // basic
+                if (dataLead.size() >= limit_lead_basic) {
                     new AlertDialog.Builder(getContext())
                             .setMessage("Kuota Penyimpanan telah penuh, silahkan upgrade Akun Premium")
                             .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
@@ -473,11 +478,11 @@ public class LeadMagnetFragment extends Fragment {
                                     startActivity(intent2);
                                 }
                             })
-                            .setNegativeButton("Batal",null)
+                            .setNegativeButton("Batal", null)
                             .show();
                     return false;
                 }
-            }else if (!(type.equals("6") || type.equals(6))) { // basic
+            } else if (!(type.equals("6") || type.equals(6))) { // basic
                 if (dataLead.size() >= limit_lead_premium) {
                     new AlertDialog.Builder(getContext())
                             .setMessage("Kuota Penyimpanan telah penuh, silahkan upgrade Akun Premium")
@@ -496,10 +501,10 @@ public class LeadMagnetFragment extends Fragment {
                 }
             }
             Intent i = new Intent(getContext(), FormLeadMagnetActivity.class);
-            i.putExtra("tipe","add");
-            startActivityForResult(i,REQUEST_ADD);
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataLead.size()>0){
+            i.putExtra("tipe", "add");
+            startActivityForResult(i, REQUEST_ADD);
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataLead.size() > 0) {
                 menuTop.findItem(R.id.actImporKontak).setVisible(false);
                 menuTop.findItem(R.id.actBatal).setVisible(true);
                 menuTop.findItem(R.id.actHapus).setVisible(true);
@@ -507,16 +512,16 @@ public class LeadMagnetFragment extends Fragment {
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
                 menuTop.findItem(R.id.actScan).setVisible(false);
-                for (int i = 0; i < dataLead.size(); i++){
+                for (int i = 0; i < dataLead.size(); i++) {
                     ItemLeadmagnet ikontak = dataLead.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataLead.set(i,ikontak);
+                    dataLead.set(i, ikontak);
                 }
                 leadAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data Kontak tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actImporKontak).setVisible(false);
@@ -525,7 +530,7 @@ public class LeadMagnetFragment extends Fragment {
             menuTop.findItem(R.id.actTambah).setVisible(true);
             menuTop.findItem(R.id.actScan).setVisible(true);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(getContext())
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -534,21 +539,22 @@ public class LeadMagnetFragment extends Fragment {
                             hapusKontak();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0; i < dataLead.size(); i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataLead.size(); i++) {
                 ItemLeadmagnet ikontak = dataLead.get(i);
                 ikontak.setCheckbox(true);
-                dataLead.set(i,ikontak);
+                dataLead.set(i, ikontak);
             }
             leadAdapter.notifyDataSetChanged();
-        }else if(item.getItemId()==R.id.actScan){
+        } else if (item.getItemId() == R.id.actScan) {
             requestCameraPermission();
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void requestCameraPermission() {
         // Permission has not been granted and must be requested.
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
@@ -578,22 +584,23 @@ public class LeadMagnetFragment extends Fragment {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             // Permission is already available, start camera preview
-            startActivityForResult(new Intent(getContext(), ScanQrActivity.class),REQUEST_QRCODE);
+            startActivityForResult(new Intent(getContext(), ScanQrActivity.class), REQUEST_QRCODE);
         }
 
     }
+
     private void hapusKontak() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final JSONArray jsonArray = new JSONArray();
 
-        for (int i = 0; i < dataLead.size(); i++){
-            if (dataLead.get(i).isCheckbox()){
+        for (int i = 0; i < dataLead.size(); i++) {
+            if (dataLead.get(i).isCheckbox()) {
                 jsonArray.put(Integer.parseInt(dataLead.get(i).getId()));
             }
         }
         final JSONObject request_body = new JSONObject();
         try {
-            request_body.put("id",jsonArray);
+            request_body.put("id", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -604,7 +611,7 @@ public class LeadMagnetFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body , new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -612,10 +619,10 @@ public class LeadMagnetFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
-                        for (int i = 0; i < dataLead.size(); i++){
-                            if (dataLead.get(i).isCheckbox() ){
+                    Log.i(TAG, message);
+                    if (status) {
+                        for (int i = 0; i < dataLead.size(); i++) {
+                            if (dataLead.get(i).isCheckbox()) {
                                 dataLead.remove(i);
                                 i = i - 1;
                             }
@@ -630,17 +637,17 @@ public class LeadMagnetFragment extends Fragment {
                         menuTop.findItem(R.id.actScan).setVisible(true);
                         listDefault();
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -649,15 +656,15 @@ public class LeadMagnetFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response!=null){
-                    if (response.statusCode==403){
+                if (response != null) {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -670,7 +677,7 @@ public class LeadMagnetFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -681,7 +688,7 @@ public class LeadMagnetFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
@@ -690,7 +697,7 @@ public class LeadMagnetFragment extends Fragment {
                                 .setPositiveButton("OK", null)
                                 .show();
                     }
-                }else{
+                } else {
                     final String msg = getResources().getString(errorResponse(error));
                     new AlertDialog.Builder(getContext())
                             .setMessage(msg)
@@ -699,11 +706,11 @@ public class LeadMagnetFragment extends Fragment {
                             .show();
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
-                header.put("X-API-KEY",token);
+                HashMap<String, String> header = new HashMap<>();
+                header.put("X-API-KEY", token);
                 return header;
             }
         };
@@ -713,6 +720,7 @@ public class LeadMagnetFragment extends Fragment {
         requestQueue.add(jsonObjectRequest);
 
     }
+
     private void hidePdialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
@@ -721,12 +729,12 @@ public class LeadMagnetFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadKontak();
             }
-        }else if(requestCode==REQUEST_QRCODE){
-            if (resultCode==RESULT_OK){
+        } else if (requestCode == REQUEST_QRCODE) {
+            if (resultCode == RESULT_OK) {
                 final String qrcode = data.getStringExtra("result");
                 new androidx.appcompat.app.AlertDialog.Builder(getContext())
                         .setMessage(qrcode)
@@ -740,7 +748,7 @@ public class LeadMagnetFragment extends Fragment {
                             }
                         })
                         .setCancelable(false)
-                        .setNegativeButton("Batal",null)
+                        .setNegativeButton("Batal", null)
                         .show();
             }
         }

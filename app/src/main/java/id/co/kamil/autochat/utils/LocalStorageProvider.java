@@ -16,7 +16,6 @@ import android.provider.DocumentsProvider;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-
 import androidx.annotation.RequiresApi;
 
 import java.io.File;
@@ -35,7 +34,7 @@ public class LocalStorageProvider extends DocumentsProvider {
     /**
      * Default root projection: everything but Root.COLUMN_MIME_TYPES
      */
-    private final static String[] DEFAULT_ROOT_PROJECTION = new String[] {
+    private final static String[] DEFAULT_ROOT_PROJECTION = new String[]{
             Root.COLUMN_ROOT_ID,
             Root.COLUMN_FLAGS, Root.COLUMN_TITLE, Root.COLUMN_DOCUMENT_ID, Root.COLUMN_ICON,
             Root.COLUMN_AVAILABLE_BYTES
@@ -44,7 +43,7 @@ public class LocalStorageProvider extends DocumentsProvider {
      * Default document projection: everything but Document.COLUMN_ICON and
      * Document.COLUMN_SUMMARY
      */
-    private final static String[] DEFAULT_DOCUMENT_PROJECTION = new String[] {
+    private final static String[] DEFAULT_DOCUMENT_PROJECTION = new String[]{
             Document.COLUMN_DOCUMENT_ID,
             Document.COLUMN_DISPLAY_NAME, Document.COLUMN_FLAGS, Document.COLUMN_MIME_TYPE,
             Document.COLUMN_SIZE,

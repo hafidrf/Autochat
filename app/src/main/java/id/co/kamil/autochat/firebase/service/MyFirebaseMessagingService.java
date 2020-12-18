@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -73,11 +72,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         registrationComplete.putExtra("token", refreshedToken);
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
+
     private void sendRegistrationToServer(final String token) {
         // sending gcm token to server
         session = new SessionManager(this);
         userDetail = session.getUserDetails();
-        if (!session.isLoggedIn()){
+        if (!session.isLoggedIn()) {
             return;
         }
         final String token_id = userDetail.get(KEY_TOKEN);
@@ -86,7 +86,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("token",token);
+            requestBody.put("token", token);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -95,32 +95,32 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .buildUpon()
                 .toString();
 
-        Log.i(TAG,"body:" + requestBody);
+        Log.i(TAG, "body:" + requestBody);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,"updateToken:" + message);
+                    Log.i(TAG, "updateToken:" + message);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e(TAG,e.getMessage());
+                    Log.e(TAG, e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                errorResponse(getApplicationContext(),error);
+                errorResponse(getApplicationContext(), error);
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token_id);
+                header.put("x-api-key", token_id);
                 return header;
             }
         };
@@ -129,12 +129,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         requestQueue.add(jsonObjectRequest);
         Log.e(TAG, "sendRegistrationToServer: " + token);
     }
+
     private void storeRegIdInPref(String token) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("regId", token);
         editor.commit();
     }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
@@ -172,7 +174,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
             notificationUtils.playNotificationSound();
 
-        }else{
+        } else {
             // If the app is in background, firebase itself handles the notification
         }
     }
@@ -198,9 +200,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "timestamp: " + timestamp);
 
 
-            if (payload.getString("action") != null){
+            if (payload.getString("action") != null) {
                 String action = payload.getString("action");
-                if (action.equals("logout")){
+                if (action.equals("logout")) {
                     session = new SessionManager(this);
                     session.clearData();
                 }
@@ -218,15 +220,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Intent resultIntent = new Intent(Intent.ACTION_VIEW);
                 resultIntent.setData(Uri.parse(payload.getString("url")));
 
-                if (payload.getString("url") == null || payload.getString("url").isEmpty()){
+                if (payload.getString("url") == null || payload.getString("url").isEmpty()) {
                     resultIntent = null;
-                }else if (payload.getString("action") != null){
+                } else if (payload.getString("action") != null) {
                     resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 }
 
 
                 // check for image attachment
-                showNotification(getApplicationContext(),title,message,resultIntent);
+                showNotification(getApplicationContext(), title, message, resultIntent);
                 //showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
 //                if (TextUtils.isEmpty(imageUrl)) {
 //                } else {
@@ -237,16 +239,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 // app is in background, show the notification in notification tray
                 Intent resultIntent = new Intent(Intent.ACTION_VIEW);
                 resultIntent.setData(Uri.parse(payload.getString("url")));
-                if (payload.getString("url") == null || payload.getString("url").isEmpty()){
+                if (payload.getString("url") == null || payload.getString("url").isEmpty()) {
                     resultIntent = null;
-                }else if (payload.getString("action") != null){
+                } else if (payload.getString("action") != null) {
                     resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 }
 //                Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
 //                resultIntent.putExtra("payloadNotification", payload.toString());
 
                 // check for image attachment
-                showNotification(getApplicationContext(),title,message,resultIntent);
+                showNotification(getApplicationContext(), title, message, resultIntent);
                 //showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
                 /*if (TextUtils.isEmpty(imageUrl)) {
                 } else {
@@ -290,11 +292,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         notificationManager.notify(notificationId, mBuilder.build());
     }
+
     /**
      * Showing notification with text only
      */
     private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
-        Log.e(TAG,"showNotificationMessage");
+        Log.e(TAG, "showNotificationMessage");
         notificationUtils = new NotificationUtils(context);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         notificationUtils.showNotificationMessage(title, message, timeStamp, intent);

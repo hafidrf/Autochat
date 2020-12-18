@@ -22,15 +22,18 @@ public class AdapterFollowup extends BaseAdapter {
     ArrayList<ItemFollowup> arraylist;
 
     private static final int resource = R.layout.item_list_followup;
+
     public class ViewHolder {
         TextView txtJudul;
         CheckBox chk1;
 
     }
-    public void reloadArrayList(){
+
+    public void reloadArrayList() {
         arraylist = new ArrayList<ItemFollowup>();
         arraylist.addAll(dataFollowup);
     }
+
     public AdapterFollowup(List<ItemFollowup> apps, Context context) {
         this.dataFollowup = apps;
         this.context = context;
@@ -79,9 +82,9 @@ public class AdapterFollowup extends BaseAdapter {
         viewHolder.chk1.setChecked(item.isCheckbox());
 
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {

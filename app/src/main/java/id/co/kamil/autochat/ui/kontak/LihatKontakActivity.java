@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
@@ -54,7 +53,6 @@ import id.co.kamil.autochat.utils.SessionManager;
 
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_POST_LIST_CONTACT_ID;
-import static id.co.kamil.autochat.utils.API.URL_POST_LIST_GRUP;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
 import static id.co.kamil.autochat.utils.Utils.errorResponseString;
@@ -121,9 +119,9 @@ public class LihatKontakActivity extends AppCompatActivity {
 
         final String tmpData = getIntent().getStringExtra("data");
         idKontak = getIntent().getStringExtra("id");
-        if (tmpData == null){
+        if (tmpData == null) {
             loadKontakId(idKontak);
-        }else{
+        } else {
             displayData(tmpData);
         }
 
@@ -131,10 +129,10 @@ public class LihatKontakActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String phone = txtPhone.getText().toString();
-                phone = phone.replace(" ","");
-                phone = phone.replace("-","");
-                phone = phone.replace("08","628");
-                phone = phone.replace("+62","62");
+                phone = phone.replace(" ", "");
+                phone = phone.replace("-", "");
+                phone = phone.replace("08", "628");
+                phone = phone.replace("+62", "62");
 
                 String url = "https://api.whatsapp.com/send?phone=" + phone;
                 Intent i = new Intent(Intent.ACTION_VIEW);
@@ -155,9 +153,9 @@ public class LihatKontakActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String phone = txtPhone.getText().toString();
-                phone = phone.replace(" ","");
-                phone = phone.replace("-","");
-                phone = phone.replace("08","628");
+                phone = phone.replace(" ", "");
+                phone = phone.replace("-", "");
+                phone = phone.replace("08", "628");
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + phone));
@@ -169,7 +167,7 @@ public class LihatKontakActivity extends AppCompatActivity {
                                 new String[]{android.Manifest.permission.CALL_PHONE},
                                 MY_PERMISSIONS_REQUEST_CALL_PHONE);
                     }
-                }else{
+                } else {
                     startActivity(callIntent);
                 }
 
@@ -183,7 +181,7 @@ public class LihatKontakActivity extends AppCompatActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("contact_id",idKontak);
+            requestBody.put("contact_id", idKontak);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -194,7 +192,7 @@ public class LihatKontakActivity extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.i(TAG,"idKontak:" + idKontak);
+        Log.i(TAG, "idKontak:" + idKontak);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -203,10 +201,10 @@ public class LihatKontakActivity extends AppCompatActivity {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
                         displayData(data.getJSONObject(0).toString());
-                    }else{
+                    } else {
                         new AlertDialog.Builder(LihatKontakActivity.this)
                                 .setMessage(message)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -237,17 +235,17 @@ public class LihatKontakActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(LihatKontakActivity.this,error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(LihatKontakActivity.this, error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new androidx.appcompat.app.AlertDialog.Builder(LihatKontakActivity.this)
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -260,7 +258,7 @@ public class LihatKontakActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(LihatKontakActivity.this)
                                         .setMessage(msg)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -275,7 +273,7 @@ public class LihatKontakActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(LihatKontakActivity.this)
@@ -293,13 +291,13 @@ public class LihatKontakActivity extends AppCompatActivity {
 
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("X-API-KEY",token);
+                header.put("X-API-KEY", token);
                 return header;
             }
         };
@@ -334,7 +332,7 @@ public class LihatKontakActivity extends AppCompatActivity {
             String itemKota = data.getString("city");
             String itemNote = data.getString("note");
             final String tmpGroup = data.getString("customer_groups");
-            Log.i(TAG,"json:" + data.toString());
+            Log.i(TAG, "json:" + data.toString());
             itemGroup = new JSONArray(tmpGroup);
 
             itemTglLahir = formateDateFromstring("yyyy-MM-dd HH:mm:ss", "dd-MM-yyyy", itemTglLahir);
@@ -523,7 +521,7 @@ public class LihatKontakActivity extends AppCompatActivity {
                                             } catch (ActivityNotFoundException e) {
                                                 //TODO: Handle case where no email app is available
                                             }
-                                        }else if(item.getTipe().equals("telegram")){
+                                        } else if (item.getTipe().equals("telegram")) {
                                             String url = "";
                                             if (item.getLink().substring(0, 4).equals("http")) {
                                                 url = item.getLink();
@@ -561,8 +559,8 @@ public class LihatKontakActivity extends AppCompatActivity {
 
     private void displayGrup() {
         String grup = "";
-        if (itemGroup.length()>0){
-            for(int i = 0;i<itemGroup.length();i++){
+        if (itemGroup.length() > 0) {
+            for (int i = 0; i < itemGroup.length(); i++) {
                 try {
                     grup += itemGroup.getJSONObject(i).getString("name") + ", ";
                 } catch (JSONException e) {
@@ -580,20 +578,20 @@ public class LihatKontakActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_edit_only,menu);
+        getMenuInflater().inflate(R.menu.menu_edit_only, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
-        }else if(item.getItemId()==R.id.actEdit){
-            Intent i = new Intent(this,FormKontakActivity.class);
-            i.putExtra("tipe","edit");
-            i.putExtra("id",idKontak);
-            i.putExtra("data",dataJson.toString());
-            startActivityForResult(i,REQUEST_EDIT);
+        } else if (item.getItemId() == R.id.actEdit) {
+            Intent i = new Intent(this, FormKontakActivity.class);
+            i.putExtra("tipe", "edit");
+            i.putExtra("id", idKontak);
+            i.putExtra("data", dataJson.toString());
+            startActivityForResult(i, REQUEST_EDIT);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -601,8 +599,8 @@ public class LihatKontakActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_EDIT){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_EDIT) {
+            if (resultCode == RESULT_OK) {
                 setResult(RESULT_OK);
                 finish();
             }

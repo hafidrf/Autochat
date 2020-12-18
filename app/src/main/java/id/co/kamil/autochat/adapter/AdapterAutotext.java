@@ -8,9 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,8 +23,9 @@ public class AdapterAutotext extends BaseAdapter {
     ArrayList<ItemAutotext> arraylist;
 
     private static final int resource = R.layout.item_list_auto_text;
+
     public class ViewHolder {
-        TextView txtTemplate,txtGroup,txtShorcut;
+        TextView txtTemplate, txtGroup, txtShorcut;
         CheckBox chk1;
 
     }
@@ -79,12 +77,12 @@ public class AdapterAutotext extends BaseAdapter {
 
         final ItemAutotext item = listData.get(position);
         String template = item.getTemplate();
-        if (template.length()>100){
-            template = template.substring(0,100) + "...";
+        if (template.length() > 100) {
+            template = template.substring(0, 100) + "...";
         }
         String shorcut = item.getShorcut();
-        if (shorcut.length()>100){
-            shorcut = shorcut.substring(0,100) + "...";
+        if (shorcut.length() > 100) {
+            shorcut = shorcut.substring(0, 100) + "...";
         }
 
         viewHolder.txtTemplate.setText(template);
@@ -93,9 +91,9 @@ public class AdapterAutotext extends BaseAdapter {
         viewHolder.chk1.setChecked(item.isCheckbox());
 
 
-        if (item.isChkvisible()){
+        if (item.isChkvisible()) {
             viewHolder.chk1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.chk1.setVisibility(View.GONE);
         }
         viewHolder.chk1.setOnClickListener(new View.OnClickListener() {
@@ -119,8 +117,7 @@ public class AdapterAutotext extends BaseAdapter {
             for (ItemAutotext postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getShorcut().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
-                }
-                else if (charText.length() != 0 && postDetail.getTemplate().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && postDetail.getTemplate().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listData.add(postDetail);
                 }
             }

@@ -47,7 +47,7 @@ public class KeyPreviewView extends TextView {
     }
 
     public void setPreviewVisual(final Key key, final KeyboardIconsSet iconsSet,
-            final KeyDrawParams drawParams) {
+                                 final KeyDrawParams drawParams) {
         // What we show as preview should match what we show on a key top in onDraw().
         final int iconId = key.getIconId();
         if (iconId != KeyboardIconsSet.ICON_UNDEFINED) {

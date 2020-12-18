@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -36,13 +35,7 @@
     <string name="subtype_en_GB">"ఆంగ్లం (యుకె)"</string>
     <string name="subtype_en_US">"ఆంగ్లం (యుఎస్)"</string>
     <string name="subtype_es_US">"స్పానిష్ (యుఎస్)"</string>
-    <string name="subtype_hi_ZZ">"హింగ్లీష్"</string>
     <string name="subtype_sr_ZZ">"సెర్బియన్ (లాటిన్)"</string>
-    <string name="subtype_with_layout_en_GB">"ఆంగ్లం (యుకె) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_en_US">"ఆంగ్లం (యుఎస్) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_es_US">"స్పానిష్ (యుఎస్) (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_hi_ZZ">"హింగ్లీష్ (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
-    <string name="subtype_with_layout_sr_ZZ">"సెర్బియన్ (<xliff:g id="KEYBOARD_LAYOUT">%s</xliff:g>)"</string>
     <string name="subtype_generic_traditional">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (సాంప్రదాయకం)"</string>
     <string name="subtype_generic_compact">"<xliff:g id="LANGUAGE_NAME">%s</xliff:g> (కాంపాక్ట్)"</string>
     <string name="custom_input_styles_title">"అనుకూల ఇన్‌పుట్ శైలులు"</string>
@@ -56,8 +49,5 @@
     <string name="enable">"ప్రారంభించండి"</string>
     <string name="not_now">"ఇప్పుడు కాదు"</string>
     <string name="custom_input_style_already_exists">"ఇదే ఇన్‌పుట్ శైలి ఇప్పటికే ఉంది: <xliff:g id="INPUT_STYLE_NAME">%s</xliff:g>"</string>
-    <string name="prefs_keypress_vibration_duration_settings">"కీని నొక్కినప్పుడు వైబ్రేషన్ వ్యవధి"</string>
-    <string name="prefs_keypress_sound_volume_settings">"కీని నొక్కినప్పుడు చేసే ధ్వని వాల్యూమ్"</string>
-    <string name="prefs_key_longpress_timeout_settings">"కీని ఎక్కువసేపు నొక్కి ఉంచాల్సిన సమయంలో ఆలస్యం"</string>
     <string name="button_default">"డిఫాల్ట్"</string>
 </resources>

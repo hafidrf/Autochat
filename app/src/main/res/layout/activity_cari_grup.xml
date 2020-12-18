@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.grup.CariGrupActivity">
+
     <EditText
         android:id="@+id/edtCari"
         android:hint="Cari"
@@ -21,12 +21,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rectangle_grey"
-        android:drawableLeft="@drawable/ic_search_light"/>
+        android:drawableLeft="@drawable/ic_search_light" />
+
     <ListView
         android:id="@+id/listGrup"
         android:dividerHeight="0dp"
         android:divider="@null"
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

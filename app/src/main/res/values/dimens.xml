@@ -6,7 +6,4 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="key_height">52dip</dimen>
-    <dimen name="candidate_font_height">20sp</dimen>
-    <dimen name="candidate_vertical_padding">16sp</dimen>
 </resources>

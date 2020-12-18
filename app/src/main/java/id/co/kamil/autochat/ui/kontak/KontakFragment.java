@@ -8,13 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -37,6 +31,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -56,13 +54,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,7 +72,6 @@ import id.co.kamil.autochat.adapter.AdapterKontak;
 import id.co.kamil.autochat.adapter.ItemFollowup;
 import id.co.kamil.autochat.adapter.ItemKontak;
 import id.co.kamil.autochat.ui.followup.FormFollowupActivity;
-import id.co.kamil.autochat.utils.FileUtils;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
@@ -88,7 +82,6 @@ import static id.co.kamil.autochat.utils.API.URL_DIRECT_LINK_UPGRADE;
 import static id.co.kamil.autochat.utils.API.URL_POST_ADD_CONTACT_FOLLOW_UP;
 import static id.co.kamil.autochat.utils.API.URL_POST_ALL_CONTACT;
 import static id.co.kamil.autochat.utils.API.URL_POST_HAPUS_CONTACT;
-import static id.co.kamil.autochat.utils.API.URL_POST_IMPORT_CONTACT;
 import static id.co.kamil.autochat.utils.API.URL_POST_IMPORT_CONTACT_CSV;
 import static id.co.kamil.autochat.utils.API.URL_POST_LIST_CONTACT;
 import static id.co.kamil.autochat.utils.API.URL_POST_LIST_FOLLOW_UP;
@@ -98,7 +91,6 @@ import static id.co.kamil.autochat.utils.Utils.errorResponse;
 import static id.co.kamil.autochat.utils.Utils.errorResponseString;
 import static id.co.kamil.autochat.utils.Utils.fileExist;
 import static id.co.kamil.autochat.utils.Utils.getDirWabot;
-import static id.co.kamil.autochat.utils.Utils.getFileExtension;
 
 public class KontakFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -180,17 +172,17 @@ public class KontakFragment extends Fragment {
         sharePref = new SharPref(getContext());
 
         limit_kontak = Integer.parseInt(sharePref.getSessionStr(SharPref.KEY_LIMIT_KONTAK));
-        if (limit_kontak<=0){
+        if (limit_kontak <= 0) {
             limit_kontak = LIMIT_KONTAK;
         }
         pDialog = new ProgressDialog(getContext());
         labelStorage = (TextView) view.findViewById(R.id.labelStorage);
         progressStorage = (ProgressBar) view.findViewById(R.id.progressStorage);
 
-        if (type.equals("1")){ // basic
+        if (type.equals("1")) { // basic
             progressStorage.setVisibility(View.VISIBLE);
             labelStorage.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             progressStorage.setVisibility(View.GONE);
             labelStorage.setVisibility(View.GONE);
         }
@@ -215,12 +207,12 @@ public class KontakFragment extends Fragment {
                 builder.setItems(arr, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-                        switch (which){
+                        switch (which) {
                             case 0:
-                                Intent intent = new Intent(getContext(),LihatKontakActivity.class);
-                                intent.putExtra("id",dataKontak.get(i).getId());
-                                intent.putExtra("data",dataKontak.get(i).getJsonObject().toString());
-                                startActivityForResult(intent,REQUEST_ADD);
+                                Intent intent = new Intent(getContext(), LihatKontakActivity.class);
+                                intent.putExtra("id", dataKontak.get(i).getId());
+                                intent.putExtra("data", dataKontak.get(i).getJsonObject().toString());
+                                startActivityForResult(intent, REQUEST_ADD);
                                 break;
                             case 1:
                                 dialogFollowup(i);
@@ -259,8 +251,8 @@ public class KontakFragment extends Fragment {
                 try {
                     kontakAdapter.filter(edtCari.getText().toString().trim());
                     listKontak.invalidate();
-                }catch (NullPointerException e){
-                    Log.i(TAG,e.getMessage());
+                } catch (NullPointerException e) {
+                    Log.i(TAG, e.getMessage());
                 }
             }
 
@@ -308,7 +300,7 @@ public class KontakFragment extends Fragment {
                 try {
                     followupAdapter.filter(edtCari.getText().toString().trim());
                     listFollowup.invalidate();
-                }catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -322,31 +314,31 @@ public class KontakFragment extends Fragment {
         listFollowup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if(position>=0){
+                if (position >= 0) {
                     new AlertDialog.Builder(getContext())
                             .setMessage("Apakah anda yakin akan menambahkan ke list followup untuk kontak tersebut?")
                             .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    tambahFollowup(dataFollowup.get(position).getId(),dataKontak.get(indexList).getId());
+                                    tambahFollowup(dataFollowup.get(position).getId(), dataKontak.get(indexList).getId());
                                 }
                             })
-                            .setNegativeButton("Tidak",null)
+                            .setNegativeButton("Tidak", null)
                             .show();
                 }
             }
         });
-        loadFollowUp(listFollowup,labelMessage);
+        loadFollowUp(listFollowup, labelMessage);
 
         dialog.setPositiveButton("Buat Baru", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(getContext(), FormFollowupActivity.class);
-                intent.putExtra("contact_id",dataKontak.get(indexList).getId());
-                intent.putExtra("contact_title",dataKontak.get(indexList).getJudul());
-                intent.putExtra("contact_nomor",dataKontak.get(indexList).getNomorhp());
-                intent.putExtra("tipe","add");
+                intent.putExtra("contact_id", dataKontak.get(indexList).getId());
+                intent.putExtra("contact_title", dataKontak.get(indexList).getJudul());
+                intent.putExtra("contact_nomor", dataKontak.get(indexList).getNomorhp());
+                intent.putExtra("tipe", "add");
                 startActivity(intent);
             }
         });
@@ -362,15 +354,15 @@ public class KontakFragment extends Fragment {
         dialog.show();
     }
 
-    private void tambahFollowup(String id_follow_up,String id_kontak) {
+    private void tambahFollowup(String id_follow_up, String id_kontak) {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final String uri = Uri.parse(URL_POST_ADD_CONTACT_FOLLOW_UP)
                 .buildUpon()
                 .toString();
         JSONObject parameter = new JSONObject();
         try {
-            parameter.put("id_follow_up",id_follow_up);
-            parameter.put("id_kontak",id_kontak);
+            parameter.put("id_follow_up", id_follow_up);
+            parameter.put("id_kontak", id_kontak);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -388,7 +380,7 @@ public class KontakFragment extends Fragment {
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT);
                 }
 
             }
@@ -397,15 +389,15 @@ public class KontakFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -418,7 +410,7 @@ public class KontakFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
@@ -426,7 +418,7 @@ public class KontakFragment extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
@@ -434,13 +426,13 @@ public class KontakFragment extends Fragment {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -465,23 +457,23 @@ public class KontakFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
-                            dataFollowup.add(new ItemFollowup(id,name,data.getJSONObject(i),false,false));
+                            dataFollowup.add(new ItemFollowup(id, name, data.getJSONObject(i), false, false));
                         }
-                    }else{
+                    } else {
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                     }
-                    followupAdapter = new AdapterFollowup(dataFollowup,getContext());
+                    followupAdapter = new AdapterFollowup(dataFollowup, getContext());
                     listFollowup.setAdapter(followupAdapter);
-                    if (dataFollowup.size()>0){
+                    if (dataFollowup.size() > 0) {
                         labelMessage.setVisibility(View.GONE);
                         listFollowup.setVisibility(View.VISIBLE);
                         labelMessage.setText("Data Followup tidak tersedia");
-                    }else{
+                    } else {
                         labelMessage.setVisibility(View.VISIBLE);
                         listFollowup.setVisibility(View.GONE);
                     }
@@ -489,7 +481,7 @@ public class KontakFragment extends Fragment {
                     e.printStackTrace();
                     labelMessage.setVisibility(View.VISIBLE);
                     labelMessage.setText(e.getMessage());
-                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT);
                 }
 
             }
@@ -499,15 +491,15 @@ public class KontakFragment extends Fragment {
                 labelMessage.setVisibility(View.VISIBLE);
                 labelMessage.setText(errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -520,7 +512,7 @@ public class KontakFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
@@ -528,7 +520,7 @@ public class KontakFragment extends Fragment {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
@@ -536,13 +528,13 @@ public class KontakFragment extends Fragment {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
-                header.put("x-api-key",token);
+                header.put("x-api-key", token);
                 return header;
             }
         };
@@ -550,12 +542,13 @@ public class KontakFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void loadKontak(){
+
+    private void loadKontak() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final String uri = Uri.parse(URL_POST_LIST_CONTACT)
                 .buildUpon()
                 .toString();
-        showError(false,"",true);
+        showError(false, "", true);
         swipe_refresh.setRefreshing(true);
         dataKontak.clear();
         //dataKontak.add(new ItemKontak("grupku","Grup Kontak","",false));
@@ -568,29 +561,29 @@ public class KontakFragment extends Fragment {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
 
-                    if (status){
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String first_name = data.getJSONObject(i).getString("first_name");
                             final String last_name = data.getJSONObject(i).getString("last_name");
                             String name;
-                            if (last_name.isEmpty() || last_name.equals(null) || last_name.equals("null") || last_name == null){
+                            if (last_name.isEmpty() || last_name.equals(null) || last_name.equals("null") || last_name == null) {
                                 name = first_name;
-                            }else{
+                            } else {
                                 name = first_name + " " + last_name;
                             }
                             final String phone = data.getJSONObject(i).getString("phone");
-                            dataKontak.add(new ItemKontak(id,name,phone,false,data.getJSONObject(i)));
+                            dataKontak.add(new ItemKontak(id, name, phone, false, data.getJSONObject(i)));
                         }
                         //Log.i(TAG,"data:" + data.toString());
-                    }else{
-                        showError(true,message,false);
+                    } else {
+                        showError(true, message, false);
                     }
                     displayKontak();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showError(true,e.getMessage(),true);
+                    showError(true, e.getMessage(), true);
                 }
 
             }
@@ -599,9 +592,9 @@ public class KontakFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 swipe_refresh.setRefreshing(false);
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else {
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
                     if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
@@ -635,12 +628,12 @@ public class KontakFragment extends Fragment {
                 }
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
+                HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
-                header.put("X-API-KEY",token);
+                header.put("X-API-KEY", token);
                 return header;
             }
 
@@ -649,30 +642,32 @@ public class KontakFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void showError(boolean show,String message, boolean visibleButton){
-        if (show){
+
+    private void showError(boolean show, String message, boolean visibleButton) {
+        if (show) {
             layMessage.setVisibility(View.VISIBLE);
             listKontak.setVisibility(View.GONE);
             lblMessage.setText(message);
-        }else{
+        } else {
             layMessage.setVisibility(View.GONE);
             listKontak.setVisibility(View.VISIBLE);
         }
-        if (visibleButton){
+        if (visibleButton) {
             btnCobaLagi.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnCobaLagi.setVisibility(View.GONE);
         }
     }
+
     private void displayKontak() {
-        kontakAdapter = new AdapterKontak(dataKontak,getContext());
+        kontakAdapter = new AdapterKontak(dataKontak, getContext());
         listKontak.setAdapter(kontakAdapter);
         adapterInstance = true;
         labelStorage.setText("Penyimpanan (Akun Basic) : " + dataKontak.size() + " s.d " + limit_kontak);
 
-        if (dataKontak.size()<limit_kontak){
-            progressStorage.setProgress((dataKontak.size()* 100 ) /limit_kontak);
-        }else{
+        if (dataKontak.size() < limit_kontak) {
+            progressStorage.setProgress((dataKontak.size() * 100) / limit_kontak);
+        } else {
             progressStorage.setProgress(100);
         }
     }
@@ -689,22 +684,24 @@ public class KontakFragment extends Fragment {
         menu.findItem(R.id.actSemua).setVisible(false);
         menu.findItem(R.id.actImport).setVisible(true);
         menu.findItem(R.id.actExport).setVisible(false);
-        if (adapterInstance){
+        if (adapterInstance) {
             listDefault();
         }
     }
-    private void listDefault(){
-        for (int i = 0 ; i < dataKontak.size();i++){
+
+    private void listDefault() {
+        for (int i = 0; i < dataKontak.size(); i++) {
             ItemKontak ikontak = dataKontak.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
-            dataKontak.set(i,ikontak);
+            dataKontak.set(i, ikontak);
         }
         kontakAdapter.notifyDataSetChanged();
-        if (dataKontak.size()==0){
+        if (dataKontak.size() == 0) {
             loadKontak();
         }
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menuTop = menu;
@@ -713,11 +710,12 @@ public class KontakFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.actTambah){
-            if (type.equals("1")){ // basic
-                if (dataKontak.size()>=limit_kontak){
+        if (item.getItemId() == R.id.actTambah) {
+            if (type.equals("1")) { // basic
+                if (dataKontak.size() >= limit_kontak) {
                     new AlertDialog.Builder(getContext())
                             .setMessage("Kuota Penyimpanan telah penuh, silahkan upgrade Akun Premium")
                             .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
@@ -729,16 +727,16 @@ public class KontakFragment extends Fragment {
                                     startActivity(intent2);
                                 }
                             })
-                            .setNegativeButton("Batal",null)
+                            .setNegativeButton("Batal", null)
                             .show();
                     return false;
                 }
             }
             Intent i = new Intent(getContext(), FormKontakActivity.class);
-            i.putExtra("tipe","add");
-            startActivityForResult(i,REQUEST_ADD);
-        }else if (item.getItemId()==R.id.actEdit) {
-            if (dataKontak.size()>0){
+            i.putExtra("tipe", "add");
+            startActivityForResult(i, REQUEST_ADD);
+        } else if (item.getItemId() == R.id.actEdit) {
+            if (dataKontak.size() > 0) {
                 menuTop.findItem(R.id.actImporKontak).setVisible(false);
                 menuTop.findItem(R.id.actImport).setVisible(false);
                 menuTop.findItem(R.id.actExport).setVisible(false);
@@ -748,16 +746,16 @@ public class KontakFragment extends Fragment {
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actEditForExport).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0 ; i < dataKontak.size();i++){
+                for (int i = 0; i < dataKontak.size(); i++) {
                     ItemKontak ikontak = dataKontak.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataKontak.set(i,ikontak);
+                    dataKontak.set(i, ikontak);
                 }
                 kontakAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data Kontak tidak tersedia", Toast.LENGTH_SHORT).show();
             }
-        }else if (item.getItemId()==R.id.actBatal) {
+        } else if (item.getItemId() == R.id.actBatal) {
             menuTop.findItem(R.id.actBatal).setVisible(false);
             menuTop.findItem(R.id.actHapus).setVisible(false);
             menuTop.findItem(R.id.actImporKontak).setVisible(true);
@@ -768,7 +766,7 @@ public class KontakFragment extends Fragment {
             menuTop.findItem(R.id.actImport).setVisible(true);
             menuTop.findItem(R.id.actExport).setVisible(false);
             listDefault();
-        }else if (item.getItemId()==R.id.actHapus) {
+        } else if (item.getItemId() == R.id.actHapus) {
             new AlertDialog.Builder(getContext())
                     .setMessage("Apakah anda yakin akan menghapus data berikut?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -777,26 +775,26 @@ public class KontakFragment extends Fragment {
                             hapusKontak();
                         }
                     })
-                    .setNegativeButton("Tidak",null)
+                    .setNegativeButton("Tidak", null)
                     .show();
 
-        }else if (item.getItemId()==R.id.actSemua) {
-            for (int i = 0 ; i < dataKontak.size();i++){
+        } else if (item.getItemId() == R.id.actSemua) {
+            for (int i = 0; i < dataKontak.size(); i++) {
                 ItemKontak ikontak = dataKontak.get(i);
                 ikontak.setCheckbox(true);
-                dataKontak.set(i,ikontak);
+                dataKontak.set(i, ikontak);
             }
             kontakAdapter.notifyDataSetChanged();
-        }else if(item.getItemId()==R.id.actImporKontak){
-            startActivityForResult(new Intent(getContext(),ImporKontakActivity.class),REQUEST_IMPORT);
-        }else if(item.getItemId()==R.id.actImport){
-            if (type.equals("1")){
+        } else if (item.getItemId() == R.id.actImporKontak) {
+            startActivityForResult(new Intent(getContext(), ImporKontakActivity.class), REQUEST_IMPORT);
+        } else if (item.getItemId() == R.id.actImport) {
+            if (type.equals("1")) {
                 Toast.makeText(getContext(), "Fitur ini khusus untuk Akun Premium / Bisnis. Silahkan upgrade akun", Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_IMPORT_CSV);
-                }else {
+                } else {
                     Intent intent = new Intent();
                     //intent.setType("*/*");
                     intent.setType("text/*");
@@ -806,8 +804,8 @@ public class KontakFragment extends Fragment {
                     startActivityForResult(Intent.createChooser(intent, "Select CSV"), REQUEST_IMPORT_CSV);
                 }
             }
-        }else if(item.getItemId()==R.id.actExport){
-            if (checkPermissionGallery()){
+        } else if (item.getItemId() == R.id.actExport) {
+            if (checkPermissionGallery()) {
                 new AlertDialog.Builder(getContext())
                         .setMessage("Apakah anda yakin akan ekspor data berikut ke csv?")
                         .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
@@ -816,12 +814,12 @@ public class KontakFragment extends Fragment {
                                 exportCSV();
                             }
                         })
-                        .setNegativeButton("Tidak",null)
+                        .setNegativeButton("Tidak", null)
                         .show();
             }
 
-        }else if(item.getItemId()==R.id.actEditForExport){
-            if (dataKontak.size()>0){
+        } else if (item.getItemId() == R.id.actEditForExport) {
+            if (dataKontak.size() > 0) {
                 menuTop.findItem(R.id.actImporKontak).setVisible(false);
                 menuTop.findItem(R.id.actImport).setVisible(false);
                 menuTop.findItem(R.id.actExport).setVisible(true);
@@ -831,19 +829,20 @@ public class KontakFragment extends Fragment {
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actEditForExport).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
-                for (int i = 0 ; i < dataKontak.size();i++){
+                for (int i = 0; i < dataKontak.size(); i++) {
                     ItemKontak ikontak = dataKontak.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
-                    dataKontak.set(i,ikontak);
+                    dataKontak.set(i, ikontak);
                 }
                 kontakAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Data Kontak tidak tersedia", Toast.LENGTH_SHORT).show();
             }
         }
         return super.onOptionsItemSelected(item);
     }
-    public boolean checkPermissionGallery(){
+
+    public boolean checkPermissionGallery() {
         try {
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -858,25 +857,26 @@ public class KontakFragment extends Fragment {
         }
         return false;
     }
+
     private void exportCSV() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final JSONArray jsonArray = new JSONArray();
 
-        for (int i = 0 ; i < dataKontak.size();i++){
-            if (dataKontak.get(i).isCheckbox()){
+        for (int i = 0; i < dataKontak.size(); i++) {
+            if (dataKontak.get(i).isCheckbox()) {
                 jsonArray.put(Integer.parseInt(dataKontak.get(i).getId()));
             }
         }
-        if(jsonArray.length()<=0){
+        if (jsonArray.length() <= 0) {
             new AlertDialog.Builder(getContext())
                     .setMessage("Tidak ada kontak yang dipilih untuk diekspor")
-                    .setPositiveButton("OK",null)
+                    .setPositiveButton("OK", null)
                     .show();
             return;
         }
         final JSONObject request_body = new JSONObject();
         try {
-            request_body.put("contact_id",jsonArray);
+            request_body.put("contact_id", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -886,8 +886,8 @@ public class KontakFragment extends Fragment {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.e(TAG,"uri:" + uri);
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body , new Response.Listener<JSONObject>() {
+        Log.e(TAG, "uri:" + uri);
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -895,8 +895,8 @@ public class KontakFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
+                    Log.i(TAG, message);
+                    if (status) {
                         final JSONArray data = response.getJSONArray("data");
                         StringBuilder stringBuilder = new StringBuilder();
 
@@ -926,12 +926,12 @@ public class KontakFragment extends Fragment {
                         final String ccustomer_groups = "custmer_groups (json)";
                         final String chistori_kontak = "histori_kontak (json)";
 
-                        stringBuilder.append(TextUtils.join(";",new String[]{cnama_depan,cnama_belakang,cemail,cphone,csapaan,ctelegram,
-                                caddress,cweb,cfb,cig,clinkedin,ctokopedia,cbukalapak,cshopee,colshop_id,cgender,cdate_of_birth,cnote,cid_kota,
-                                cid_wabot,cref_source,ccucapan_ultah,cnext_ultah,ccustomer_groups,chistori_kontak}));
+                        stringBuilder.append(TextUtils.join(";", new String[]{cnama_depan, cnama_belakang, cemail, cphone, csapaan, ctelegram,
+                                caddress, cweb, cfb, cig, clinkedin, ctokopedia, cbukalapak, cshopee, colshop_id, cgender, cdate_of_birth, cnote, cid_kota,
+                                cid_wabot, cref_source, ccucapan_ultah, cnext_ultah, ccustomer_groups, chistori_kontak}));
                         stringBuilder.append("\n");
 
-                        for (int i = 0 ;i<data.length();i++){
+                        for (int i = 0; i < data.length(); i++) {
                             final String nama_depan = data.getJSONObject(i).getString("first_name");
                             final String nama_belakang = data.getJSONObject(i).getString("last_name");
                             final String email = data.getJSONObject(i).getString("email");
@@ -958,36 +958,36 @@ public class KontakFragment extends Fragment {
                             final JSONArray customer_groups = data.getJSONObject(i).getJSONArray("customer_groups");
                             final JSONArray histori_kontak = data.getJSONObject(i).getJSONArray("histori_kontak");
 
-                            stringBuilder.append(TextUtils.join(";",new String[]{nama_depan,nama_belakang,email,phone,sapaan,telegram,
-                                    address,web,fb,ig,linkedin,tokopedia,bukalapak,shopee,olshop_id,gender,date_of_birth,note,id_kota,
-                                    id_wabot,ref_source,ucapan_ultah,next_ultah,customer_groups.toString(),histori_kontak.toString()}));
-                            if (i < data.length()-1){
+                            stringBuilder.append(TextUtils.join(";", new String[]{nama_depan, nama_belakang, email, phone, sapaan, telegram,
+                                    address, web, fb, ig, linkedin, tokopedia, bukalapak, shopee, olshop_id, gender, date_of_birth, note, id_kota,
+                                    id_wabot, ref_source, ucapan_ultah, next_ultah, customer_groups.toString(), histori_kontak.toString()}));
+                            if (i < data.length() - 1) {
                                 stringBuilder.append("\n");
                             }
 
                         }
-                        if (stringBuilder.length()>0){
+                        if (stringBuilder.length() > 0) {
                             Date c = Calendar.getInstance().getTime();
                             SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
                             String formattedDate = df.format(c);
 
                             String nama_file = "contact_" + formattedDate + ".csv";
-                            createCSV(stringBuilder,nama_file);
-                        }else{
+                            createCSV(stringBuilder, nama_file);
+                        } else {
                             Toast.makeText(getContext(), "Maaf, tidak ada kontak yang akan diekspor", Toast.LENGTH_SHORT).show();
                         }
 
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -996,17 +996,17 @@ public class KontakFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -1019,7 +1019,7 @@ public class KontakFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -1030,7 +1030,7 @@ public class KontakFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
@@ -1041,11 +1041,11 @@ public class KontakFragment extends Fragment {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
-                header.put("X-API-KEY",token);
+                HashMap<String, String> header = new HashMap<>();
+                header.put("X-API-KEY", token);
                 return header;
             }
         };
@@ -1054,14 +1054,15 @@ public class KontakFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void createCSV(StringBuilder data,String nama_file){
+
+    private void createCSV(StringBuilder data, String nama_file) {
         //generate data
 
-        try{
+        try {
             //saving the file into device
-            String dir = getDirWabot("export") ;
+            String dir = getDirWabot("export");
             String fileName = dir + "/" + nama_file;
-            if(fileExist(getContext(),fileName) == false){
+            if (fileExist(getContext(), fileName) == false) {
                 String root = Environment.getExternalStorageDirectory().getAbsolutePath();
                 File myDir = new File(root + "/wabot/export/");
                 myDir.mkdirs();
@@ -1080,7 +1081,7 @@ public class KontakFragment extends Fragment {
             menuTop.findItem(R.id.actExport).setVisible(false);
             new AlertDialog.Builder(getContext())
                     .setMessage("Export selesai. Path : " + fileName)
-                    .setPositiveButton("OK",null)
+                    .setPositiveButton("OK", null)
                     .setCancelable(false)
                     .show();
             //exporting
@@ -1093,8 +1094,7 @@ public class KontakFragment extends Fragment {
 //            fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //            fileIntent.putExtra(Intent.EXTRA_STREAM, fileName);
 //            startActivity(Intent.createChooser(fileIntent, "Send mail"));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             String stackTrace = Log.getStackTraceString(e);
             new AlertDialog.Builder(getContext())
@@ -1106,18 +1106,19 @@ public class KontakFragment extends Fragment {
 
 
     }
+
     private void hapusKontak() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         final JSONArray jsonArray = new JSONArray();
 
-        for (int i = 0 ; i < dataKontak.size();i++){
-            if (dataKontak.get(i).isCheckbox()){
+        for (int i = 0; i < dataKontak.size(); i++) {
+            if (dataKontak.get(i).isCheckbox()) {
                 jsonArray.put(Integer.parseInt(dataKontak.get(i).getId()));
             }
         }
         final JSONObject request_body = new JSONObject();
         try {
-            request_body.put("id",jsonArray);
+            request_body.put("id", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1128,7 +1129,7 @@ public class KontakFragment extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body , new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -1136,10 +1137,10 @@ public class KontakFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    Log.i(TAG,message);
-                    if (status){
-                        for (int i = 0 ; i < dataKontak.size();i++){
-                            if (dataKontak.get(i).isCheckbox() ){
+                    Log.i(TAG, message);
+                    if (status) {
+                        for (int i = 0; i < dataKontak.size(); i++) {
+                            if (dataKontak.get(i).isCheckbox()) {
                                 dataKontak.remove(i);
                                 i = i - 1;
                             }
@@ -1156,17 +1157,17 @@ public class KontakFragment extends Fragment {
                         menuTop.findItem(R.id.actExport).setVisible(false);
                         listDefault();
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -1175,17 +1176,17 @@ public class KontakFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -1198,7 +1199,7 @@ public class KontakFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -1209,7 +1210,7 @@ public class KontakFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
@@ -1220,11 +1221,11 @@ public class KontakFragment extends Fragment {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
-                header.put("X-API-KEY",token);
+                HashMap<String, String> header = new HashMap<>();
+                header.put("X-API-KEY", token);
                 return header;
             }
         };
@@ -1234,6 +1235,7 @@ public class KontakFragment extends Fragment {
         requestQueue.add(jsonObjectRequest);
 
     }
+
     private void hidePdialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
@@ -1242,15 +1244,15 @@ public class KontakFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_ADD){
-            if (resultCode==RESULT_OK){
+        if (requestCode == REQUEST_ADD) {
+            if (resultCode == RESULT_OK) {
                 loadKontak();
             }
-        }else if(requestCode==REQUEST_IMPORT){
-            if(resultCode==RESULT_OK){
+        } else if (requestCode == REQUEST_IMPORT) {
+            if (resultCode == RESULT_OK) {
                 loadKontak();
             }
-        }else if(requestCode == REQUEST_IMPORT_CSV){
+        } else if (requestCode == REQUEST_IMPORT_CSV) {
 
 
             String tableName = "proinfo";
@@ -1262,69 +1264,69 @@ public class KontakFragment extends Fragment {
                         return;
                     }
                     try {
-                        Log.e(TAG,"getData:" + data.getData());
+                        Log.e(TAG, "getData:" + data.getData());
                         BufferedReader buffer = readCSV(data.getData());
                         String line = "";
                         int i = 0;
                         while ((line = buffer.readLine()) != null) {
-                            if (i == 0){
+                            if (i == 0) {
                                 i++;
                                 continue;
                             }
                             String[] str = line.split(";", 25);  // defining 3 columns with null or blank field //values acceptance
                             //Id, Company,Name,Price
-                            String nama_depan = str[0].toString();
-                            String nama_belakang = str[1].toString();
-                            String email = str[2].toString();
-                            String phone = str[3].toString();
-                            String sapaan = str[4].toString();
-                            String telegram = str[5].toString();
-                            String address = str[6].toString();
-                            String web = str[7].toString();
-                            String fb = str[8].toString();
-                            String ig = str[9].toString();
-                            String linkedin = str[10].toString();
-                            String tokopedia = str[11].toString();
-                            String bukalapak = str[12].toString();
-                            String shopee = str[13].toString();
-                            String olshop_id = str[14].toString();
-                            String gender = str[15].toString();
-                            String date_of_birth = str[16].toString();
-                            String note = str[17].toString();
-                            String id_kota = str[18].toString();
-                            String id_wabot = str[19].toString();
-                            String ref_source = str[20].toString();
-                            String ucapan_ultah = str[21].toString();
-                            String next_ultah = str[22].toString();
-                            String customer_groups = str[23].toString();
-                            String histori_kontak = str[24].toString();
+                            String nama_depan = str[0];
+                            String nama_belakang = str[1];
+                            String email = str[2];
+                            String phone = str[3];
+                            String sapaan = str[4];
+                            String telegram = str[5];
+                            String address = str[6];
+                            String web = str[7];
+                            String fb = str[8];
+                            String ig = str[9];
+                            String linkedin = str[10];
+                            String tokopedia = str[11];
+                            String bukalapak = str[12];
+                            String shopee = str[13];
+                            String olshop_id = str[14];
+                            String gender = str[15];
+                            String date_of_birth = str[16];
+                            String note = str[17];
+                            String id_kota = str[18];
+                            String id_wabot = str[19];
+                            String ref_source = str[20];
+                            String ucapan_ultah = str[21];
+                            String next_ultah = str[22];
+                            String customer_groups = str[23];
+                            String histori_kontak = str[24];
 
                             JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("k_nama_depan",nama_depan);
-                            jsonObject.put("k_nama_belakang",nama_belakang);
-                            jsonObject.put("k_email",email);
-                            jsonObject.put("k_phone",phone);
-                            jsonObject.put("k_sapaan",sapaan);
-                            jsonObject.put("k_telegram",telegram);
-                            jsonObject.put("k_address",address);
-                            jsonObject.put("k_web",web);
-                            jsonObject.put("k_fb",fb);
-                            jsonObject.put("k_ig",ig);
-                            jsonObject.put("k_linkedin",linkedin);
-                            jsonObject.put("k_tokopedia",tokopedia);
-                            jsonObject.put("k_bukalapak",bukalapak);
-                            jsonObject.put("k_shopee",shopee);
-                            jsonObject.put("k_olshop_id",olshop_id);
-                            jsonObject.put("k_gender",gender);
-                            jsonObject.put("k_date_of_birth",date_of_birth);
-                            jsonObject.put("k_note",note);
-                            jsonObject.put("id_kota",id_kota);
-                            jsonObject.put("id_wabot",id_wabot);
-                            jsonObject.put("k_ref_source",ref_source);
-                            jsonObject.put("k_ucapan_ultah",ucapan_ultah);
-                            jsonObject.put("k_next_ultah",next_ultah);
+                            jsonObject.put("k_nama_depan", nama_depan);
+                            jsonObject.put("k_nama_belakang", nama_belakang);
+                            jsonObject.put("k_email", email);
+                            jsonObject.put("k_phone", phone);
+                            jsonObject.put("k_sapaan", sapaan);
+                            jsonObject.put("k_telegram", telegram);
+                            jsonObject.put("k_address", address);
+                            jsonObject.put("k_web", web);
+                            jsonObject.put("k_fb", fb);
+                            jsonObject.put("k_ig", ig);
+                            jsonObject.put("k_linkedin", linkedin);
+                            jsonObject.put("k_tokopedia", tokopedia);
+                            jsonObject.put("k_bukalapak", bukalapak);
+                            jsonObject.put("k_shopee", shopee);
+                            jsonObject.put("k_olshop_id", olshop_id);
+                            jsonObject.put("k_gender", gender);
+                            jsonObject.put("k_date_of_birth", date_of_birth);
+                            jsonObject.put("k_note", note);
+                            jsonObject.put("id_kota", id_kota);
+                            jsonObject.put("id_wabot", id_wabot);
+                            jsonObject.put("k_ref_source", ref_source);
+                            jsonObject.put("k_ucapan_ultah", ucapan_ultah);
+                            jsonObject.put("k_next_ultah", next_ultah);
                             jsonObject.put("group", new JSONArray(customer_groups));
-                            jsonObject.put("histori_kontak",new JSONArray((histori_kontak)));
+                            jsonObject.put("histori_kontak", new JSONArray((histori_kontak)));
 
                             dataImport.put(jsonObject);
                         }
@@ -1343,14 +1345,14 @@ public class KontakFragment extends Fragment {
                         e.printStackTrace();
                         new AlertDialog.Builder(getContext())
                                 .setMessage(e.getMessage())
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                         // db.endTransaction();
                     }
                 } else {
                     new AlertDialog.Builder(getContext())
                             .setMessage("Only CSV files allowed")
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
             } catch (Exception e) {
@@ -1360,7 +1362,8 @@ public class KontakFragment extends Fragment {
 
         }
     }
-    private BufferedReader readCSV(Uri uri){
+
+    private BufferedReader readCSV(Uri uri) {
         ContentResolver contentResolver = getContext().getContentResolver();
         BufferedReader result = null;
         try {
@@ -1375,8 +1378,9 @@ public class KontakFragment extends Fragment {
         return result;
 
     }
+
     private void importToDB(JSONArray dataImport) {
-        if (dataImport.length()<=0){
+        if (dataImport.length() <= 0) {
             Toast.makeText(getContext(), "Tidak ada data yang akan diimport", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1384,7 +1388,7 @@ public class KontakFragment extends Fragment {
 
         final JSONObject request_body = new JSONObject();
         try {
-            request_body.put("import",dataImport);
+            request_body.put("import", dataImport);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1394,8 +1398,8 @@ public class KontakFragment extends Fragment {
         pDialog.setMessage("Sedang import data...");
         pDialog.setCancelable(false);
         pDialog.show();
-        Log.e(TAG,request_body.toString());
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body , new Response.Listener<JSONObject>() {
+        Log.e(TAG, request_body.toString());
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 hidePdialog();
@@ -1403,7 +1407,7 @@ public class KontakFragment extends Fragment {
                 try {
                     final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
-                    if (status){
+                    if (status) {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -1414,17 +1418,17 @@ public class KontakFragment extends Fragment {
                                 })
                                 .setCancelable(false)
                                 .show();
-                    }else{
+                    } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton("OK",null)
+                                .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
                             .setMessage(e.getMessage())
-                            .setPositiveButton("OK",null)
+                            .setPositiveButton("OK", null)
                             .show();
                 }
 
@@ -1433,17 +1437,17 @@ public class KontakFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hidePdialog();
-                Log.i(TAG,errorResponseString(error));
+                Log.i(TAG, errorResponseString(error));
                 NetworkResponse response = error.networkResponse;
-                if (response == null){
-                    errorResponse(getContext(),error);
-                }else{
-                    if (response.statusCode==403){
+                if (response == null) {
+                    errorResponse(getContext(), error);
+                } else {
+                    if (response.statusCode == 403) {
                         try {
                             JSONObject jsonObject = new JSONObject(response.data.toString());
                             final boolean status = jsonObject.getBoolean("status");
                             final String msg = jsonObject.getString("error");
-                            if (msg.trim().toLowerCase().equals("invalid api key")){
+                            if (msg.trim().toLowerCase().equals("invalid api key")) {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage("Session telah habias / telah login di perangkat lain.")
                                         .setCancelable(false)
@@ -1456,7 +1460,7 @@ public class KontakFragment extends Fragment {
                                             }
                                         })
                                         .show();
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(getContext())
                                         .setMessage(msg)
                                         .setCancelable(false)
@@ -1467,7 +1471,7 @@ public class KontakFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                    }else{
+                    } else {
 
                         final String msg = getResources().getString(errorResponse(error));
                         new AlertDialog.Builder(getContext())
@@ -1478,11 +1482,11 @@ public class KontakFragment extends Fragment {
                     }
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> header = new HashMap<>();
-                header.put("X-API-KEY",token);
+                HashMap<String, String> header = new HashMap<>();
+                header.put("X-API-KEY", token);
                 return header;
             }
         };

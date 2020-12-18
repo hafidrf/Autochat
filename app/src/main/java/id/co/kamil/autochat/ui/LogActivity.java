@@ -1,8 +1,5 @@
 package id.co.kamil.autochat.ui;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -16,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +38,7 @@ public class LogActivity extends AppCompatActivity {
     private Button btnReload;
     private ProgressDialog pDialog;
     private EditText edtPage;
-    private Button btnBack,btnNext;
+    private Button btnBack, btnNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +61,10 @@ public class LogActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Integer.valueOf(edtPage.getText().toString()) > 1){
-                    edtPage.setText(String.valueOf(Integer.valueOf(edtPage.getText().toString())-1));
-                    getLog(Integer.valueOf(edtPage.getText().toString()),50);
-                }else{
+                if (Integer.valueOf(edtPage.getText().toString()) > 1) {
+                    edtPage.setText(String.valueOf(Integer.valueOf(edtPage.getText().toString()) - 1));
+                    getLog(Integer.valueOf(edtPage.getText().toString()), 50);
+                } else {
                     edtPage.setText("1");
                 }
                 btnNext.setEnabled(true);
@@ -73,13 +73,13 @@ public class LogActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLog(Integer.parseInt(edtPage.getText().toString())+1,50);
+                getLog(Integer.parseInt(edtPage.getText().toString()) + 1, 50);
             }
         });
         btnReload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLog(Integer.parseInt(edtPage.getText().toString()),50);
+                getLog(Integer.parseInt(edtPage.getText().toString()), 50);
             }
         });
         btnClear.setOnClickListener(new View.OnClickListener() {
@@ -92,54 +92,53 @@ public class LogActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dbHelper.deleteAllLog(user_id);
                                 edtPage.setText("1");
-                                getLog(Integer.parseInt(edtPage.getText().toString()),50);
+                                getLog(Integer.parseInt(edtPage.getText().toString()), 50);
                             }
                         })
-                        .setNegativeButton("Tidak",null)
+                        .setNegativeButton("Tidak", null)
                         .show();
 
             }
         });
         pDialog = new ProgressDialog(this);
 
-        getLog(Integer.parseInt(edtPage.getText().toString()),50);
+        getLog(Integer.parseInt(edtPage.getText().toString()), 50);
 
 
     }
 
-    private void getLog(int page,int limit) {
+    private void getLog(int page, int limit) {
         pDialog.setMessage("Loading...");
         pDialog.show();
-        dataLog = dbHelper.getLog(user_id,page,limit);
-        if (dataLog.size()>0){
+        dataLog = dbHelper.getLog(user_id, page, limit);
+        if (dataLog.size() > 0) {
             edtPage.setText(String.valueOf(page));
-        }else{
+        } else {
             btnNext.setEnabled(false);
         }
         String tmp = "";
-        tmp += "<p style=\"color:yellow\">DB Version : " + dbHelper.getDatabaseVersion() + "</p>\n\n\n";
+        tmp += "<p style=\"color:yellow\">DB Version : " + DBHelper.getDatabaseVersion() + "</p>\n\n\n";
 
-        for (int i = 0; i< dataLog.size(); i++){
+        for (int i = 0; i < dataLog.size(); i++) {
             String created = dataLog.get(i)[1];
             String service = dataLog.get(i)[2];
             String log = dataLog.get(i)[3];
             String status = dataLog.get(i)[4];
-            if (status.equals("normal")){
-                tmp += "<p style=\"color:yellow\">["+created+"]["+service+"]<br>" + log + "</p>\n";
-            }else if (status.equals("danger")) {
+            if (status.equals("normal")) {
+                tmp += "<p style=\"color:yellow\">[" + created + "][" + service + "]<br>" + log + "</p>\n";
+            } else if (status.equals("danger")) {
                 tmp += "<p style=\"color:red\">[" + created + "][" + service + "]<br>" + log + "</p>\n";
-            }else if (status.equals("success")) {
+            } else if (status.equals("success")) {
                 tmp += "<p style=\"color:green\">[" + created + "][" + service + "]<br>" + log + "</p>\n";
-            }else if (status.equals("warning")) {
+            } else if (status.equals("warning")) {
                 tmp += "<p style=\"color:red\">[" + created + "][" + service + "]<br>" + log + "</p>\n";
             }
         }
         pDialog.dismiss();
-        setTextViewHTML(labelLog,tmp);
+        setTextViewHTML(labelLog, tmp);
     }
 
-    protected void setTextViewHTML(TextView text, String html)
-    {
+    protected void setTextViewHTML(TextView text, String html) {
         CharSequence sequence = Html.fromHtml(html);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
         URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
@@ -149,9 +148,10 @@ public class LogActivity extends AppCompatActivity {
         text.setText(strBuilder);
         text.setMovementMethod(LinkMovementMethod.getInstance());
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

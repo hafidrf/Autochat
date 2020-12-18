@@ -101,15 +101,25 @@ public class KeyboardView extends View {
     private final KeyDrawParams mKeyDrawParams = new KeyDrawParams();
 
     // Drawing
-    /** True if all keys should be drawn */
+    /**
+     * True if all keys should be drawn
+     */
     private boolean mInvalidateAllKeys;
-    /** The keys that should be drawn */
+    /**
+     * The keys that should be drawn
+     */
     private final HashSet<Key> mInvalidatedKeys = new HashSet<>();
-    /** The working rectangle for clipping */
+    /**
+     * The working rectangle for clipping
+     */
     private final Rect mClipRect = new Rect();
-    /** The keyboard bitmap buffer for faster updates */
+    /**
+     * The keyboard bitmap buffer for faster updates
+     */
     private Bitmap mOffscreenBuffer;
-    /** The canvas for the above mutable keyboard bitmap */
+    /**
+     * The canvas for the above mutable keyboard bitmap
+     */
     private final Canvas mOffscreenCanvas = new Canvas();
     private final Paint mPaint = new Paint();
     private final Paint.FontMetrics mFontMetrics = new Paint.FontMetrics();
@@ -162,9 +172,10 @@ public class KeyboardView extends View {
     /**
      * Attaches a keyboard to this view. The keyboard can be switched at any time and the
      * view will re-layout itself to accommodate the keyboard.
+     *
+     * @param keyboard the keyboard to display in this view
      * @see Keyboard
      * @see #getKeyboard()
-     * @param keyboard the keyboard to display in this view
      */
     public void setKeyboard(final Keyboard keyboard) {
         mKeyboard = keyboard;
@@ -179,6 +190,7 @@ public class KeyboardView extends View {
 
     /**
      * Returns the current keyboard being displayed by this view.
+     *
      * @return the currently attached keyboard
      * @see #setKeyboard(Keyboard)
      */
@@ -301,7 +313,7 @@ public class KeyboardView extends View {
     }
 
     private void onDrawKey(final Key key, final Canvas canvas,
-            final Paint paint) {
+                           final Paint paint) {
         final int keyDrawX = key.getDrawX() + getPaddingLeft();
         final int keyDrawY = key.getY() + getPaddingTop();
         canvas.translate(keyDrawX, keyDrawY);
@@ -324,7 +336,7 @@ public class KeyboardView extends View {
 
     // Draw key background.
     protected void onDrawKeyBackground(final Key key, final Canvas canvas,
-            final Drawable background) {
+                                       final Drawable background) {
         final int keyWidth = key.getDrawWidth();
         final int keyHeight = key.getHeight();
         final Rect padding = mKeyBackgroundPadding;
@@ -342,8 +354,8 @@ public class KeyboardView extends View {
     }
 
     // Draw key top visuals.
-    protected void onDrawKeyTopVisuals(final Key key,final Canvas canvas,
-            final Paint paint, final KeyDrawParams params) {
+    protected void onDrawKeyTopVisuals(final Key key, final Canvas canvas,
+                                       final Paint paint, final KeyDrawParams params) {
         final int keyWidth = key.getDrawWidth();
         final int keyHeight = key.getHeight();
         final float centerX = keyWidth * 0.5f;
@@ -450,7 +462,7 @@ public class KeyboardView extends View {
         if (label == null && icon != null) {
             final int iconWidth;
             if (key.getCode() == Constants.CODE_SPACE && icon instanceof NinePatchDrawable) {
-                iconWidth = (int)(keyWidth * mSpacebarIconWidthRatio);
+                iconWidth = (int) (keyWidth * mSpacebarIconWidthRatio);
             } else {
                 iconWidth = Math.min(icon.getIntrinsicWidth(), keyWidth);
             }
@@ -467,7 +479,7 @@ public class KeyboardView extends View {
     }
 
     protected static void drawIcon(final Canvas canvas, final Drawable icon,
-            final int x, final int y, final int width, final int height) {
+                                   final int x, final int y, final int width, final int height) {
         canvas.translate(x, y);
         icon.setBounds(0, 0, width, height);
         icon.draw(canvas);
@@ -492,6 +504,7 @@ public class KeyboardView extends View {
      * Requests a redraw of the entire keyboard. Calling {@link #invalidate} is not sufficient
      * because the keyboard renders the keys to an off-screen buffer and an invalidate() only
      * draws the cached buffer.
+     *
      * @see #invalidateKey(Key)
      */
     public void invalidateAllKeys() {
@@ -504,6 +517,7 @@ public class KeyboardView extends View {
      * Invalidates a key so that it will be redrawn on the next repaint. Use this method if only
      * one key is changing it's content. Any changes that affect the position or size of the key
      * may not be honored.
+     *
      * @param key key in the attached {@link Keyboard}.
      * @see #invalidateAllKeys
      */

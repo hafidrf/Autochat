@@ -14,7 +14,7 @@ import java.util.List;
 
 import id.co.kamil.autochat.R;
 
-public class RecylerTagAdapter extends RecyclerView.Adapter<RecylerTagAdapter.ViewHolder>  {
+public class RecylerTagAdapter extends RecyclerView.Adapter<RecylerTagAdapter.ViewHolder> {
     private List<ItemRecyclerTag> list;
     private Context context;
 
@@ -23,6 +23,7 @@ public class RecylerTagAdapter extends RecyclerView.Adapter<RecylerTagAdapter.Vi
     public interface OnItemClickListener {
         void onItemClick(ItemRecyclerTag item);
     }
+
     public RecylerTagAdapter(List<ItemRecyclerTag> list, Context context, OnItemClickListener listener) {
         this.list = list;
         this.context = context;
@@ -46,7 +47,7 @@ public class RecylerTagAdapter extends RecyclerView.Adapter<RecylerTagAdapter.Vi
         return list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
         TextView txtTitle;
@@ -54,8 +55,9 @@ public class RecylerTagAdapter extends RecyclerView.Adapter<RecylerTagAdapter.Vi
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imgClose);
-            txtTitle= (TextView) itemView.findViewById(R.id.itemTitle);
+            txtTitle = (TextView) itemView.findViewById(R.id.itemTitle);
         }
+
         public void bind(final ItemRecyclerTag item, final RecylerTagAdapter.OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
