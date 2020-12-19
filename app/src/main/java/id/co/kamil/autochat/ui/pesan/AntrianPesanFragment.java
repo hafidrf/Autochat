@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.text.Editable;
@@ -48,16 +49,23 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.parse.CountCallback;
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
+import com.parse.livequery.ParseLiveQueryClient;
+import com.parse.livequery.SubscriptionHandling;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,8 +127,6 @@ public class AntrianPesanFragment extends Fragment {
     private SharPref sharePref;
     private int limit_pesan;
     private DBHelper dbHelper;
-    private FirebaseDatabase dbFirebase;
-    private DatabaseReference fOutboxRef;
     private Button btnDeleteAll;
     private int current_page = 1;
 
@@ -165,9 +171,7 @@ public class AntrianPesanFragment extends Fragment {
         type = userDetail.get(KEY_CUST_GROUP);
         sharePref = new SharPref(getContext());
 
-        dbFirebase = FirebaseDatabase.getInstance();
-        fOutboxRef = dbFirebase.getReference().child("outbox").child(session.getValue(KEY_CUST_ID));
-        fOutboxRef.keepSynced(true);
+        saveParseOutbox(session.getValue(KEY_CUST_ID));
         limit_pesan = Integer.parseInt(sharePref.getSessionStr(SharPref.KEY_LIMIT_PESAN));
         if (limit_pesan <= 0) {
             limit_pesan = LIMIT_PESAN;
@@ -293,6 +297,32 @@ public class AntrianPesanFragment extends Fragment {
         return view;
     }
 
+    private void saveParseOutbox(final String user_id) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Outbox");
+        query.whereEqualTo("KeyCust",user_id);
+        // Or use the the non-blocking method countInBackground method with a CountCallback
+        query.countInBackground(new CountCallback() {
+            public void done(int count, ParseException e) {
+                if (e == null) {
+                    if(count<=0){
+                        ParseObject entity = new ParseObject("Outbox");
+                        entity.put("KeyCust", user_id);
+                        // Saves the new object.
+                        // Notice that the SaveCallback is totally optional!
+                        entity.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                // Here you can handle errors, if thrown. Otherwise, "e" should be null
+                            }
+                        });
+                    }
+                    Log.i(TAG,"count"+count);
+                } else {
+                    Log.i(TAG,e.getMessage());
+                }
+            }
+        });
+    }
     private void deleteAll() {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JSONObject bodyRequest = new JSONObject();
@@ -318,8 +348,7 @@ public class AntrianPesanFragment extends Fragment {
                     final String message = response.getString("message");
                     Log.i(TAG, message);
                     if (status) {
-                        fOutboxRef.removeValue();
-                        loadPesan();
+                        deleteParseAntrian();
                     } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
@@ -397,6 +426,74 @@ public class AntrianPesanFragment extends Fragment {
         RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
+    }
+    private void deleteParseOutboxMessage(final String idmessage) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
+        query.whereEqualTo("idmessage",idmessage);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject entity, ParseException e) {
+                if (e == null) {
+
+                    String keyCust=String.valueOf(entity.get("KeyCust"));
+                    entity.deleteInBackground();
+                    if(pesanAdapter!=null){
+                        if(pesanAdapter.getCount()<=0){
+                            ParseQuery<ParseObject> query = ParseQuery.getQuery("Outbox");
+                            query.whereEqualTo("KeyCust",keyCust);
+                            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject object, ParseException e) {
+                                    object.deleteInBackground();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+    private void deleteParseAntrian() {
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Outbox");
+        parseQuery.whereEqualTo("KeyCust", session.getValue(KEY_CUST_ID));
+        final ParseQuery<ParseObject> parseQueryMessage = ParseQuery.getQuery("OutboxMessage");
+        parseQueryMessage.whereEqualTo("KeyCust", session.getValue(KEY_CUST_ID));
+
+        parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e==null){
+                    parseQueryMessage.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> objects, ParseException e) {
+                            ParseObject.deleteAllInBackground(objects, new DeleteCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    loadPesan();
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    object.deleteInBackground(new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            parseQueryMessage.findInBackground(new FindCallback<ParseObject>() {
+                                @Override
+                                public void done(List<ParseObject> objects, ParseException e) {
+                                    ParseObject.deleteAllInBackground(objects, new DeleteCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            loadPesan();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public class MyHandler extends Handler {
@@ -765,72 +862,82 @@ public class AntrianPesanFragment extends Fragment {
             prefTryagain = "5";
         }
         final int maxTryAgain = Integer.parseInt(prefTryagain);
-        fOutboxRef.addChildEventListener(new ChildEventListener() {
+
+        ParseLiveQueryClient parseLiveQueryClient = null;
+        try {
+            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://dash.wabot.id:1337"));
+        } catch (URISyntaxException e) {
+            Log.e(TAG,e.getMessage());
+            e.printStackTrace();
+        }
+
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("OutboxMessage");
+        parseQuery.whereEqualTo("KeyCust", session.getValue(KEY_CUST_ID));
+
+        SubscriptionHandling<ParseObject> subscriptionHandling = parseLiveQueryClient.subscribe(parseQuery);
+
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                try {
-                    String id = dataSnapshot.child("id").getValue().toString();
-                    String error_again = dataSnapshot.child("error_again").getValue().toString();
-                    for (int i = 0; i < dataPesan.size(); i++) {
-                        if (dataPesan.get(i).getId().equals(id)) {
-                            ItemPesan itemPesan = dataPesan.get(i);
-                            itemPesan.setError_again(error_again);
-                            dataPesan.remove(i);
-                            dataPesan.add(i, itemPesan);
-                        }
-                    }
-                    for (ItemPesan itemPesan : dataPesan) {
-                        if (!TextUtils.isEmpty(itemPesan.getError_again())) {
-                            if (Integer.parseInt(itemPesan.getError_again()) > maxTryAgain) {
-                                hapusPesan(itemPesan.getId());
+            public void onEvent(final ParseQuery<ParseObject> parseQuery, final ParseObject object) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            String id = object.get("idmessage")+"";
+                            String error_again = object.get("error_again")+"";
+                            for (int i = 0; i < dataPesan.size(); i++) {
+                                if (dataPesan.get(i).getId().equals(id)) {
+                                    ItemPesan itemPesan = dataPesan.get(i);
+                                    itemPesan.setError_again(error_again);
+                                    dataPesan.remove(i);
+                                    dataPesan.add(i, itemPesan);
+                                }
                             }
-                        }
-                    }
-                    pesanAdapter.notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                try {
-                    String id = dataSnapshot.child("id").getValue().toString();
-                    String error_again = dataSnapshot.child("error_again").getValue().toString();
-                    for (int i = 0; i < dataPesan.size(); i++) {
-                        if (dataPesan.get(i).getId().equals(id)) {
-                            ItemPesan itemPesan = dataPesan.get(i);
-                            itemPesan.setError_again(error_again);
-                            dataPesan.remove(i);
-                            dataPesan.add(i, itemPesan);
-                        }
-                    }
-                    for (ItemPesan itemPesan : dataPesan) {
-                        if (!TextUtils.isEmpty(itemPesan.getError_again())) {
-                            if (Integer.parseInt(itemPesan.getError_again()) > maxTryAgain) {
-                                hapusPesan(itemPesan.getId());
+                            for (ItemPesan itemPesan : dataPesan) {
+                                if (!TextUtils.isEmpty(itemPesan.getError_again())) {
+                                    if (Integer.parseInt(itemPesan.getError_again()) > maxTryAgain) {
+                                        hapusPesan(itemPesan.getId());
+                                    }
+                                }
                             }
+                            pesanAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
-                    pesanAdapter.notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                });
             }
-
+        });
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            String id = object.get("idmessage")+"";
+                            String error_again = object.get("error_again")+"";
+                            for (int i = 0; i < dataPesan.size(); i++) {
+                                if (dataPesan.get(i).getId().equals(id)) {
+                                    ItemPesan itemPesan = dataPesan.get(i);
+                                    itemPesan.setError_again(error_again);
+                                    dataPesan.remove(i);
+                                    dataPesan.add(i, itemPesan);
+                                }
+                            }
+                            for (ItemPesan itemPesan : dataPesan) {
+                                if (!TextUtils.isEmpty(itemPesan.getError_again())) {
+                                    if (Integer.parseInt(itemPesan.getError_again()) > maxTryAgain) {
+                                        hapusPesan(itemPesan.getId());
+                                    }
+                                }
+                            }
+                            pesanAdapter.notifyDataSetChanged();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
             }
         });
     }
@@ -1032,7 +1139,7 @@ public class AntrianPesanFragment extends Fragment {
                         int i = 0;
                         do {
                             if (dataPesan.get(i).isCheckbox()) {
-                                fOutboxRef.child(dataPesan.get(i).getId()).removeValue();
+                                deleteParseOutboxMessage(dataPesan.get(i).getId());
                                 dataPesan.remove(i);
                             } else {
                                 i++;
@@ -1052,7 +1159,7 @@ public class AntrianPesanFragment extends Fragment {
                         int i = 0;
                         do {
                             if (dataPesan.get(i).isCheckbox()) {
-                                fOutboxRef.child(dataPesan.get(i).getId()).removeValue();
+                                deleteParseOutboxMessage(dataPesan.get(i).getId());
                                 dataPesan.remove(i);
                             } else {
                                 i++;
@@ -1118,8 +1225,6 @@ public class AntrianPesanFragment extends Fragment {
                                 .show();
                     }
                 }
-
-
             }
         }) {
             @Override

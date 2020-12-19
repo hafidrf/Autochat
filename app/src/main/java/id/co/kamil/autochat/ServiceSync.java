@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.StrictMode;
@@ -50,11 +51,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.livequery.ParseLiveQueryClient;
+import com.parse.livequery.SubscriptionHandling;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -72,6 +75,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
@@ -144,10 +149,8 @@ public class ServiceSync extends Service {
     private boolean is_synchronizing_outbox = false;
     private boolean is_synchronizing_db = false;
     private int page_kontak_wabot = 0;
-    private DatabaseReference fOutboxRef;
     private List<String[]> dataAntrianPesanFirebase = new ArrayList<>();
     private List<String[]> dataOutboxUploadPending = new ArrayList<>();
-    private FirebaseDatabase dbFirebase;
 //    private DatabaseReference mKontakReference;
 
 
@@ -200,112 +203,7 @@ public class ServiceSync extends Service {
         session = new SessionManager(this);
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
-        try {
-            if (FirebaseApp.getApps(this).isEmpty()) {
-                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        dbFirebase = FirebaseDatabase.getInstance();
-
-        fOutboxRef = dbFirebase.getReference().child("outbox").child(session.getValue(KEY_CUST_ID));
-        fOutboxRef.keepSynced(true);
-        ChildEventListener childListenerOutbox = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                try {
-                    Log.e(TAG, "childAdd:" + dataSnapshot.toString() + ", String : " + s);
-                    //dbHelper = new DBHelper(getApplicationContext());
-                    String id = dataSnapshot.child("id").getValue().toString();
-                    String destination_number = dataSnapshot.child("destination_number").getValue().toString();
-                    String message = dataSnapshot.child("message").getValue().toString();
-                    String image_hash = dataSnapshot.child("image_hash").getValue().toString();
-                    String image_url = dataSnapshot.child("image_url").getValue().toString();
-                    String index_order = dataSnapshot.child("error_again").getValue().toString();
-                    String sent = dataSnapshot.child("sent").getValue().toString();
-
-                    String sha1 = sha1(image_url) + ".jpg";
-                    String path = getDirWabot("bulk") + "/" + sha1;
-                    if (fileExist(getApplicationContext(), path)) {
-                        if (image_hash.isEmpty() || image_hash == null) {
-                            image_hash = path;
-                        }
-                    }
-                    if (sent.isEmpty()) {
-                        dataAntrianPesanFirebase.add(new String[]{id, destination_number, message, image_hash, image_url, index_order});
-                    } else {
-                        dataOutboxUploadPending.add(new String[]{id, sent});
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                try {
-                    Log.e(TAG, "childChanged:" + dataSnapshot.toString() + ", String : " + s);
-                    //dbHelper = new DBHelper(getApplicationContext());
-                    String id = dataSnapshot.child("id").getValue().toString();
-                    String destination_number = dataSnapshot.child("destination_number").getValue().toString();
-                    String message = dataSnapshot.child("message").getValue().toString();
-                    String image_hash = dataSnapshot.child("image_hash").getValue().toString();
-                    String image_url = dataSnapshot.child("image_url").getValue().toString();
-                    String index_order = dataSnapshot.child("error_again").getValue().toString();
-                    String sent = dataSnapshot.child("sent").getValue().toString();
-
-                    String sha1 = sha1(image_url) + ".jpg";
-                    String path = getDirWabot("bulk") + "/" + sha1;
-                    if (fileExist(getApplicationContext(), path)) {
-                        if (image_hash.isEmpty() || image_hash == null) {
-                            image_hash = path;
-                        }
-                    }
-                    for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
-                        String[] str = dataAntrianPesanFirebase.get(i);
-                        if (str[i].equals(id)) {
-                            dataAntrianPesanFirebase.remove(i);
-                            if (sent.isEmpty()) {
-                                dataAntrianPesanFirebase.add(i, new String[]{id, destination_number, message, image_hash, image_url, index_order});
-                            } else {
-                                dataOutboxUploadPending.add(new String[]{id, sent});
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    Log.e(TAG, "childRemoved:" + dataSnapshot.toString());
-                    //dbHelper = new DBHelper(getApplicationContext());
-                    String id = dataSnapshot.getKey();
-                    deleteArrayListFirebaseAntrian(id);
-                    //dbHelper.deleteOutboxById(id);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.e(TAG, "onChildMoved: " + dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        };
-        fOutboxRef.addChildEventListener(childListenerOutbox);
+        liveQueryParse(session.getValue(KEY_CUST_ID));
 
         startTimerDB(0);
         //startTimer();
@@ -317,6 +215,195 @@ public class ServiceSync extends Service {
         return mStartMode;
     }
 
+    private void updateParseOutboxMessage(final String idmessage,final String param,final String value) {
+        Log.e(TAG,"idmessage:"+idmessage);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
+        query.whereEqualTo("idmessage",idmessage);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject entity, ParseException e) {
+                if(e==null) {
+                    entity.put(param, value);
+                    entity.saveInBackground();
+                }
+            }
+        });
+    }
+    private void deleteParseOutboxMessage(final String idmessage) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
+        query.whereEqualTo("idmessage",idmessage);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject entity, ParseException e) {
+                if (e == null) {
+
+                    String keyCust=String.valueOf(entity.get("KeyCust"));
+                    entity.deleteInBackground();
+                    if(getAntrianPesan().isEmpty()){
+                        ParseQuery<ParseObject> query = ParseQuery.getQuery("Outbox");
+                        query.whereEqualTo("KeyCust",keyCust);
+                        query.getFirstInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject object, ParseException e) {
+                                object.deleteInBackground();
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+    private void liveQueryParse(final String user_id){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
+        query.whereEqualTo("KeyCust",user_id);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e!=null){
+                    e.printStackTrace();
+                    return;
+                }
+                for(ParseObject object:objects){
+                    try {
+                        String id = object.get("idmessage") + "";
+                        String destination_number = object.get("destination_number") + "";
+                        String message = object.get("message") + "";
+                        String image_hash = object.get("image_hash") + "";
+                        String image_url = object.get("image_url") + "";
+                        String index_order = object.get("error_again") + "";
+                        String sent = object.get("sent") + "";
+
+                        String sha1 = sha1(image_url) + ".jpg";
+                        String path = getDirWabot("bulk") + "/" + sha1;
+                        if (fileExist(getApplicationContext(), path)) {
+                            if (image_hash.isEmpty() || object.get("image_hash") == null) {
+                                image_hash = path;
+                            }
+                        }
+                        if (sent.isEmpty()) {
+                            dataAntrianPesanFirebase.add(new String[]{id, destination_number, message, image_hash, image_url, index_order});
+                        } else {
+                            dataOutboxUploadPending.add(new String[]{id, sent});
+                        }
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }
+                startWASender();
+            }
+        });
+        ParseLiveQueryClient parseLiveQueryClient = null;
+        try {
+            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://dash.wabot.id:1337"));
+        } catch (URISyntaxException e) {
+            Log.e(TAG,e.getMessage());
+            e.printStackTrace();
+        }
+
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("OutboxMessage");
+        parseQuery.whereEqualTo("KeyCust", user_id);
+
+        SubscriptionHandling<ParseObject> subscriptionHandling = parseLiveQueryClient.subscribe(parseQuery);
+
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
+            @Override
+            public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            Log.e(TAG, "childAdd:" + object.get("KeyCust") + ", String : " + object.get("idmessage"));
+                            //dbHelper = new DBHelper(getApplicationContext());
+                            String id = object.get("idmessage")+"";
+                            String destination_number = object.get("destination_number")+"";
+                            String message = object.get("message")+"";
+                            String image_hash = object.get("image_hash")+"";
+                            String image_url = object.get("image_url")+"";
+                            String index_order = object.get("error_again")+"";
+                            String sent = object.get("sent")+"";
+
+                            String sha1 = sha1(image_url) + ".jpg";
+                            String path = getDirWabot("bulk") + "/" + sha1;
+                            if (fileExist(getApplicationContext(), path)) {
+                                if (image_hash.isEmpty() || image_hash == null) {
+                                    image_hash = path;
+                                }
+                            }
+                            if (sent.isEmpty()) {
+                                dataAntrianPesanFirebase.add(new String[]{id, destination_number, message, image_hash, image_url, index_order});
+                            } else {
+                                dataOutboxUploadPending.add(new String[]{id, sent});
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
+            @Override
+            public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            Log.e(TAG, "childChanged:" + object.get("KeyCust") + ", String : " + object.get("idmessage"));
+                            //dbHelper = new DBHelper(getApplicationContext());
+                            String id = object.get("idmessage")+"";
+                            String destination_number = object.get("destination_number")+"";
+                            String message = object.get("message")+"";
+                            String image_hash = object.get("image_hash")+"";
+                            String image_url = object.get("image_url")+"";
+                            String index_order = object.get("error_again")+"";
+                            String sent = object.get("sent")+"";
+
+                            String sha1 = sha1(image_url) + ".jpg";
+                            String path = getDirWabot("bulk") + "/" + sha1;
+                            if (fileExist(getApplicationContext(), path)) {
+                                if (image_hash.isEmpty() || image_hash == null) {
+                                    image_hash = path;
+                                }
+                            }
+                            for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
+                                String[] str = dataAntrianPesanFirebase.get(i);
+                                if (str[i].equals(id)) {
+                                    dataAntrianPesanFirebase.remove(i);
+                                    if (sent.isEmpty()) {
+                                        dataAntrianPesanFirebase.add(i, new String[]{id, destination_number, message, image_hash, image_url, index_order});
+                                    } else {
+                                        dataOutboxUploadPending.add(new String[]{id, sent});
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
+            @Override
+            public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            Log.e(TAG, "childRemoved:" + object.get("idmessage")+"");
+                            //dbHelper = new DBHelper(getApplicationContext());
+                            String id = object.get("idmessage")+"";
+                            deleteArrayListFirebaseAntrian(id);
+                            //dbHelper.deleteOutboxById(id);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     private boolean deleteArrayListFirebaseAntrian(String id) {
         try {
@@ -1451,7 +1538,7 @@ public class ServiceSync extends Service {
                 String index_order = antrianPesan.get(0)[5];
                 int try_again = sharePref.getSessionInt("tryagain" + id);
                 if (index_order == null || index_order.equals(null) || index_order.equals("null") || index_order.isEmpty()) {
-                    fOutboxRef.child(id).child("error_again").setValue(1);
+                    updateParseOutboxMessage(id,"error_again","1");
                     //dbHelper.updateAntrianPesan(id,"1");
                 } else {
                     if (status_prefTryagain) {
@@ -1465,7 +1552,8 @@ public class ServiceSync extends Service {
                             return;
                         }
                     }
-                    fOutboxRef.child(id).child("error_again").setValue(Integer.parseInt(index_order) + 1);
+                    int idxOrder=Integer.parseInt(index_order) + 1;
+                    updateParseOutboxMessage(id,"error_again",String.valueOf(idxOrder));
                 }
                 Log.i(TAG, "send message...");
                 Log.i(TAG, "phone : " + phoneNumber);
@@ -1508,7 +1596,7 @@ public class ServiceSync extends Service {
                         String sha1 = sha1(image_url) + ".jpg";
                         String path = getDirWabot("bulk") + "/" + sha1;
                         if (fileExist(getApplicationContext(), path)) {
-                            fOutboxRef.child(id).child("image_hash").setValue(path);
+                            updateParseOutboxMessage(id,"image_hash",path);
                             for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                                 String[] str = dataAntrianPesanFirebase.get(i);
                                 if (str[i].equals(id)) {
@@ -1607,7 +1695,7 @@ public class ServiceSync extends Service {
                     Log.i(TAG, message);
                     if (status) {
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            fOutboxRef.child(jsonArray.getString(i)).removeValue();
+                            deleteParseOutboxMessage(jsonArray.getString(i));
                         }
                     }
                 } catch (JSONException e) {
@@ -1768,7 +1856,7 @@ public class ServiceSync extends Service {
 //                    Uri imageInternalUri = saveImageToInternalStorage(result,sha1);
                     SaveImage(result, "bulk", sha1);
                     String path = getDirWabot("bulk") + "/" + sha1;
-                    fOutboxRef.child(idMessage).child("image_hash").setValue(path);
+                    updateParseOutboxMessage(idMessage,"image_hash",path);
                     for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                         String[] str = dataAntrianPesanFirebase.get(i);
                         if (str[i].equals(idMessage)) {
@@ -1929,8 +2017,7 @@ public class ServiceSync extends Service {
                         final JSONArray data = response.getJSONArray("data");
                         for (int i = 0; i < data.length(); i++) {
                             String id = data.getString(i);
-                            fOutboxRef.child(id).removeValue();
-                            //dbHelper.deleteOutboxById(id);
+                            deleteParseOutboxMessage(id);
                         }
                         Log.i(TAG, "upload outbox selesai! data : " + data.toString());
                         dbHelper.insertLog(created, ID_SERVICE_SYNC, "Singkronisasi outbox selesai", "success", user_id);

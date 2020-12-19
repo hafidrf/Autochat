@@ -5,8 +5,12 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.parse.CountCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -76,9 +80,7 @@ public class WASendService extends AccessibilityService {
             user_id = userDetail.get(KEY_CUST_ID);
             SharPref sharePref = new SharPref(this);
 
-            FirebaseDatabase dbFirebase = FirebaseDatabase.getInstance();
-            DatabaseReference fOutboxRef = dbFirebase.getReference().child("outbox").child(session.getValue(KEY_CUST_ID));
-            fOutboxRef.keepSynced(true);
+            saveParseOutbox(session.getValue(KEY_CUST_ID));
             boolean statusWASender = sharePref.getSessionBool(STATUS_BULK_SENDER);
             boolean statusSending = sharePref.getSessionBool(STATUS_BULK_SENDING);
             if (!statusWASender) {
@@ -117,7 +119,7 @@ public class WASendService extends AccessibilityService {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String tglSent = df.format(c);
 
-            fOutboxRef.child(idMessage).child("sent").setValue(tglSent);
+            updateParseOutboxMessageSent(idMessage,tglSent);
             //dbHelper.updateSent(idMessage, "1", tglSent, "0");
             dbHelper.insertLog(tglSent, ID_SERVICE_WA, "Berhasil dikirim", "success", user_id);
 
@@ -156,7 +158,46 @@ public class WASendService extends AccessibilityService {
 
         return node;
     }
+    private void saveParseOutbox(final String user_id) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Outbox");
+        query.whereEqualTo("KeyCust",user_id);
+        // Or use the the non-blocking method countInBackground method with a CountCallback
+        query.countInBackground(new CountCallback() {
+            public void done(int count, ParseException e) {
+                if (e == null) {
+                    if(count<=0){
+                        ParseObject entity = new ParseObject("Outbox");
+                        entity.put("KeyCust", user_id);
+                        // Saves the new object.
+                        // Notice that the SaveCallback is totally optional!
+                        entity.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                // Here you can handle errors, if thrown. Otherwise, "e" should be null
+                            }
+                        });
+                    }
+                    Log.i(TAG,"count"+count);
+                } else {
+                    Log.i(TAG,e.getMessage());
+                }
+            }
+        });
+    }
 
+    private void updateParseOutboxMessageSent(final String idmessage,final String tglSent) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
+        query.whereEqualTo("idmessage",idmessage);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject entity, ParseException e) {
+                if (e == null) {
+                    entity.put("sent", tglSent);
+                    entity.saveInBackground();
+                }
+            }
+        });
+    }
     @Override
     public void onInterrupt() {
 

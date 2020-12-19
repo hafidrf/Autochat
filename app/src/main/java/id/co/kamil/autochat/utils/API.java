@@ -3,7 +3,7 @@ package id.co.kamil.autochat.utils;
 public class API {
     public static final int SOCKET_TIMEOUT = 30000;//30 seconds - change to what you want
 
-    public static final String BASE_URL = "https://api.autochat.id/";
+    public static final String BASE_URL = "https://sandbox.wabot.id/";
     public static final String URL_POST_LIST_CONTACT = BASE_URL + "api/contact/list";
     public static final String URL_POST_HAPUS_CONTACT = BASE_URL + "api/contact/delete";
     public static final String URL_POST_LIST_GRUP = BASE_URL + "api/group/list";
