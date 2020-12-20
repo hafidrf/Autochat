@@ -39,11 +39,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
+            android:name=".ServiceSyncNew"
+            android:enabled="true"
+            android:exported="true"
+            android:label="autochat sync"
+            android:priority="3000"/>
+        <service
             android:name=".FloatingViewService"
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".ui.linkpage.FormLinkPageAddFieldActivity"></activity>
+        <activity android:name=".ui.linkpage.FormLinkPageAddFieldActivity" />
         <activity android:name=".ui.linkpage.FormLinkPageActivity" />
         <activity android:name=".ui.template.TemplateShareDetailActivity" />
         <activity android:name=".ui.waform.WaformAddFieldActivity" />
@@ -113,10 +119,10 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <service
+        <!--<service
             android:name=".ServiceSync"
             android:label="autochat sync"
-            android:priority="3000" />
+            android:priority="3000" />-->
         <service
             android:name=".bulksender.WASendService"
             android:label="@string/accessibility_service_label"
@@ -169,15 +175,17 @@
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
         </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.exportcsv.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <receiver
             android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver"
             tools:remove="android:permission">
@@ -186,15 +194,14 @@
                     android:name="com.android.vending.INSTALL_REFERRER"
                     tools:node="remove" />
             </intent-filter>
-        </receiver>
-        <!-- Used for install referrer tracking-->
+        </receiver> <!-- Used for install referrer tracking -->
         <service android:name="com.google.android.gms.tagmanager.InstallReferrerService" />
         <service android:name=".service.BackgroundLocationService" />
 
         <receiver
             android:name="com.google.android.gms.tagmanager.InstallReferrerReceiver"
-            android:permission="android.permission.INSTALL_PACKAGES"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.INSTALL_PACKAGES">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>

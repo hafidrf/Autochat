@@ -1,10 +1,19 @@
 package id.co.kamil.autochat.bulksender;
 
 import android.accessibilityservice.AccessibilityService;
+import android.net.Uri;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.parse.CountCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -12,36 +21,48 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import id.co.kamil.autochat.database.DBHelper;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
-import static id.co.kamil.autochat.ServiceSync.ID_SERVICE_WA;
+import static id.co.kamil.autochat.ServiceSyncNew.ID_SERVICE_WA;
+import static id.co.kamil.autochat.ServiceSyncNew.is_send;
+import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
+import static id.co.kamil.autochat.utils.API.URL_POST_HAPUS_PESAN_ANTRIAN;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
+import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
 
 public class WASendService extends AccessibilityService {
-    private static String typeApp;
     private static String idMessage;
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = "WASendService";
 
-    private static final String waTextFieldID = "com.whatsapp:id/entry";
     private static final String waButtonSendID = "com.whatsapp:id/send";
     private static final String waBackButtonID = "com.whatsapp:id/back";
-    private static long try_again = 0;
     private DBHelper dbHelper;
     private String user_id;
 
+
     public static void setID(String id) {
         idMessage = id;
+        if(id==null){
+            return;
+        }
+        Log.e(TAG,"SetID:"+id);
+        is_send=true;
     }
 
     @Override
@@ -56,9 +77,7 @@ public class WASendService extends AccessibilityService {
 
             CharSequence packageName = nodeInfo.getPackageName();
             Log.i(TAG, packageName.toString());
-
             performWhatsAppMessage(nodeInfo);
-
             // recycle the nodeInfo object
             nodeInfo.recycle();
         } catch (Exception e) {
@@ -86,7 +105,9 @@ public class WASendService extends AccessibilityService {
             if (!statusWASender) {
                 return;
             }
-
+            if(idMessage==null){
+                return;
+            }
 
             final AccessibilityNodeInfo buttonSend;
             final AccessibilityNodeInfo backButton;
@@ -95,46 +116,64 @@ public class WASendService extends AccessibilityService {
 
             if (buttonSend == null) {
                 if (backButton == null) {
-                    dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + buttonSend + " dan ID Button Back : " + backButton, "warning", user_id);
-                    Log.e(TAG, "button Send : " + buttonSend);
-                    return;
+                    dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + null + " dan ID Button Back : " + null, "warning", user_id);
+                    Log.e(TAG, "button Send : " + null +idMessage);
                 } else if (statusSending) {
                     backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    return;
                 } else {
-                    dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + buttonSend, "warning", user_id);
+                    dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + null, "warning", user_id);
                 }
-            }
-            if (idMessage == null) {
-                dbHelper.insertLog(created, ID_SERVICE_WA, "Tidak ada pesan yang akan dikirim", "warning", user_id);
-                return;
-            }
-
-
-            if (buttonSend != null) {
+                hapusPesan(idMessage, new HapusPesanListener() {
+                    @Override
+                    public void done() {
+                        is_send=false;
+                    }
+                });
+            }else {
                 buttonSend.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                Log.e(TAG, "button Send : " + buttonSend+idMessage);
+                dbHelper = new DBHelper(this);
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                final String tglSent = df.format(c);
+
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
+                query.whereEqualTo("idmessage",idMessage);
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject entity, ParseException e) {
+                        if (e == null) {
+                            String cek_sent=entity.get("sent")+"";
+                            if(cek_sent.equals("")) {
+                                entity.put("sent", tglSent);
+                                entity.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        //dbHelper.updateSent(idMessage, "1", tglSent, "0");
+                                        dbHelper.insertLog(tglSent, ID_SERVICE_WA, "Berhasil dikirim", "success", user_id);
+                                        if (backButton != null) {
+                                            backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                            Log.e(TAG, "button Back : " + backButton + idMessage);
+                                        }
+                                        hapusPesan(idMessage, new HapusPesanListener() {
+                                            @Override
+                                            public void done() {
+                                                is_send=false;
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
             }
-            dbHelper = new DBHelper(this);
-            Date c = Calendar.getInstance().getTime();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            String tglSent = df.format(c);
 
-            updateParseOutboxMessageSent(idMessage,tglSent);
-            //dbHelper.updateSent(idMessage, "1", tglSent, "0");
-            dbHelper.insertLog(tglSent, ID_SERVICE_WA, "Berhasil dikirim", "success", user_id);
-
-            setID(null);
-            try_again = 0;
-
-            if (backButton != null) {
-                backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
             String stackTrace = Log.getStackTraceString(e);
             dbHelper.insertLog(created, ID_SERVICE_WA, stackTrace, "danger", user_id);
-
         }
     }
 
@@ -185,21 +224,67 @@ public class WASendService extends AccessibilityService {
         });
     }
 
-    private void updateParseOutboxMessageSent(final String idmessage,final String tglSent) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
-        query.whereEqualTo("idmessage",idmessage);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject entity, ParseException e) {
-                if (e == null) {
-                    entity.put("sent", tglSent);
-                    entity.saveInBackground();
-                }
-            }
-        });
-    }
     @Override
     public void onInterrupt() {
 
+    }
+    interface HapusPesanListener{
+        void done();
+    }
+    private void hapusPesan(final String id,final HapusPesanListener hapusPesanListener) {
+        SessionManager session = new SessionManager(this);
+        HashMap<String, String> userDetail = session.getUserDetails();
+        final String token = userDetail.get(KEY_TOKEN);
+        if(token==null){
+            hapusPesanListener.done();
+            return;
+        }
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final JSONArray jsonArray = new JSONArray();
+
+        jsonArray.put(Integer.parseInt(id));
+        Log.d("deletedari", "antrian pesan");
+        final JSONObject request_body = new JSONObject();
+        try {
+            request_body.put("id", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, request_body.toString());
+        final String uri = Uri.parse(URL_POST_HAPUS_PESAN_ANTRIAN)
+                .buildUpon()
+                .toString();
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    final String message = response.getString("message");
+                    Log.i(TAG, message);
+                    hapusPesanListener.done();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    hapusPesanListener.done();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                hapusPesanListener.done();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                //header.put("Content-Type","application/json");
+                header.put("x-api-key", token);
+                return header;
+            }
+        };
+
+        RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
     }
 }

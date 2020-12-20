@@ -33,7 +33,7 @@
     <string name="toast_network_error">Periksa kembali koneksi internet anda</string>
     <string name="toast_server_error">Terjadi kesalahan server, silakan coba beberapa saat lagi</string>
     <string name="toast_timeout">Timeout. Silakan coba beberapa saat lagi</string>
-    <string name="accessibility_service_label">aksesibilitas Wabot</string>
+    <string name="accessibility_service_label">Wabot</string>
     <string name="accessibility_service_description">Layanan yang bertanggung jawab untuk mengotomatisasi pengiriman pesan</string>
     <string name="warning_disable_accessibility">Aktifkan layanan aksesibilitas Wabot</string>
     <string name="snack_enable_service">Pengaturan</string>

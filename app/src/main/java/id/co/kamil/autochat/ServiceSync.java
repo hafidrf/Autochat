@@ -1432,7 +1432,7 @@ public class ServiceSync extends Service {
                     public void run() {
                         statusWASender = sharePref.getSessionBool(STATUS_BULK_SENDER);
 
-                        if (is_send == false && statusWASender && is_parent && is_synchronizing == false) {
+                        if (!is_send && statusWASender && is_parent && !is_synchronizing) {
                             //WASendService.setTextToSend(null);
                             Log.e("WhatsApp", "SENDING....");
                             dbHelper.insertLog(created, ID_SERVICE_WA, "Persiapan pengiriman Pesan", "normal", user_id);
@@ -1506,13 +1506,13 @@ public class ServiceSync extends Service {
         final String created = getTgl();
         config_on_screen = sharePref.getSessionBool(BULK_SENDER_ON_SCREEN);
         boolean accessibility = isAccessibilityEnabled();
-        if (accessibility == false) {
+        if (!accessibility) {
             is_send = false;
             dbHelper.insertLog(created, ID_SERVICE_WA, "Aksesibilitas Wabot tidak aktif", "warning", user_id);
             startWASender();
             return;
         }
-        if (session.isLoggedIn() == false) {
+        if (!session.isLoggedIn()) {
             startWASender();
             return;
         }

@@ -348,7 +348,7 @@ public class AntrianPesanFragment extends Fragment {
                     final String message = response.getString("message");
                     Log.i(TAG, message);
                     if (status) {
-                        deleteParseAntrian();
+                        loadPesan();
                     } else {
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
@@ -427,7 +427,7 @@ public class AntrianPesanFragment extends Fragment {
         jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
-    private void deleteParseOutboxMessage(final String idmessage) {
+    /*private void deleteParseOutboxMessage(final String idmessage) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
         query.whereEqualTo("idmessage",idmessage);
         query.getFirstInBackground(new GetCallback<ParseObject>() {
@@ -494,7 +494,7 @@ public class AntrianPesanFragment extends Fragment {
                 }
             }
         });
-    }
+    }*/
 
     public class MyHandler extends Handler {
         @Override
@@ -889,8 +889,7 @@ public class AntrianPesanFragment extends Fragment {
                                 if (dataPesan.get(i).getId().equals(id)) {
                                     ItemPesan itemPesan = dataPesan.get(i);
                                     itemPesan.setError_again(error_again);
-                                    dataPesan.remove(i);
-                                    dataPesan.add(i, itemPesan);
+                                    dataPesan.set(i, itemPesan);
                                 }
                             }
                             for (ItemPesan itemPesan : dataPesan) {
@@ -921,8 +920,7 @@ public class AntrianPesanFragment extends Fragment {
                                 if (dataPesan.get(i).getId().equals(id)) {
                                     ItemPesan itemPesan = dataPesan.get(i);
                                     itemPesan.setError_again(error_again);
-                                    dataPesan.remove(i);
-                                    dataPesan.add(i, itemPesan);
+                                    dataPesan.set(i, itemPesan);
                                 }
                             }
                             for (ItemPesan itemPesan : dataPesan) {
@@ -1139,7 +1137,6 @@ public class AntrianPesanFragment extends Fragment {
                         int i = 0;
                         do {
                             if (dataPesan.get(i).isCheckbox()) {
-                                deleteParseOutboxMessage(dataPesan.get(i).getId());
                                 dataPesan.remove(i);
                             } else {
                                 i++;
@@ -1159,7 +1156,6 @@ public class AntrianPesanFragment extends Fragment {
                         int i = 0;
                         do {
                             if (dataPesan.get(i).isCheckbox()) {
-                                deleteParseOutboxMessage(dataPesan.get(i).getId());
                                 dataPesan.remove(i);
                             } else {
                                 i++;

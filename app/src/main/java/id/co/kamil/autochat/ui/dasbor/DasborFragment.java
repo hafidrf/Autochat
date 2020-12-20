@@ -327,6 +327,7 @@ public class DasborFragment extends Fragment implements ViewTreeObserver.OnScrol
     public void onResume() {
         super.onResume();
         updateStatusBulkSender();
+        loadDashboard();
     }
 
     private boolean isAccessibilityEnabled() {

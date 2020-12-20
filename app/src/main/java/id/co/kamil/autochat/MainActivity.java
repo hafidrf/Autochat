@@ -157,12 +157,12 @@ public class MainActivity extends AppCompatActivity {
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     break;
                 case "enableForegroundService":
-                    Intent intent1 = new Intent(MainActivity.this, ServiceSync.class);
+                    Intent intent1 = new Intent(MainActivity.this, ServiceSyncNew.class);
                     intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, true);
                     startService(intent1);
                     break;
                 case "disableForegroundService":
-                    intent1 = new Intent(MainActivity.this, ServiceSync.class);
+                    intent1 = new Intent(MainActivity.this, ServiceSyncNew.class);
                     intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, false);
                     startService(intent1);
                     break;
@@ -332,11 +332,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, MyNotifiService.class);//启动服务
             startService(intent);//Start service
 
-            Intent intent1 = new Intent(MainActivity.this, ServiceSync.class);
+            Intent intent1 = new Intent(MainActivity.this, ServiceSyncNew.class);
             boolean foreground_service = sharePref.getSessionBool(STATUS_FOREGROUND_SERVICE);
             intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, foreground_service);
             intent1.putExtra(SharPref.STATUS_SYNC_SERVICE, true);
             startService(intent1);
+            hidePdialog();
         } catch (Exception e) {
             hidePdialog();
             new AlertDialog.Builder(this)
