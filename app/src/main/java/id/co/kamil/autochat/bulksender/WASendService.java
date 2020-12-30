@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.parse.CountCallback;
+import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -40,24 +41,25 @@ import id.co.kamil.autochat.utils.SharPref;
 import static id.co.kamil.autochat.ServiceSyncNew.ID_SERVICE_WA;
 import static id.co.kamil.autochat.ServiceSyncNew.is_send;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
-import static id.co.kamil.autochat.utils.API.URL_POST_HAPUS_PESAN_ANTRIAN;
+import static id.co.kamil.autochat.utils.API.URL_SYNC_DB_OUTBOX;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
 
 public class WASendService extends AccessibilityService {
-    private static String idMessage;
+    private static String idMessage,created;
     private static final String TAG = "WASendService";
-
+    private static final String ID_SERVICE_SYNC = "Sync";
     private static final String waButtonSendID = "com.whatsapp:id/send";
     private static final String waBackButtonID = "com.whatsapp:id/back";
     private DBHelper dbHelper;
     private String user_id;
 
 
-    public static void setID(String id) {
+    public static void setID(String id,String tgl) {
         idMessage = id;
+        created=tgl;
         if(id==null){
             return;
         }
@@ -87,10 +89,6 @@ public class WASendService extends AccessibilityService {
     }
 
     private void performWhatsAppMessage(final AccessibilityNodeInfo rootNode) {
-        Date c2 = Calendar.getInstance().getTime();
-
-        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        final String created = df2.format(c2);
         try {
 
             dbHelper = new DBHelper(this);
@@ -123,7 +121,7 @@ public class WASendService extends AccessibilityService {
                 } else {
                     dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + null, "warning", user_id);
                 }
-                hapusPesan(idMessage, new HapusPesanListener() {
+                updateSentPesan(idMessage,created, new SentPesanListener() {
                     @Override
                     public void done() {
                         is_send=false;
@@ -155,7 +153,7 @@ public class WASendService extends AccessibilityService {
                                             backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                                             Log.e(TAG, "button Back : " + backButton + idMessage);
                                         }
-                                        hapusPesan(idMessage, new HapusPesanListener() {
+                                        updateSentPesan(idMessage,created, new SentPesanListener() {
                                             @Override
                                             public void done() {
                                                 is_send=false;
@@ -228,50 +226,79 @@ public class WASendService extends AccessibilityService {
     public void onInterrupt() {
 
     }
-    interface HapusPesanListener{
+    interface SentPesanListener{
         void done();
     }
-    private void hapusPesan(final String id,final HapusPesanListener hapusPesanListener) {
+    private void updateSentPesan(final String id,final String created,final SentPesanListener sentPesanListener) {
         SessionManager session = new SessionManager(this);
         HashMap<String, String> userDetail = session.getUserDetails();
         final String token = userDetail.get(KEY_TOKEN);
         if(token==null){
-            hapusPesanListener.done();
+            sentPesanListener.done();
             return;
         }
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final JSONArray jsonArray = new JSONArray();
+        JSONArray arrIdOutbox = new JSONArray();
+        JSONArray arrDate = new JSONArray();
 
-        jsonArray.put(Integer.parseInt(id));
-        Log.d("deletedari", "antrian pesan");
-        final JSONObject request_body = new JSONObject();
+        arrIdOutbox.put(id);
+        arrDate.put(created);
+
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final JSONObject requestBody = new JSONObject();
         try {
-            request_body.put("id", jsonArray);
+            requestBody.put("id", arrIdOutbox);
+            requestBody.put("sent_date", arrDate);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i(TAG, request_body.toString());
-        final String uri = Uri.parse(URL_POST_HAPUS_PESAN_ANTRIAN)
+        Log.i(TAG, requestBody.toString());
+        final String uri = Uri.parse(URL_SYNC_DB_OUTBOX)
                 .buildUpon()
                 .toString();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    final boolean status = response.getBoolean("status");
                     final String message = response.getString("message");
                     Log.i(TAG, message);
-                    hapusPesanListener.done();
+                    if (status) {
+                        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
+                        query.whereEqualTo("idmessage",id);
+                        // Or use the the non-blocking method countInBackground method with a CountCallback
+                        query.getFirstInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject object, ParseException e) {
+                                if(e==null){
+                                    object.deleteInBackground(new DeleteCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            sentPesanListener.done();
+                                        }
+                                    });
+                                }else{
+                                    dbHelper.insertLog(created, ID_SERVICE_SYNC, e.getMessage(), "warning", user_id);
+                                    Log.i(TAG, message);
+                                    sentPesanListener.done();
+                                }
+                            }
+                        });
+                    } else {
+                        dbHelper.insertLog(created, ID_SERVICE_SYNC, message, "warning", user_id);
+                        Log.i(TAG, message);
+                        sentPesanListener.done();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    hapusPesanListener.done();
+                    sentPesanListener.done();
                 }
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                hapusPesanListener.done();
+                sentPesanListener.done();
             }
         }) {
             @Override

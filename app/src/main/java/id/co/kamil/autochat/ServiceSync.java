@@ -1567,7 +1567,7 @@ public class ServiceSync extends Service {
                 dbHelper.insertLog(created, ID_SERVICE_WA, "Persiapan Kirim Pesan ke " + phoneNumber + ", isi Pesan : " + bodyLog, "normal", user_id);
                 Log.e(TAG, "ImageHash:" + image_hash);
                 Log.e(TAG, "ImageHUrl:" + image_url);
-                WASendService.setID(id);
+                WASendService.setID(id,"");
                 if ((image_hash == null || image_hash.isEmpty() || image_hash.equals(null) || image_hash.equals("null")) && (image_url == null || image_url.isEmpty() || image_url.equals(null) || image_url.equals("null"))) {
 //                    Intent sendIntent = new Intent();
 //                    sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

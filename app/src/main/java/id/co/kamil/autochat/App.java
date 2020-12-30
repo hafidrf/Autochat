@@ -9,8 +9,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("KSDJFKASJFI3S8DSJFDH")
-                .clientKey("LASDK823JKHR87SDFJSDHF8DFHASFDC")
+                .applicationId("0cbfcf03-3f98-470a-95be-e9b46fd56e2c")
+                .clientKey("0cbfcf03-3f98-470a-95be-e9b46fd56e2c")
                 .server("https://dash.wabot.id:1337/parse")
                 .build()
         );

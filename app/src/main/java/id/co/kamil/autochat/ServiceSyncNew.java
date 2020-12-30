@@ -318,7 +318,7 @@ public class ServiceSyncNew extends Service {
             dbHelper.insertLog(created, ID_SERVICE_WA, "Tidak ada antrian pesan", "normal", user_id);
             //dbHelper.updateDBVersion("0");
             Log.e(TAG, "tidak ada pesan antrian");
-            WASendService.setID(null);
+            WASendService.setID(null,null);
             is_send = false;
             startWASender(user_id);
         }
@@ -429,7 +429,7 @@ public class ServiceSyncNew extends Service {
             return;
         }
         if ((image_hash.equals("")) && (image_url.equals(""))) {
-            WASendService.setID(id);
+            WASendService.setID(id,created);
             String toNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -478,7 +478,7 @@ public class ServiceSyncNew extends Service {
             }
             Log.e(TAG, "Download Image:");
         } else {
-            WASendService.setID(id);
+            WASendService.setID(id,created);
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
             File filePath = new File(image_hash);
