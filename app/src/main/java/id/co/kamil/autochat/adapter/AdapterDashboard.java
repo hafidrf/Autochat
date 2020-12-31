@@ -17,7 +17,6 @@ import id.co.kamil.autochat.R;
 
 public class AdapterDashboard extends ArrayAdapter<ItemDashboard> {
     private int _resource;
-
     public AdapterDashboard(@NonNull Context context, int resource, @NonNull List<ItemDashboard> objects) {
         super(context, resource, objects);
         this._resource = resource;
@@ -27,21 +26,21 @@ public class AdapterDashboard extends ArrayAdapter<ItemDashboard> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View view = layoutInflater.inflate(this._resource, parent, false);
+        final View view = layoutInflater.inflate(this._resource,parent,false);
         TextView txtTitle = (TextView) view.findViewById(R.id.txtTitle);
         TextView txtValue = (TextView) view.findViewById(R.id.txtValue);
-        LinearLayout background = (LinearLayout) view.findViewById(R.id.background);
+        androidx.cardview.widget.CardView background = (androidx.cardview.widget.CardView) view.findViewById(R.id.background);
 
         final ItemDashboard itemDashboard = getItem(position);
         txtTitle.setText(itemDashboard.getTitle());
         txtValue.setText(itemDashboard.getVal());
-        if (itemDashboard.getColor().equals("blue")) {
+        if (itemDashboard.getColor().equals("blue")){
             background.setBackground(getContext().getDrawable(R.drawable.rectangle_blue));
-        } else if (itemDashboard.getColor().equals("orange")) {
+        }else if (itemDashboard.getColor().equals("orange")) {
             background.setBackground(getContext().getDrawable(R.drawable.rectangle_orange));
-        } else if (itemDashboard.getColor().equals("green")) {
+        }else if (itemDashboard.getColor().equals("green")) {
             background.setBackground(getContext().getDrawable(R.drawable.rectangle_green));
-        } else if (itemDashboard.getColor().equals("tosca")) {
+        }else if (itemDashboard.getColor().equals("tosca")) {
             background.setBackground(getContext().getDrawable(R.drawable.rectangle_tosca));
         }
         return view;

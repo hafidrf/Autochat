@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/wallwabot2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/ic_launcher_background"
+    android:scrollbars="none"
+    android:scrollingCache="true"
     tools:context=".ui.dasbor.DasborFragment">
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:orientation="vertical"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
                 <Button
                     android:background="@drawable/btn_rect_default"
                     android:visibility="gone"
@@ -34,290 +38,826 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:background="@color/colorPrimary" />
 
                 <LinearLayout
-                    android:background="@drawable/rectangle_white"
-                    android:orientation="vertical"
-                    android:padding="15dp"
-                    android:layout_margin="20dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bulk Sender" />
-
-                    <RelativeLayout
+                    <!--NAVBAR-->
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="55dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+                        <!--ICON SIDE DRAWER-->
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:tint="@android:color/white"
+                            app:srcCompat="@drawable/logo_small_roundd" />
 
                         <TextView
-                            android:id="@+id/labelStatusBulkSender"
-                            android:textSize="16sp"
-                            android:textColor="@color/md_black_1000"
+                            android:id="@+id/txtNama"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="Hai, Ryan"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="PREMIUM"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="@color/md_amber_600"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="35dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="35dp"
+                        android:backgroundTint="#00FFFFFF"
+                        app:flexWrap="nowrap"
+                        app:justifyContent="space_between">
+
+                        <LinearLayout
+                            android:id="@+id/btnUpgrade"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Upgrade"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                                android:textColor="@android:color/white" />
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp"
+                                app:srcCompat="@drawable/upgrade" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/btnShare"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Share"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                                android:textColor="@android:color/white"
+                                app:fontFamily="sans-serif-medium" />
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp"
+                                app:srcCompat="@drawable/share" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/btnAffiliasi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Link"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                                android:textColor="@android:color/white"
+                                app:fontFamily="sans-serif-medium" />
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp"
+                                app:srcCompat="@drawable/link" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/btnPengaturan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pengaturan"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                                android:textColor="@android:color/white"
+                                app:fontFamily="sans-serif-medium" />
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="5dp"
+                                app:srcCompat="@drawable/setting" />
+
+                        </LinearLayout>
+                    </com.google.android.flexbox.FlexboxLayout>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="#fff"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginTop="12dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="5dp"
+                        app:cardUseCompatPadding="true">
+
+                        <GridLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:alignmentMode="alignMargins"
+                            android:columnOrderPreserved="false"
+                            android:padding="8dp"
+                            android:rowCount="2">
+
+                            <id.co.kamil.autochat.utils.ExpandableHeightListView
+                                android:id="@+id/listDashboard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@null"
+                                android:dividerHeight="0dp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+                        </GridLayout>
+                    </androidx.cardview.widget.CardView>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginBottom="5dp"
+                        app:cardBackgroundColor="#fff"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="5dp"
+                        app:cardUseCompatPadding="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <!-- STATUS BULK SENDER -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp">
+
+                                <TextView
+                                    android:id="@+id/labelStatusBulkSender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="STATUS BULK SENDER"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                                    android:textColor="#222" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <Switch
+                                    android:id="@+id/switchEnabledBulkSender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+                            <!-- STATUS BULK SENDER -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp">
+
+                                <TextView
+                                    android:id="@+id/labelAccessibility"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="AKSEBILITAS WABOT"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                                    android:textColor="#222" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <Switch
+                                    android:id="@+id/switchAksesibilitas"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp">
+
+                                <TextView
+                                    android:id="@+id/labelFloatingWidget"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="TOMBOL ASISTEN"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                                    android:textColor="#222" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <Switch
+                                    android:id="@+id/switchFloatingWidget"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp">
+
+                                <TextView
+                                    android:id="@+id/labelScreenAlwaysOn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="SELALU NYALAKAN LAYAR"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                                    android:textColor="#222" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <Switch
+                                    android:id="@+id/switchScreenAlwaysOn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp">
+
+                                <TextView
+                                    android:id="@+id/labelEnableForegroundService"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="WABOT SELALU AKTIF"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                                    android:textColor="#222" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <Switch
+                                    android:id="@+id/switchEnableForegroundService"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp">
+
+                                <TextView
+                                    android:id="@+id/aktifwabota"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="AKTIFASI KEYBOARD WABOT"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                                    android:textColor="#222" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <Switch
+                                    android:id="@+id/switch5a"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp">
+
+                                <TextView
+                                    android:id="@+id/aktifwabotaa"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="AUTO REPLY"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                                    android:textColor="#222" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <Switch
+                                    android:id="@+id/swiatch5a"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:focusableInTouchMode="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:text="Paket Berlangganan"
+                            android:textColor="#222"
+                            android:textSize="20dp"
+                            android:textStyle="bold">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/txtTypeAccount"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="Status Bulk Sender" />
-
-                        <Switch
-                            android:id="@+id/switchEnabledBulkSender"
-                            android:layout_alignTop="@id/labelStatusBulkSender"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:text="Type Account : "
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:id="@+id/labelAccessibility"
-                            android:textSize="16sp"
-                            android:textColor="@color/md_black_1000"
-                            android:layout_below="@id/labelStatusBulkSender"
+                            android:layout_height="wrap_content"/>
+                        <HorizontalScrollView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="Aksesibilitas Wabot" />
+                            android:layout_marginTop="25dp"
+                            android:scrollbars="none">
 
-                        <Switch
-                            android:id="@+id/switchAksesibilitas"
-                            android:layout_alignTop="@id/labelAccessibility"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </RelativeLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                                <View
+                                    android:layout_width="18dp"
+                                    android:layout_height="0dp" />
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="155dp"
+                                    android:layout_height="wrap_content"
+                                    app:cardBackgroundColor="#00FFFFFF"
+                                    app:cardCornerRadius="8dp"
+                                    app:cardElevation="0dp"
+                                    app:cardUseCompatPadding="false">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="450dp"
+                                        app:srcCompat="@drawable/basic" />
+                                </androidx.cardview.widget.CardView>
+
+                                <View
+                                    android:layout_width="18dp"
+                                    android:layout_height="0dp" />
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="155dp"
+                                    android:layout_height="wrap_content"
+                                    app:cardBackgroundColor="#00FFFFFF"
+                                    app:cardCornerRadius="8dp"
+                                    app:cardElevation="0dp"
+                                    app:cardUseCompatPadding="false">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="450dp"
+                                        app:srcCompat="@drawable/premium" />
+                                </androidx.cardview.widget.CardView>
+
+                                <View
+                                    android:layout_width="18dp"
+                                    android:layout_height="0dp" />
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="155dp"
+                                    android:layout_height="wrap_content"
+                                    app:cardBackgroundColor="#00FFFFFF"
+                                    app:cardCornerRadius="8dp"
+                                    app:cardElevation="0dp"
+                                    app:cardUseCompatPadding="false">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="450dp"
+                                        app:srcCompat="@drawable/bisnis" />
+                                </androidx.cardview.widget.CardView>
+                            </LinearLayout>
+
+                        </HorizontalScrollView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btnUpgrade2"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Options" />
+                        android:layout_margin="20dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/colorPrimary"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="0dp"
+                            app:cardUseCompatPadding="false">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="10dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:text="UPGRADE SEKARANG"
+                                    android:textColor="#fff"
+                                    android:textSize="15dp">
+                                </TextView>
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_marginRight="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/labelFloatingWidget"
-                            android:textSize="16sp"
-                            android:textColor="@color/md_black_1000"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:text="Tombol Asisten" />
-
-                        <Switch
-                            android:id="@+id/switchFloatingWidget"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:text="Komisi Ajak Teman"
+                            android:textColor="#222"
+                            android:textSize="20dp"
+                            android:textStyle="bold"></TextView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/md_light_blue_600"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="0dp"
+                            app:cardUseCompatPadding="false">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="15dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:text="Yuk ajan dan Referensikan teman dan kenalanmu untuk menggunakan WABOT Dan Dapatkan penghasilan Rp.500/register atau Pendaftar."
+                                    android:textColor="#fff"
+                                    android:textSize="13dp"></TextView>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:text="Komisi sebesar 50% dari Setiap User yang Upgrade Baru"
+                                    android:textColor="#fff"
+                                    android:textSize="13dp"></TextView>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:text="Dan Komisi 20% dari User yang Perpanjang Upgrade (Renewal)"
+                                    android:textColor="#fff"
+                                    android:textSize="13dp"></TextView>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="right"
+                                    android:orientation="horizontal">
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="8dp"
+                                        app:cardBackgroundColor="@color/colorPrimary"
+                                        app:cardCornerRadius="10dp"
+                                        app:cardElevation="0dp"
+                                        app:cardUseCompatPadding="false">
+
+                                        <LinearLayout
+                                            android:id="@+id/btnShare2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center_horizontal"
+                                            android:layout_margin="10dp"
+                                            android:orientation="horizontal">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
+                                                android:text="SHARE"
+                                                android:textColor="#fff"
+                                                android:textSize="15dp"></TextView>
+                                        </LinearLayout>
+                                    </androidx.cardview.widget.CardView>
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="8dp"
+                                        app:cardBackgroundColor="@color/colorPrimary"
+                                        app:cardCornerRadius="8dp"
+                                        app:cardElevation="0dp"
+                                        app:cardUseCompatPadding="false">
+
+                                        <LinearLayout
+                                            android:id="@+id/btnAffiliasi2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center_horizontal"
+                                            android:layout_margin="10dp"
+                                            android:orientation="horizontal">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
+                                                android:text="LINK REFERAL"
+                                                android:textColor="#fff"
+                                                android:textSize="15dp"></TextView>
+                                        </LinearLayout>
+                                    </androidx.cardview.widget.CardView>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_marginRight="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/labelScreenAlwaysOn"
-                            android:textSize="16sp"
-                            android:textColor="@color/md_black_1000"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:text="Layar Selalu Menyala" />
-
-                        <Switch
-                            android:id="@+id/switchScreenAlwaysOn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_marginRight="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/labelEnableForegroundService"
-                            android:textSize="16sp"
-                            android:textColor="@color/md_black_1000"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:text="Wabot Selalu Aktif" />
-
-                        <Switch
-                            android:id="@+id/switchEnableForegroundService"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="15dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/rectangle_orange"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:text="Sebelum menggunakan WABOT yuk seting dulu pengaturanya."
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <LinearLayout
-                        android:layout_marginTop="15dp"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <Button
-                            android:background="@drawable/btn_rect_default"
-                            android:id="@+id/btnPengaturan"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:text="Pengaturan"
-                            android:textSize="12sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="25dp" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <id.co.kamil.autochat.utils.ExpandableHeightListView
-                    android:id="@+id/listDashboard"
-                    android:divider="@null"
-                    android:dividerHeight="0dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <LinearLayout
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/rectangle_grey"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/txtTypeAccount"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:layout_marginTop="0dp"
                         android:layout_marginRight="20dp"
-                        android:text="Type Account : "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/imgPrice"
-                    android:layout_margin="20dp"
-                    android:scaleType="fitEnd"
-                    android:adjustViewBounds="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:id="@+id/btnUpgrade"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:text="Upgrade Akun"
-                    android:textSize="12sp"
-                    android:background="@drawable/btn_rect_default"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="15dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/rectangle_orange"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:text="Yuk ajak dan referensikan teman dan kenalan Mu untuk menggunakan WABOT. Dan dapatkan penghasilan Rp.500/register atau per pendaftar. Komisi Sebesar 50% dari setiap user yang Upgrade Baru dan komisi 20% dari User yang perpanjang upgrade (renewal). "
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <LinearLayout
-                        android:layout_marginTop="15dp"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <Button
-                            android:background="@drawable/btn_rect_default"
-                            android:id="@+id/btnShare"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:text="Share"
-                            android:textSize="12sp"
+                        <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="25dp" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:text="Informasi"
+                            android:textColor="#222"
+                            android:textSize="20dp"
+                            android:textStyle="bold"></TextView>
 
-                        <Button
-                            android:layout_marginLeft="10dp"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:background="@drawable/btn_rect_default"
-                            android:id="@+id/btnAffiliasi"
-                            android:text="Lihat Link Referal"
-                            android:textSize="12sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="25dp" />
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/md_teal_400"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="0dp"
+                            app:cardUseCompatPadding="false">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="15dp"
+                                android:orientation="vertical">
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:text="Simak penjelasan apa itu WABOT. Bagaimana cara penggunaan dan Informasi lainnya."
+                                    android:textColor="#fff"
+                                    android:textSize="13dp"></TextView>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="right"
+                                    android:orientation="horizontal">
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="8dp"
+                                        app:cardBackgroundColor="@color/colorPrimary"
+                                        app:cardCornerRadius="12dp"
+                                        app:cardElevation="0dp"
+                                        app:cardUseCompatPadding="false">
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="10dp"
+                                            android:gravity="right"
+                                            android:orientation="horizontal">
+
+                                            <TextView
+                                                android:id="@+id/txtInfo"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
+                                                android:textColorLink="#fff"
+                                                android:text="LIHAT"
+                                                android:textColor="#fff"
+                                                android:textSize="15dp"></TextView>
+                                        </LinearLayout>
+                                    </androidx.cardview.widget.CardView>
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="20dp" />
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/md_teal_400"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="0dp"
+                            app:cardUseCompatPadding="false">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="15dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:text="Silahkan Bergabung dengan pengguna WABOT lainnya untuk bisa saling berdiskusi dan sharing serta belajar bareng tentang Whatsapp Marketing."
+                                    android:textColor="#fff"
+                                    android:textSize="13dp">
+
+                                </TextView>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:text="Yuk Klik Dibawah ini"
+                                    android:textColor="#fff"
+                                    android:textSize="13dp">
+
+                                </TextView>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="right"
+                                    android:orientation="horizontal">
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="8dp"
+                                        app:cardBackgroundColor="@color/colorPrimary"
+                                        app:cardCornerRadius="12dp"
+                                        app:cardElevation="0dp"
+                                        app:cardUseCompatPadding="false">
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="10dp"
+                                            android:gravity="right"
+                                            android:orientation="horizontal">
+
+                                            <TextView
+                                                android:backgroundTint="@color/colorPrimary"
+                                                android:id="@+id/txtJoin"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
+                                                android:text="JOIN GROUP"
+                                                android:textColorLink="#fff"
+                                                android:textColor="#fff"
+                                                android:textSize="15dp">
+
+                                            </TextView>
+
+                                        </LinearLayout>
+                                    </androidx.cardview.widget.CardView>
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="20dp" />
+
                     </LinearLayout>
+
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/txtInfo"
-                    android:background="@drawable/rectangle_blue"
-                    android:padding="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:textColor="@color/md_black_1000"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/txtJoin"
-                    android:background="@drawable/rectangle_green"
-                    android:padding="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:textColor="@color/md_black_1000"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
-            </LinearLayout>
+            </RelativeLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
