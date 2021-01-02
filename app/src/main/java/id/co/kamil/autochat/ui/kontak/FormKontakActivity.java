@@ -378,7 +378,8 @@ public class FormKontakActivity extends AppCompatActivity {
                     final String id = customers.getJSONObject(i).getString("id");
                     final String name = customers.getJSONObject(i).getString("name");
                     final String description = customers.getJSONObject(i).getString("description");
-                    dataGrup.add(new ItemGrup(id, name, description, true, true));
+                    final String total_member = customers.getJSONObject(i).getString("total_member");
+                    dataGrup.add(new ItemGrup(id, name, description, total_member, true, true));
                 }
 
             } catch (JSONException e) {
@@ -503,6 +504,7 @@ public class FormKontakActivity extends AppCompatActivity {
                         dataItemGroup.put("id", itemGrup.getId());
                         dataItemGroup.put("name", itemGrup.getJudul());
                         dataItemGroup.put("description", itemGrup.getDeskripsi());
+                        dataItemGroup.put("total_member", itemGrup.getMember());
                         JSONObject jsonObject = new JSONObject(dataItemGroup);
                         customers.put(jsonObject);
                     }

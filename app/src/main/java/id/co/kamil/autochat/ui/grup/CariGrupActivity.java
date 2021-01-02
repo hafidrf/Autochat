@@ -150,6 +150,7 @@ public class CariGrupActivity extends AppCompatActivity {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
                             final String description = data.getJSONObject(i).getString("description");
+                            final String total_member = data.getJSONObject(i).getString("total_member");
                             for (int a = 0; a < excludeGroup.length(); a++) {
                                 if (excludeGroup.get(a).toString().equals(id)) {
                                     exclude = true;
@@ -157,7 +158,7 @@ public class CariGrupActivity extends AppCompatActivity {
                                 }
                             }
                             if (!exclude) {
-                                dataGrup.add(new ItemGrup(id, name, description, data.getJSONObject(i)));
+                                dataGrup.add(new ItemGrup(id, name, description, total_member, data.getJSONObject(i)));
                             }
                         }
                     } else {

@@ -25,6 +25,8 @@ public class AdapterGrup extends BaseAdapter {
 
     public class ViewHolder {
         TextView txtJudul;
+        TextView txtid;
+        TextView txtmember;
         CheckBox chk1;
 
     }
@@ -67,9 +69,12 @@ public class AdapterGrup extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater)
                     context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(resource, null);
+
             // configure view holder
             viewHolder = new ViewHolder();
             viewHolder.txtJudul = (TextView) rowView.findViewById(R.id.judul);
+            viewHolder.txtmember = (TextView) rowView.findViewById(R.id.member);
+            viewHolder.txtid = (TextView) rowView.findViewById(R.id.id);
             viewHolder.chk1 = (CheckBox) rowView.findViewById(R.id.checkbox);
             rowView.setTag(viewHolder);
 
@@ -79,6 +84,8 @@ public class AdapterGrup extends BaseAdapter {
 
         final ItemGrup item = dataGrup.get(position);
         viewHolder.txtJudul.setText(item.getJudul());
+        viewHolder.txtmember.setText(item.getMember());
+        viewHolder.txtid.setText(item.getId());
         viewHolder.chk1.setChecked(item.isCheckbox());
 
 
@@ -108,11 +115,17 @@ public class AdapterGrup extends BaseAdapter {
             for (ItemGrup postDetail : arraylist) {
                 if (charText.length() != 0 && postDetail.getJudul().toLowerCase(Locale.getDefault()).contains(charText)) {
                     dataGrup.add(postDetail);
-                } else if (charText.length() != 0 && postDetail.getDeskripsi().toLowerCase(Locale.getDefault()).contains(charText)) {
-                    dataGrup.add(postDetail);
+                    if (charText.length() != 0 && postDetail.getId().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        dataGrup.add(postDetail);
+                        if (charText.length() != 0 && postDetail.getMember().toLowerCase(Locale.getDefault()).contains(charText)) {
+                            dataGrup.add(postDetail);
+                        } else if (charText.length() != 0 && postDetail.getDeskripsi().toLowerCase(Locale.getDefault()).contains(charText)) {
+                            dataGrup.add(postDetail);
+                        }
+                    }
                 }
+                notifyDataSetChanged();
             }
         }
-        notifyDataSetChanged();
     }
 }

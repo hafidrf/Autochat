@@ -229,7 +229,8 @@ public class GrupFragment extends Fragment {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
                             final String description = data.getJSONObject(i).getString("description");
-                            dataGrup.add(new ItemGrup(id, name, description, data.getJSONObject(i)));
+                            final String total_member = data.getJSONObject(i).getString("total_member");
+                            dataGrup.add(new ItemGrup(id, name, description, total_member, data.getJSONObject(i)));
                         }
                     } else {
                         showError(true, message, false);

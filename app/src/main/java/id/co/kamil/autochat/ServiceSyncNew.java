@@ -800,4 +800,5 @@ public class ServiceSyncNew extends Service {
             e.printStackTrace();
         }
     }
+
 }
