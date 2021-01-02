@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -60,6 +61,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.internal.ListenerHolder;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -89,7 +91,10 @@ import id.co.kamil.autochat.utils.ExpandableHeightListView;
 import id.co.kamil.autochat.utils.PermissionManagement;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
+import rkr.simplekeyboard.inputmethod.latin.RichInputMethodManager;
+import rkr.simplekeyboard.inputmethod.latin.utils.FragmentUtils;
 
+import static android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;
 import static id.co.kamil.autochat.MainActivity.MAIN_RECEIVER;
 import static id.co.kamil.autochat.utils.API.DESKRIPSI_INFO;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
@@ -133,13 +138,14 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     private HashMap<String, String> userDetail;
     private String token;
     private TextView txtTypeAccount;
+    private TextView txtakun;
     private List<ItemDashboard> dataDashboard = new ArrayList<>();
     private TextView txtJoin;
     private LinearLayout btnShare;
     private LinearLayout btnShare2;
     private LinearLayout btnAffiliasi;
     private LinearLayout btnAffiliasi2;
-    private String linkPlaystore,linkWeb;
+    private String linkPlaystore, linkWeb;
     private String template_share;
     private LinearLayout btnUpgrade;
     private LinearLayout btnUpgrade2;
@@ -150,9 +156,13 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     private int dbVersionCode;
     private ProgressDialog pDialog;
     private int page_kontak_wabot = 0;
-    private Switch switchEnabledBulkSender,switchAksesibilitas, switchFloatingWidget,
+    private Switch switchEnabledBulkSender, switchAksesibilitas, switchFloatingWidget,
             switchScreenAlwaysOn, switchEnableForegroundService;
+    private Switch switchkeyboard;
     private boolean status_aksesibilitas;
+    private Button btnPengaturanKeyboard;
+    private Button btnPengaturanAutoReply;
+    private boolean status_keyboard;
 
 
     public DasborFragment() {
@@ -194,9 +204,12 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         scrollView = (ScrollView) view.findViewById(R.id.scrollView);
         txtTypeAccount = (TextView) view.findViewById(R.id.txtTypeAccount);
+        txtakun = (TextView) view.findViewById(R.id.txtakun);
         btnUpgrade = (LinearLayout) view.findViewById(R.id.btnUpgrade);
         btnUpgrade2 = (LinearLayout) view.findViewById(R.id.btnUpgrade2);
         btnPengaturan = (LinearLayout) view.findViewById(R.id.btnPengaturan);
+        btnPengaturanKeyboard = (Button) view.findViewById(R.id.btnPengaturanKeyboard);
+        btnPengaturanAutoReply = (Button) view.findViewById(R.id.btnPengaturanAutoReply);
         btnSingkronisasi = (Button) view.findViewById(R.id.btnSingkronisasi);
         btnPengaturan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,8 +241,8 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             public void onClick(View v) {
                 try {
                     String konten = template_share;
-                    konten = konten.replace("[linklanding]",linkPlaystore);
-                    konten = konten.replace("[linkweb]",linkWeb);
+                    konten = konten.replace("[linklanding]", linkPlaystore);
+                    konten = konten.replace("[linkweb]", linkWeb);
 
                     String appId = getActivity().getPackageName();
                     Intent i = new Intent(Intent.ACTION_SEND);
@@ -238,7 +251,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -249,8 +262,8 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             public void onClick(View v) {
                 try {
                     String konten = template_share;
-                    konten = konten.replace("[linklanding]",linkPlaystore);
-                    konten = konten.replace("[linkweb]",linkWeb);
+                    konten = konten.replace("[linklanding]", linkPlaystore);
+                    konten = konten.replace("[linkweb]", linkWeb);
 
                     String appId = getActivity().getPackageName();
                     Intent i = new Intent(Intent.ACTION_SEND);
@@ -259,7 +272,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                     String sAux = konten;
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Bagikan lewat"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -278,6 +291,20 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 startActivity(new Intent(getContext(), AffiliasiActivity.class));
             }
         });
+        btnPengaturanKeyboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.provider.Settings.ACTION_INPUT_METHOD_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+        btnPengaturanAutoReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS));
+            }
+        });
         session = new SessionManager(getContext());
         userDetail = session.getUserDetails();
         token = userDetail.get(KEY_TOKEN);
@@ -287,12 +314,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 userDetail.get(KEY_LASTNAME)
         ));
         updateStatusBulkSender();
-        switchEnabledBulkSender.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_BULK_SENDER,isChecked);
-            }
-        });
+
         switchAksesibilitas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -304,7 +326,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchFloatingWidget.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_FLOATING_WIDGET,isChecked);
+                sharePref.createSession(STATUS_FLOATING_WIDGET, isChecked);
 
                 if (getActivity() != null) {
                     if (isChecked) {
@@ -322,7 +344,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchScreenAlwaysOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_SCREEN_ALWAYS_ON,isChecked);
+                sharePref.createSession(STATUS_SCREEN_ALWAYS_ON, isChecked);
 
                 if (getContext() == null) return;
 
@@ -334,7 +356,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchEnableForegroundService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharePref.createSession(STATUS_FOREGROUND_SERVICE,isChecked);
+                sharePref.createSession(STATUS_FOREGROUND_SERVICE, isChecked);
 
                 if (getContext() == null) return;
 
@@ -343,6 +365,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(pushNotification);
             }
         });
+
         swipe_refresh.post(new Runnable() {
             @Override
             public void run() {
@@ -351,17 +374,17 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             }
         });
         btnSingkronisasi.setVisibility(View.GONE);
-        if (userDetail.get(KEY_PARENT_ID) != null){
-            if (userDetail.get(KEY_PARENT_ID).equals("5187")){
+        if (userDetail.get(KEY_PARENT_ID) != null) {
+            if (userDetail.get(KEY_PARENT_ID).equals("5187")) {
                 btnSingkronisasi.setVisibility(View.VISIBLE);
             }
         }
-        if (userDetail.get(KEY_CUST_ID) != null){
-            if (userDetail.get(KEY_CUST_ID).equals("5187")){
+        if (userDetail.get(KEY_CUST_ID) != null) {
+            if (userDetail.get(KEY_CUST_ID).equals("5187")) {
                 btnSingkronisasi.setVisibility(View.VISIBLE);
             }
         }
-        Log.e(TAG,"ParentID" + userDetail.get(KEY_PARENT_ID));
+        Log.e(TAG, "ParentID" + userDetail.get(KEY_PARENT_ID));
         btnSingkronisasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -374,18 +397,18 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 loadDashboard();
             }
         });
-        setTextViewHTML(txtInfo,DESKRIPSI_INFO);
+        setTextViewHTML(txtInfo, DESKRIPSI_INFO);
         listDashboard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent pushNotification = new Intent(MAIN_RECEIVER);
-                if (position==0){
+                if (position == 0) {
                     pushNotification.putExtra("action", "kontak");
-                }else if(position==1){
+                } else if (position == 1) {
                     pushNotification.putExtra("action", "antrian");
-                }else if(position==2){
+                } else if (position == 2) {
                     pushNotification.putExtra("action", "jadwal");
-                }else if(position==3){
+                } else if (position == 3) {
                     pushNotification.putExtra("action", "terkirim");
 
                 }
@@ -395,6 +418,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
 
         return view;
     }
+
     private void updateStatusBulkSender() {
         boolean status_bulk_sender = sharePref.getSessionBool(STATUS_BULK_SENDER);
         status_aksesibilitas = isAccessibilityEnabled();
@@ -408,6 +432,8 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         switchScreenAlwaysOn.setChecked(screen_always_on);
         switchEnableForegroundService.setChecked(foreground_service);
     }
+
+
 
     @Override
     public void onResume() {
@@ -442,6 +468,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
 
         return false;
     }
+
     private String getTgl(){
 
         Date c = Calendar.getInstance().getTime();
@@ -709,6 +736,14 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                             }
                         } else {
                             txtTypeAccount.setText("Type akun Anda Saat ini adalah: " + account_type);
+                        }
+                        session.setKeyCustGroup(account_type_id);
+                        if (account_type_id.equals("1")) {
+                            if (status_account.equals(null) || status_account == null || status_account.equals("null")) {
+                                txtakun.setVisibility(View.GONE);
+                            }
+                        } else {
+                            txtakun.setText(account_type);
                         }
 
                         dataDashboard.clear();

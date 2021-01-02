@@ -34,6 +34,7 @@ public class SharPref {
     public static final String LINK_KURIR = "LINK_KURIR";
     public static final String AUTOREPLY_PERSONAL = "AUTOREPLY_PERSONAL";
     public static final String AUTOREPLY_BUSINESS = "AUTOREPLY_BUSINESS";
+    public static final String STATUS_KEYBOARD = "STATUS_KEYBOARD";
     public static final String SYNC_CONTACT_WABOT = "SYNC_CONTACT_WABOT";
     public static final String DIR_IMAGE = "DIR_IMAGE";
 

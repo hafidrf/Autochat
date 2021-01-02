@@ -80,6 +80,7 @@
                             android:layout_weight="1" />
 
                         <TextView
+                            android:id="@+id/txtakun"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
@@ -386,7 +387,6 @@
                                 android:paddingRight="15dp">
 
                                 <TextView
-                                    android:id="@+id/aktifwabota"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="AKTIFASI KEYBOARD WABOT"
@@ -397,12 +397,19 @@
                                     android:layout_width="0dp"
                                     android:layout_height="0dp"
                                     android:layout_weight="1" />
-
-                                <Switch
-                                    android:id="@+id/switch5a"
+                                <Button
+                                    android:id="@+id/btnPengaturanKeyboard"
+                                    android:background="@drawable/btndash"
+                                    android:textColor="@color/md_white_1000"
+                                    android:paddingLeft="20dp"
+                                    android:paddingRight="20dp"
+                                    android:textSize="11sp"
+                                    android:layout_alignTop="@id/labelEnabledKeyboard"
+                                    android:layout_alignParentRight="true"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1" />
+                                    android:layout_height="25dp"
+
+                                    android:text="Aktivasi" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -426,11 +433,18 @@
                                     android:layout_height="0dp"
                                     android:layout_weight="1" />
 
-                                <Switch
-                                    android:id="@+id/swiatch5a"
+                                <Button
+                                    android:id="@+id/btnPengaturanAutoReply"
+                                    android:background="@drawable/btndash"
+                                    android:textColor="@color/md_white_1000"
+                                    android:paddingLeft="20dp"
+                                    android:paddingRight="20dp"
+                                    android:textSize="11sp"
+                                    android:layout_alignTop="@id/labelAutoReply"
+                                    android:layout_alignParentRight="true"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1" />
+                                    android:layout_height="25dp"
+                                    android:text="Setting" />
                             </LinearLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

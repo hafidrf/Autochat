@@ -3,7 +3,7 @@ package id.co.kamil.autochat.adapter;
 import org.json.JSONObject;
 
 public class ItemGrup {
-    String id, judul, deskripsi;
+    String id, judul, deskripsi, member;
     JSONObject jsonObject;
     boolean checkbox, chkvisible;
 
@@ -11,23 +11,26 @@ public class ItemGrup {
 
     }
 
-    public ItemGrup(String id, String judul, String deskripsi) {
+    public ItemGrup(String id, String judul, String deskripsi, String member) {
         this.id = id;
         this.judul = judul;
         this.deskripsi = deskripsi;
+        this.member = member;
     }
 
-    public ItemGrup(String id, String judul, String deskripsi, JSONObject jsonObject) {
+    public ItemGrup(String id, String judul, String deskripsi, String member, JSONObject jsonObject) {
         this.id = id;
         this.judul = judul;
         this.deskripsi = deskripsi;
+        this.member = member;
         this.jsonObject = jsonObject;
     }
 
-    public ItemGrup(String id, String judul, String deskripsi, boolean checkbox, boolean chkvisible) {
+    public ItemGrup(String id, String judul, String deskripsi, String member, boolean checkbox, boolean chkvisible) {
         this.id = id;
         this.judul = judul;
         this.deskripsi = deskripsi;
+        this.member = member;
         this.checkbox = checkbox;
         this.chkvisible = chkvisible;
     }
@@ -61,7 +64,7 @@ public class ItemGrup {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id =id;
     }
 
     public String getJudul() {
@@ -80,12 +83,21 @@ public class ItemGrup {
         this.deskripsi = deskripsi;
     }
 
+    public String getMember() {
+        return member;
+    }
+
+    public void setMember ( String member) {
+        this.member = member;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "id:'" + id + '\'' +
                 ", judul:'" + judul + '\'' +
                 ", deskripsi:'" + deskripsi + '\'' +
+                ", member:'" + member + '\'' +
                 ", checkbox:" + checkbox +
                 ", chkvisible:" + chkvisible +
                 '}';

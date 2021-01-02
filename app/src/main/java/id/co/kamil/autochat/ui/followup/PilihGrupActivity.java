@@ -110,6 +110,7 @@ public class PilihGrupActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("group_id", dataGrup.get(i).getId());
                 intent.putExtra("group_name", dataGrup.get(i).getJudul());
+                intent.putExtra("group_member", dataGrup.get(i).getMember());
                 setResult(RESULT_OK, intent);
                 finish();
 
@@ -189,6 +190,7 @@ public class PilihGrupActivity extends AppCompatActivity {
                         for (int i = 0; i < data.length(); i++) {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
+                            final String total_member = data.getJSONObject(i).getString("total_member");
                             final String description = data.getJSONObject(i).getString("description");
                             if (excludeGrup.length() > 0) {
                                 boolean exist = false;
@@ -200,7 +202,7 @@ public class PilihGrupActivity extends AppCompatActivity {
                                 }
                                 if (exist) continue;
                             }
-                            dataGrup.add(new ItemGrup(id, name, description, data.getJSONObject(i)));
+                            dataGrup.add(new ItemGrup(id, name, total_member, description, data.getJSONObject(i)));
                         }
                     } else {
                         showError(true, message, false);
