@@ -15,6 +15,8 @@ public class SharPref {
     private static final String PREF_NAME = "SHARPREFAUTOCHAT";
     public static final String STATUS_FLOATING_WIDGET = "status_floating_widget";
     public static final String STATUS_SCREEN_ALWAYS_ON = "status_screen_always_on";
+    public static final String SELECTED_WHATSAPP = "SELECTED_WHATSAPP";
+    public static final String SELECTED_WHATSAPP_TYPE = "SELECTED_WHATSAPP_TYPE";
     public static final String STATUS_FOREGROUND_SERVICE = "status_foreground_service";
     public static final String STATUS_SYNC_SERVICE = "status_sync_service";
     public static final String STATUS_BULK_SENDER = "status_bulk_sender";

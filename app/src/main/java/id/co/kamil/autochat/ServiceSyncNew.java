@@ -82,6 +82,7 @@ import static id.co.kamil.autochat.utils.API.URL_POST_HAPUS_PESAN_ANTRIAN;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CHILD;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.SharPref.DELAY_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
@@ -275,8 +276,8 @@ public class ServiceSyncNew extends Service {
             } else if (Integer.parseInt(prefTryagain) < 5) {
                 prefTryagain = "5";
             }
-
-            if (cekWAInstalledOrNot()) {
+            Log.d(TAG,"INSTALLED OR NOT :"+sharePref.getSessionStr(SELECTED_WHATSAPP));
+            if (cekWAInstalledOrNot(sharePref.getSessionStr(SELECTED_WHATSAPP))) {
                 final String id = antrianPesan.get(0)[0];
                 final String phoneNumber = antrianPesan.get(0)[1];
                 final String bodyMessage = antrianPesan.get(0)[2];
@@ -433,7 +434,7 @@ public class ServiceSyncNew extends Service {
             String toNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setPackage("com.whatsapp");
+                intent.setPackage(sharePref.getSessionStr(SELECTED_WHATSAPP));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setData(Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(bodyMessage, "UTF-8")));
                 startActivity(intent);
@@ -488,7 +489,7 @@ public class ServiceSyncNew extends Service {
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("image");
             sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.ContactPicker"));
+            sendIntent.setComponent(new ComponentName(sharePref.getSessionStr(SELECTED_WHATSAPP), sharePref.getSessionStr(SELECTED_WHATSAPP)+".ContactPicker"));
             sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(phoneNumber) + "@s.whatsapp.net");
             sendIntent.putExtra(Intent.EXTRA_TEXT, bodyMessage);
             startActivity(sendIntent);
@@ -579,11 +580,11 @@ public class ServiceSyncNew extends Service {
             }
         }
     }
-    private boolean cekWAInstalledOrNot() {
+    private boolean cekWAInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         boolean app_installed;
         try {
-            pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
             app_installed = true;
         } catch (PackageManager.NameNotFoundException e) {
             app_installed = false;

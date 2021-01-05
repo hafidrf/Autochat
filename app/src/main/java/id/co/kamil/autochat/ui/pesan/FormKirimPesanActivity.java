@@ -2,6 +2,7 @@ package id.co.kamil.autochat.ui.pesan;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,11 +18,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,10 +72,13 @@ import id.co.kamil.autochat.ui.kontak.CariKontakActivity;
 import id.co.kamil.autochat.ui.kontak.ExcludeContactActivity;
 import id.co.kamil.autochat.ui.kontak.PilihGrupKontakActivity;
 import id.co.kamil.autochat.utils.SessionManager;
+import id.co.kamil.autochat.utils.SharPref;
 
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_POST_CREATE_PESAN_ANTRIAN_CONTACT;
 import static id.co.kamil.autochat.utils.API.URL_POST_CREATE_PESAN_ANTRIAN_GROUP;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP_TYPE;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 import static id.co.kamil.autochat.utils.Utils.convertDpToPixel;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
@@ -86,6 +93,7 @@ public class FormKirimPesanActivity extends AppCompatActivity {
     private static final int REQUEST_EXCLUDE = 102;
     private static final int LOAD_IMAGE_RESULT = 103;
     private static final int LOAD_IMAGE_RESULT_PROMOSI = 104;
+    private Spinner typeWhatsapp;
     private String tipeForm;
     private TextView lblNomorTujuan;
     private Button btnKontakTdkDipilih;
@@ -93,6 +101,7 @@ public class FormKirimPesanActivity extends AppCompatActivity {
     private HashMap<String, String> userDetail;
     private String token;
     private ProgressDialog pDialog;
+    private SharPref sharePref;
     private EditText edtIsiPesan;
     private ImageButton btnCariKontak;
     private Button btnSimpan;
@@ -130,8 +139,10 @@ public class FormKirimPesanActivity extends AppCompatActivity {
             lblNomorTujuan.setText("Nama Grup");
             btnKontakTdkDipilih.setVisibility(View.VISIBLE);
         }
+        typeWhatsapp = (Spinner) findViewById(R.id.selectedTypeWhatsapp);
 
         session = new SessionManager(this);
+        sharePref = new SharPref (this);
         userDetail = session.getUserDetails();
         token = userDetail.get(KEY_TOKEN);
 
@@ -199,6 +210,26 @@ public class FormKirimPesanActivity extends AppCompatActivity {
             }
         });
 
+        final String[] dataType = {"Personal","Business"};
+        final String[] dataTypeId = {"com.whatsapp","com.whatsapp.w4b"};
+        Log.d(TAG,"SELECTED WHATSAPP : "+sharePref.getSessionStr(SELECTED_WHATSAPP));
+        ArrayAdapter adapterTypeWhatsapp = new ArrayAdapter(getBaseContext(),R.layout.support_simple_spinner_dropdown_item,dataType);
+        typeWhatsapp.setAdapter(adapterTypeWhatsapp);
+        typeWhatsapp.setSelection(adapterTypeWhatsapp.getPosition(sharePref.getSessionStr(SELECTED_WHATSAPP_TYPE)));
+        typeWhatsapp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+//                dbHelper.insertLog(created, ID_SERVICE_WA, "Selected whatsapp : "+dataType[position], "normal", user_id);
+                sharePref.createSession(SELECTED_WHATSAPP,dataTypeId[position]);
+                sharePref.createSession(SELECTED_WHATSAPP_TYPE,dataType[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gridNoTujuan);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -230,7 +261,11 @@ public class FormKirimPesanActivity extends AppCompatActivity {
         reloadExcludeContact();
         if (appInstalledOrNot("com.whatsapp")) {
             txtWarnWA.setVisibility(View.GONE);
-        } else {
+        }
+        if (appInstalledOrNot("com.whatsapp.w4b")) {
+            txtWarnWA.setVisibility(View.GONE);
+        }
+        else {
             txtWarnWA.setVisibility(View.VISIBLE);
         }
 
@@ -270,6 +305,9 @@ public class FormKirimPesanActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
 
     public boolean checkPermissionGallery() {
         try {

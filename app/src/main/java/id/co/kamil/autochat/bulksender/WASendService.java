@@ -44,20 +44,23 @@ import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_SYNC_DB_OUTBOX;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
 
 public class WASendService extends AccessibilityService {
     private static String idMessage,created;
+    private static String typeApp;
     private static final String TAG = "WASendService";
     private static final String ID_SERVICE_SYNC = "Sync";
-    private static final String waButtonSendID = "com.whatsapp:id/send";
-    private static final String waBackButtonID = "com.whatsapp:id/back";
+    private static final String waTextFieldID = "com.whatsapp.w4b:id/entry";
+    private static String waButtonSendID = "com.whatsapp.w4b:id/send";
+    private static String waBackButtonID = "com.whatsapp.w4b:id/back";
     private DBHelper dbHelper;
     private String user_id;
 
 
-    public static void setID(String id,String tgl) {
+    public static void setID(String id, String tgl) {
         idMessage = id;
         created=tgl;
         if(id==null){
@@ -109,6 +112,8 @@ public class WASendService extends AccessibilityService {
 
             final AccessibilityNodeInfo buttonSend;
             final AccessibilityNodeInfo backButton;
+            waButtonSendID = sharePref.getSessionStr(SELECTED_WHATSAPP)+":id/send";
+            waBackButtonID = sharePref.getSessionStr(SELECTED_WHATSAPP)+":id/back";
             buttonSend = getNodeInfo(rootNode, waButtonSendID);
             backButton = getNodeInfo(rootNode, waBackButtonID);
 
