@@ -71,10 +71,13 @@ import id.co.kamil.autochat.ui.kontak.CariKontakActivity;
 import id.co.kamil.autochat.ui.kontak.ExcludeContactActivity;
 import id.co.kamil.autochat.ui.kontak.PilihGrupKontakActivity;
 import id.co.kamil.autochat.utils.SessionManager;
+import id.co.kamil.autochat.utils.SharPref;
 
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_POST_CREATE_JADWAL_BY_CONTACT;
 import static id.co.kamil.autochat.utils.API.URL_POST_CREATE_JADWAL_BY_GROUP;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP_TYPE;
 import static id.co.kamil.autochat.utils.API.URL_POST_GET_SCHEDULE;
 import static id.co.kamil.autochat.utils.API.URL_POST_UPDATE_JADWAL_BY_CONTACT;
 import static id.co.kamil.autochat.utils.API.URL_POST_UPDATE_JADWAL_BY_GROUP;
@@ -93,12 +96,14 @@ public class FormScheduleActivity extends AppCompatActivity {
     private static final int REQUEST_EXCLUDE = 102;
     private static final int LOAD_IMAGE_RESULT = 103;
     private static final int LOAD_IMAGE_RESULT_PROMOSI = 104;
+    private Spinner typeWhatsapp;
     private String tipeForm;
     private TextView lblNomorTujuan;
     private Button btnKontakTdkDipilih;
     private SessionManager session;
     private HashMap<String, String> userDetail;
     private String token;
+    private SharPref sharePref;
     private ProgressDialog pDialog;
     private EditText edtIsiPesan;
     private ImageButton btnCariKontak;
@@ -107,7 +112,7 @@ public class FormScheduleActivity extends AppCompatActivity {
     private JSONArray excludeContact = new JSONArray();
     private List<ItemRecyclerTag> listNoTujuan = new ArrayList<>();
     private String[] dataStatus = new String[]{"aktif", "tidak aktif"};
-    private String[] dataTipe = new String[]{"once (satu kali)", "daily", "weekly", "monthly", "annually"};
+    private String[] dataTipe = new String[]{"Once (satu kali)", "Daily", "Weekly", "Monthly", "Annually"};
     private EditText edtJadwalKirim;
     private Spinner spinTipeJadwal, spinStatus;
     private boolean is_new;
@@ -152,8 +157,10 @@ public class FormScheduleActivity extends AppCompatActivity {
             lblNomorTujuan.setText("Nama Grup");
             btnKontakTdkDipilih.setVisibility(View.VISIBLE);
         }
+        typeWhatsapp = (Spinner) findViewById(R.id.selectedTypeWhatsapp);
 
         session = new SessionManager(this);
+        sharePref = new SharPref(this);
         userDetail = session.getUserDetails();
         token = userDetail.get(KEY_TOKEN);
 
@@ -239,7 +246,7 @@ public class FormScheduleActivity extends AppCompatActivity {
                                 mTimePicker.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                     @Override
                                     public void onCancel(DialogInterface dialog) {
-                                        //edtJadwalKirimSelanjutnya.setText(edtJadwalKirimSelanjutnya.getText().toString() + " " + hour + ":" + minute);
+                                        edtJadwalKirimSelanjutnya.setText(edtJadwalKirimSelanjutnya.getText().toString() + " " + hour + ":" + minute);
                                     }
                                 });
                                 mTimePicker.setTitle("Pilih Jam Jadwal Kirim");
@@ -255,18 +262,25 @@ public class FormScheduleActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 layHari.setVisibility(View.GONE);
                 layTgl.setVisibility(View.GONE);
-                if (spinTipeJadwal.getSelectedItemPosition() == 3 || spinTipeJadwal.getSelectedItemPosition() == 4) {
+                if (spinTipeJadwal.getSelectedItemPosition() == 4) {
                     labelJadwalKirim.setText("Jadwal Kirim");
                     edtJadwalKirim.setHint("Masukan Tgl dan Jam Kirim");
                 } else if (spinTipeJadwal.getSelectedItemPosition() == 0) {
                     labelJadwalKirim.setText("Jadwal Kirim");
-                    edtJadwalKirim.setHint("Masukan Jam Kirim");
+                    edtJadwalKirim.setHint("Masukan Tgl dan Jam Kirim");
                 } else if (spinTipeJadwal.getSelectedItemPosition() == 1) {
-                    layHari.setVisibility(View.VISIBLE);
+                    //layHari.setVisibility(View.VISIBLE);
                     labelJadwalKirim.setText("Jam Kirim");
                     edtJadwalKirim.setHint("Masukan Jam Kirim");
-                } else {
+                }
+                else if (spinTipeJadwal.getSelectedItemPosition() == 3) {
                     layTgl.setVisibility(View.VISIBLE);
+                    //layHari.setVisibility(View.VISIBLE);
+                    labelJadwalKirim.setText("Jadwal Kirim");
+                    edtJadwalKirim.setHint("Masukan Tgl dan Jam Kirim");
+                }else {
+                    //layTgl.setVisibility(View.VISIBLE);
+                    layHari.setVisibility(View.VISIBLE);
                     labelJadwalKirim.setText("Jam Kirim");
                     edtJadwalKirim.setHint("Masukan Jam Kirim");
                 }
@@ -337,6 +351,28 @@ public class FormScheduleActivity extends AppCompatActivity {
                     i.putExtra("exclude", excludeContact.toString());
                     startActivityForResult(i, REQUEST_KONTAK);
                 }
+            }
+        });
+
+
+        final String[] dataType = {"Personal","Business"};
+        final String[] dataTypeId = {"com.whatsapp","com.whatsapp.w4b"};
+        Log.d(TAG,"SELECTED WHATSAPP : "+sharePref.getSessionStr(SELECTED_WHATSAPP));
+        ArrayAdapter adapterTypeWhatsapp = new ArrayAdapter(getBaseContext(),R.layout.support_simple_spinner_dropdown_item,dataType);
+        typeWhatsapp.setAdapter(adapterTypeWhatsapp);
+        typeWhatsapp.setSelection(adapterTypeWhatsapp.getPosition(sharePref.getSessionStr(SELECTED_WHATSAPP_TYPE)));
+        typeWhatsapp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+//                dbHelper.insertLog(created, ID_SERVICE_WA, "Selected whatsapp : "+dataType[position], "normal", user_id);
+                sharePref.createSession(SELECTED_WHATSAPP,dataTypeId[position]);
+                sharePref.createSession(SELECTED_WHATSAPP_TYPE,dataType[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -571,19 +607,22 @@ public class FormScheduleActivity extends AppCompatActivity {
 
                             }
                         }
-                        if (time_type.equals("daily")) {
+                        if (time_type.equals("Daily")) {
                             spinTipeJadwal.setSelection(1);
                             edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
-                        } else if (time_type.equals("weekly")) {
+                        } else if (time_type.equals("Weekly")) {
                             edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
                             spinTipeJadwal.setSelection(2);
-                        } else if (time_type.equals("monthly")) {
-                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
+                        } else if (time_type.equals("Monthly")) {
+                            edtJadwalKirim.setText(formateDateFromstring ("HH:mm:ss", "HH:mm:ss", schedule_at));
                             spinTipeJadwal.setSelection(3);
-                        } else if (time_type.equals("annually")) {
+
+                            /*-----------------------------------------------------------------*/
+
+                        } else if (time_type.equals("Annually")) {
                             edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", tgl_kirim));
                             spinTipeJadwal.setSelection(4);
-                        } else if (time_type.equals("once")) {
+                        } else if (time_type.equals("Once")) {
                             edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", tgl_kirim));
                             spinTipeJadwal.setSelection(0);
                         }

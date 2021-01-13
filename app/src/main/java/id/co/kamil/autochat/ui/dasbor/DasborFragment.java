@@ -189,6 +189,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            updateStatusBulkSender();
         }
     }
 
@@ -343,7 +344,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 userDetail.get(KEY_FIRSTNAME),
                 userDetail.get(KEY_LASTNAME)
         ));
-        updateStatusBulkSender();
+
 
         switchAksesibilitas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -452,10 +453,16 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     private void updateStatusBulkSender() {
         boolean status_bulk_sender = sharePref.getSessionBool(STATUS_BULK_SENDER);
         status_aksesibilitas = isAccessibilityEnabled();
+        //status_bulk_sender =
         boolean status_floating_widget = sharePref.getSessionBool(STATUS_FLOATING_WIDGET);
         boolean screen_always_on = sharePref.getSessionBool(STATUS_SCREEN_ALWAYS_ON);
         boolean foreground_service = sharePref.getSessionBool(STATUS_FOREGROUND_SERVICE);
-
+        switchEnabledBulkSender.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharePref.createSession(STATUS_BULK_SENDER, isChecked);
+            }
+        });
         switchAksesibilitas.setChecked(status_aksesibilitas);
         switchEnabledBulkSender.setChecked(status_bulk_sender);
         switchFloatingWidget.setChecked(status_floating_widget);
