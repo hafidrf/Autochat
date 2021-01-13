@@ -335,10 +335,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intent2 = new Intent(MainActivity.this, ServiceSync.class);
             boolean foreground_service = sharePref.getSessionBool(STATUS_FOREGROUND_SERVICE);
             intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, foreground_service);
-            intent2.putExtra(SharPref.STATUS_SYNC_SERVICE, true);
+            intent1.putExtra(SharPref.STATUS_SYNC_SERVICE, true);
             startService(intent1);
             startService(intent2);
             hidePdialog();
+            //System.exit(0);
 
         } catch (Exception e) {
             hidePdialog();

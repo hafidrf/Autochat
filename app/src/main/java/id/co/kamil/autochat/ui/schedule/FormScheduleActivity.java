@@ -57,10 +57,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import id.co.kamil.autochat.LoginActivity;
@@ -112,7 +115,7 @@ public class FormScheduleActivity extends AppCompatActivity {
     private JSONArray excludeContact = new JSONArray();
     private List<ItemRecyclerTag> listNoTujuan = new ArrayList<>();
     private String[] dataStatus = new String[]{"aktif", "tidak aktif"};
-    private String[] dataTipe = new String[]{"Once (satu kali)", "Daily", "Weekly", "Monthly", "Annually"};
+    private String[] dataTipe = new String[]{"once (satu kali)", "daily", "weekly", "monthly", "annually"};
     private EditText edtJadwalKirim;
     private Spinner spinTipeJadwal, spinStatus;
     private boolean is_new;
@@ -157,12 +160,13 @@ public class FormScheduleActivity extends AppCompatActivity {
             lblNomorTujuan.setText("Nama Grup");
             btnKontakTdkDipilih.setVisibility(View.VISIBLE);
         }
+
         typeWhatsapp = (Spinner) findViewById(R.id.selectedTypeWhatsapp);
 
         session = new SessionManager(this);
-        sharePref = new SharPref(this);
         userDetail = session.getUserDetails();
         token = userDetail.get(KEY_TOKEN);
+        sharePref = new SharPref (this);
 
         idSchedule = getIntent().getStringExtra("id");
         pDialog = new ProgressDialog(this);
@@ -185,102 +189,68 @@ public class FormScheduleActivity extends AppCompatActivity {
         btnBrowse = (ImageButton) findViewById(R.id.btnBrowse);
         btnHapus = (ImageButton) findViewById(R.id.btnHapus);
 
-        btnBrowse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callGalleryPhoto();
-            }
-        });
-        btnHapus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imgPesan.setImageDrawable(getDrawable(R.drawable.ic_image));
-                imagePath = null;
-                imageSelect = false;
+        btnBrowse.setOnClickListener(v -> callGalleryPhoto());
+        btnHapus.setOnClickListener(v -> {
+            imgPesan.setImageDrawable(getDrawable(R.drawable.ic_image));
+            imagePath = null;
+            imageSelect = false;
 
-            }
         });
-        txtSapaan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[sapaan] ");
-            }
-        });
+        txtSapaan.setOnClickListener(v -> edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[sapaan] "));
 
-        txtNamaDepan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_depan] ");
-            }
-        });
-        txtNamaBelakang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_belakang] ");
-            }
-        });
-        edtJadwalKirimSelanjutnya.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-                final String[] tempSelectDate = {""};
-                DatePickerDialog datePickerDialog = new DatePickerDialog(FormScheduleActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
+        txtNamaDepan.setOnClickListener(v -> edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_depan] "));
+        txtNamaBelakang.setOnClickListener(v -> edtIsiPesan.getText().insert(edtIsiPesan.getSelectionStart(), "[nama_belakang] "));
+        edtJadwalKirimSelanjutnya.setOnClickListener(v -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            final String[] tempSelectDate = {""};
+            DatePickerDialog datePickerDialog = new DatePickerDialog(FormScheduleActivity.this,
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        tempSelectDate[0] = year1 + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        Calendar mcurrentTime = Calendar.getInstance();
+                        final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                        final int minute = mcurrentTime.get(Calendar.MINUTE);
+                        TimePickerDialog mTimePicker;
+                        mTimePicker = new TimePickerDialog(FormScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                tempSelectDate[0] = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                                Calendar mcurrentTime = Calendar.getInstance();
-                                final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                                final int minute = mcurrentTime.get(Calendar.MINUTE);
-                                TimePickerDialog mTimePicker;
-                                mTimePicker = new TimePickerDialog(FormScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                                    @Override
-                                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                        tempSelectDate[0] = tempSelectDate[0] + " " + selectedHour + ":" + selectedMinute;
-                                        edtJadwalKirimSelanjutnya.setText(tempSelectDate[0]);
-                                    }
-                                }, hour, minute, true);//Yes 24 hour time
-                                mTimePicker.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        edtJadwalKirimSelanjutnya.setText(edtJadwalKirimSelanjutnya.getText().toString() + " " + hour + ":" + minute);
-                                    }
-                                });
-                                mTimePicker.setTitle("Pilih Jam Jadwal Kirim");
-                                mTimePicker.show();
+                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                tempSelectDate[0] = tempSelectDate[0] + " " + selectedHour + ":" + selectedMinute;
+                                edtJadwalKirimSelanjutnya.setText(tempSelectDate[0]);
                             }
-                        }, year, month, day);
-                //datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
-                datePickerDialog.show();
-            }
+                        }, hour, minute, true);//Yes 24 hour time
+                        mTimePicker.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                //edtJadwalKirimSelanjutnya.setText(edtJadwalKirimSelanjutnya.getText().toString() + " " + hour + ":" + minute);
+                            }
+                        });
+                        mTimePicker.setTitle("Pilih Jam Jadwal Kirim");
+                        mTimePicker.show();
+                    }, year, month, day);
+            //datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+            datePickerDialog.show();
         });
         spinTipeJadwal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                layHari.setVisibility(View.GONE);
-                layTgl.setVisibility(View.GONE);
-                if (spinTipeJadwal.getSelectedItemPosition() == 4) {
+                //layHari.setVisibility(View.GONE);
+                //layTgl.setVisibility(View.GONE);
+                if (spinTipeJadwal.getSelectedItemPosition() == 3 || spinTipeJadwal.getSelectedItemPosition() == 4) {
+                    layTgl.setVisibility(View.VISIBLE);
                     labelJadwalKirim.setText("Jadwal Kirim");
                     edtJadwalKirim.setHint("Masukan Tgl dan Jam Kirim");
                 } else if (spinTipeJadwal.getSelectedItemPosition() == 0) {
                     labelJadwalKirim.setText("Jadwal Kirim");
-                    edtJadwalKirim.setHint("Masukan Tgl dan Jam Kirim");
+                    edtJadwalKirim.setHint("Masukan Jam Kirim");
                 } else if (spinTipeJadwal.getSelectedItemPosition() == 1) {
                     //layHari.setVisibility(View.VISIBLE);
                     labelJadwalKirim.setText("Jam Kirim");
                     edtJadwalKirim.setHint("Masukan Jam Kirim");
-                }
-                else if (spinTipeJadwal.getSelectedItemPosition() == 3) {
-                    layTgl.setVisibility(View.VISIBLE);
-                    //layHari.setVisibility(View.VISIBLE);
-                    labelJadwalKirim.setText("Jadwal Kirim");
-                    edtJadwalKirim.setHint("Masukan Tgl dan Jam Kirim");
-                }else {
-                    //layTgl.setVisibility(View.VISIBLE);
+                } else {
                     layHari.setVisibility(View.VISIBLE);
+                    //layTgl.setVisibility(View.VISIBLE);
                     labelJadwalKirim.setText("Jam Kirim");
                     edtJadwalKirim.setHint("Masukan Jam Kirim");
                 }
@@ -295,65 +265,52 @@ public class FormScheduleActivity extends AppCompatActivity {
 
             }
         });
-        edtJadwalKirim.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (spinTipeJadwal.getSelectedItemPosition() == 0 || spinTipeJadwal.getSelectedItemPosition() == 4) {
-                    pilihTglJam(edtJadwalKirim);
-                } else if (spinTipeJadwal.getSelectedItemPosition() == 1) {
-                    pilihJam(edtJadwalKirim);
-                } else if (spinTipeJadwal.getSelectedItemPosition() == 2) {
-                    pilihJam(edtJadwalKirim);
-                } else {
-                    pilihJam(edtJadwalKirim);
-                }
+        edtJadwalKirim.setOnClickListener(v -> {
+            if (spinTipeJadwal.getSelectedItemPosition() == 0 || spinTipeJadwal.getSelectedItemPosition() == 4) {
+                pilihTglJam(edtJadwalKirim);
+            } else if (spinTipeJadwal.getSelectedItemPosition() == 1) {
+                pilihJam(edtJadwalKirim);
+            } else if (spinTipeJadwal.getSelectedItemPosition() == 2) {
+                pilihJam(edtJadwalKirim);
+            } else {
+                pilihJam(edtJadwalKirim);
             }
         });
         btnCariKontak = (ImageButton) findViewById(R.id.btnKontak);
         btnSimpan = (Button) findViewById(R.id.btnSimpan);
-        btnSimpan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnSimpan.setOnClickListener(view -> {
 
-                if (isRequired()) {
-                    simpanSchedule();
-                }
-
+            if (isRequired()) {
+                simpanSchedule();
             }
-        });
-        btnKontakTdkDipilih.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                JSONArray id_exclude_contact = new JSONArray();
-                if (excludeContact.length() > 0) {
-                    for (int i = 0; i < excludeContact.length(); i++) {
-                        try {
-                            id_exclude_contact.put(excludeContact.getJSONObject(i).getString("contact_id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        });
+        btnKontakTdkDipilih.setOnClickListener(view -> {
+
+            JSONArray id_exclude_contact = new JSONArray();
+            if (excludeContact.length() > 0) {
+                for (int i = 0; i < excludeContact.length(); i++) {
+                    try {
+                        id_exclude_contact.put(excludeContact.getJSONObject(i).getString("contact_id"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
-                Intent intent = new Intent(FormScheduleActivity.this, ExcludeContactActivity.class);
-                intent.putExtra("contact_id", id_exclude_contact.toString());
-                startActivityForResult(intent, REQUEST_EXCLUDE);
+            }
+            Intent intent = new Intent(FormScheduleActivity.this, ExcludeContactActivity.class);
+            intent.putExtra("contact_id", id_exclude_contact.toString());
+            startActivityForResult(intent, REQUEST_EXCLUDE);
+        });
+        btnCariKontak.setOnClickListener(view -> {
+            if (tipeForm.equals("grup")) {
+                Intent i = new Intent(FormScheduleActivity.this, PilihGrupKontakActivity.class);
+                startActivityForResult(i, REQUEST_GRUP);
+            } else {
+                Intent i = new Intent(FormScheduleActivity.this, CariKontakActivity.class);
+                i.putExtra("exclude", excludeContact.toString());
+                startActivityForResult(i, REQUEST_KONTAK);
             }
         });
-        btnCariKontak.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (tipeForm.equals("grup")) {
-                    Intent i = new Intent(FormScheduleActivity.this, PilihGrupKontakActivity.class);
-                    startActivityForResult(i, REQUEST_GRUP);
-                } else {
-                    Intent i = new Intent(FormScheduleActivity.this, CariKontakActivity.class);
-                    i.putExtra("exclude", excludeContact.toString());
-                    startActivityForResult(i, REQUEST_KONTAK);
-                }
-            }
-        });
-
 
         final String[] dataType = {"Personal","Business"};
         final String[] dataTypeId = {"com.whatsapp","com.whatsapp.w4b"};
@@ -375,7 +332,6 @@ public class FormScheduleActivity extends AppCompatActivity {
 
             }
         });
-
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gridNoTujuan);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -437,18 +393,21 @@ public class FormScheduleActivity extends AppCompatActivity {
             }
         }
     }
+    private String getTgl() {
 
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+
+        SimpleDateFormat df;
+        df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return df.format(c);
+    }
     private void pilihJam(final EditText editText) {
         Calendar mcurrentTime = Calendar.getInstance();
         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mcurrentTime.get(Calendar.MINUTE);
         TimePickerDialog mTimePicker;
-        mTimePicker = new TimePickerDialog(FormScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                editText.setText(selectedHour + ":" + selectedMinute);
-            }
-        }, hour, minute, true);//Yes 24 hour time
+        mTimePicker = new TimePickerDialog(FormScheduleActivity.this, (timePicker, selectedHour, selectedMinute) -> editText.setText(selectedHour + ":" + selectedMinute), hour, minute, true);//Yes 24 hour time
         mTimePicker.setTitle("Pilih Jam Jadwal Kirim");
         mTimePicker.show();
     }
@@ -460,30 +419,24 @@ public class FormScheduleActivity extends AppCompatActivity {
         int day = c.get(Calendar.DAY_OF_MONTH);
         final String[] tempSelectDate = {""};
         DatePickerDialog datePickerDialog = new DatePickerDialog(FormScheduleActivity.this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        tempSelectDate[0] = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        Calendar mcurrentTime = Calendar.getInstance();
-                        final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                        final int minute = mcurrentTime.get(Calendar.MINUTE);
-                        TimePickerDialog mTimePicker;
-                        mTimePicker = new TimePickerDialog(FormScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                tempSelectDate[0] = tempSelectDate[0] + " " + selectedHour + ":" + selectedMinute;
-                                editText.setText(tempSelectDate[0]);
-                            }
-                        }, hour, minute, true);//Yes 24 hour time
-                        mTimePicker.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                editText.setText(editText.getText().toString() + " " + hour + ":" + minute);
-                            }
-                        });
-                        mTimePicker.setTitle("Pilih Jadwal Kirim");
-                        mTimePicker.show();
-                    }
+                (view, year1, monthOfYear, dayOfMonth) -> {
+                    tempSelectDate[0] = year1 + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    final int minute = mcurrentTime.get(Calendar.MINUTE);
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(FormScheduleActivity.this, (timePicker, selectedHour, selectedMinute) -> {
+                        tempSelectDate[0] = tempSelectDate[0] + " " + selectedHour + ":" + selectedMinute;
+                        editText.setText(tempSelectDate[0]);
+                    }, hour, minute, true);//Yes 24 hour time
+                    mTimePicker.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            editText.setText(editText.getText().toString() + " " + hour + ":" + minute);
+                        }
+                    });
+                    mTimePicker.setTitle("Pilih Jadwal Kirim");
+                    mTimePicker.show();
                 }, year, month, day);
         //datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
         datePickerDialog.show();
@@ -569,96 +522,135 @@ public class FormScheduleActivity extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                hidePdialog();
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, response -> {
+            hidePdialog();
 
-                try {
-                    final boolean status = response.getBoolean("status");
-                    final String message = response.getString("message");
-                    if (status) {
-                        excludeContact = new JSONArray();
-                        listNoTujuan.clear();
-                        final JSONArray data = response.getJSONArray("data");
-                        final String id = data.getJSONObject(0).getString("id");
-                        final String img_hash = data.getJSONObject(0).getString("img_hash");
-                        final String schedule_at = data.getJSONObject(0).getString("schedule_at");
-                        final String tgl_kirim = data.getJSONObject(0).getString("tgl_kirim");
-                        final String next_schedule = data.getJSONObject(0).getString("next_schedule");
-                        final String time_type = data.getJSONObject(0).getString("time_type");
-                        final String day = data.getJSONObject(0).getString("day");
-                        final String tgl = data.getJSONObject(0).getString("tgl");
-                        final String message_sch = data.getJSONObject(0).getString("message");
-                        final String group_id = data.getJSONObject(0).getString("group_id");
-                        final String group_name = data.getJSONObject(0).getString("group_name");
-                        final String group_description = data.getJSONObject(0).getString("group_description");
-                        final String contact_id = data.getJSONObject(0).getString("contact_id");
-                        final String contact_name = data.getJSONObject(0).getString("contact_name");
-                        final String contact_phone = data.getJSONObject(0).getString("contact_phone");
-                        final JSONArray exclude_contact = data.getJSONObject(0).getJSONArray("exclude_contact");
-                        final String status_sch = data.getJSONObject(0).getString("status");
+            try {
+                final boolean status = response.getBoolean("status");
+                final String message = response.getString("message");
+                if (status) {
+                    excludeContact = new JSONArray();
+                    listNoTujuan.clear();
+                    final JSONArray data = response.getJSONArray("data");
+                    final String id = data.getJSONObject(0).getString("id");
+                    final String img_hash = data.getJSONObject(0).getString("img_hash");
+                    final String schedule_at = data.getJSONObject(0).getString("schedule_at");
+                    final String tgl_kirim = data.getJSONObject(0).getString("tgl_kirim");
+                    final String next_schedule = data.getJSONObject(0).getString("next_schedule");
+                    final String time_type = data.getJSONObject(0).getString("time_type");
+                    final String day = data.getJSONObject(0).getString("day");
+                    final String tgl = data.getJSONObject(0).getString("tgl");
+                    final String message_sch = data.getJSONObject(0).getString("message");
+                    final String group_id = data.getJSONObject(0).getString("group_id");
+                    final String group_name = data.getJSONObject(0).getString("group_name");
+                    final String group_description = data.getJSONObject(0).getString("group_description");
+                    final String contact_id = data.getJSONObject(0).getString("contact_id");
+                    final String contact_name = data.getJSONObject(0).getString("contact_name");
+                    final String contact_phone = data.getJSONObject(0).getString("contact_phone");
+                    final JSONArray exclude_contact = data.getJSONObject(0).getJSONArray("exclude_contact");
+                    final String status_sch = data.getJSONObject(0).getString("status");
 
-                        if (!(img_hash.equals(null) || img_hash.equals("null") || img_hash == null)) {
-                            try {
-                                imgPesan.setImageURI(Uri.parse(img_hash));
-                                imagePath = img_hash;
-                            } catch (Exception e) {
+                    if (!(img_hash.equals(null) || img_hash.equals("null") || img_hash == null)) {
+                        try {
+                            imgPesan.setImageURI(Uri.parse(img_hash));
+                            imagePath = img_hash;
+                        } catch (Exception e) {
 
-                            }
                         }
-                        if (time_type.equals("Daily")) {
-                            spinTipeJadwal.setSelection(1);
-                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
-                        } else if (time_type.equals("Weekly")) {
-                            edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
-                            spinTipeJadwal.setSelection(2);
-                        } else if (time_type.equals("Monthly")) {
-                            edtJadwalKirim.setText(formateDateFromstring ("HH:mm:ss", "HH:mm:ss", schedule_at));
-                            spinTipeJadwal.setSelection(3);
+                    }
+                    if (time_type.equals("daily")) {
+                        spinTipeJadwal.setSelection(1);
+                        edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
+                    } else if (time_type.equals("weekly")) {
+                        edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
+                        spinTipeJadwal.setSelection(2);
+                    } else if (time_type.equals("monthly")) {
+                        edtJadwalKirim.setText(formateDateFromstring("HH:mm:ss", "HH:mm", schedule_at));
+                        spinTipeJadwal.setSelection(3);
+                    } else if (time_type.equals("annually")) {
+                        edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", tgl_kirim));
+                        spinTipeJadwal.setSelection(4);
+                    } else if (time_type.equals("once")) {
+                        edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", tgl_kirim));
+                        spinTipeJadwal.setSelection(0);
+                    }
+                    if (day != null && !day.equals("null")) {
+                        spinHari.setSelection(Integer.parseInt(day));
+                    }
+                    if (tgl != null && !tgl.equals("null")) {
+                        spinTgl.setSelection(Integer.parseInt(tgl) - 1);
+                    }
 
-                            /*-----------------------------------------------------------------*/
-
-                        } else if (time_type.equals("Annually")) {
-                            edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", tgl_kirim));
-                            spinTipeJadwal.setSelection(4);
-                        } else if (time_type.equals("Once")) {
-                            edtJadwalKirim.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", tgl_kirim));
-                            spinTipeJadwal.setSelection(0);
-                        }
-                        if (day != null && !day.equals("null")) {
-                            spinHari.setSelection(Integer.parseInt(day));
-                        }
-                        if (tgl != null && !tgl.equals("null")) {
-                            spinTgl.setSelection(Integer.parseInt(tgl) - 1);
-                        }
-
-                        edtIsiPesan.setText(message_sch);
-                        edtJadwalKirimSelanjutnya.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", next_schedule));
+                    edtIsiPesan.setText(message_sch);
+                    edtJadwalKirimSelanjutnya.setText(formateDateFromstring("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", next_schedule));
 
 
-                        if (group_id.equals(null) || group_id.equals("null") || group_id == null) {
-                            excludeContact.put(contact_id);
-                            if (status_sch.equals("aktif")) {
-                                spinStatus.setSelection(0);
-                            } else {
-                                spinStatus.setSelection(1);
-                            }
-                            listNoTujuan.add(new ItemRecyclerTag(contact_id, contact_name));
+                    if (group_id.equals(null) || group_id.equals("null") || group_id == null) {
+                        excludeContact.put(contact_id);
+                        if (status_sch.equals("aktif")) {
+                            spinStatus.setSelection(0);
                         } else {
-                            excludeContact = exclude_contact;
-                            if (status_sch.equals("aktif")) {
-                                spinStatus.setSelection(0);
-                            } else {
-                                spinStatus.setSelection(1);
-                            }
-                            listNoTujuan.add(new ItemRecyclerTag(group_id, group_name));
+                            spinStatus.setSelection(1);
                         }
-                        reloadExcludeContact();
+                        listNoTujuan.add(new ItemRecyclerTag(contact_id, contact_name));
+                    } else {
+                        excludeContact = exclude_contact;
+                        if (status_sch.equals("aktif")) {
+                            spinStatus.setSelection(0);
+                        } else {
+                            spinStatus.setSelection(1);
+                        }
+                        listNoTujuan.add(new ItemRecyclerTag(group_id, group_name));
+                    }
+                    reloadExcludeContact();
 
+                } else {
+                    new AlertDialog.Builder(FormScheduleActivity.this)
+                            .setMessage(message)
+                            .setPositiveButton("OK", (dialog, which) -> finish())
+                            .show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                new AlertDialog.Builder(FormScheduleActivity.this)
+                        .setMessage(e.getMessage())
+                        .setPositiveButton("OK", (dialog, which) -> finish())
+                        .show();
+
+            }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadData = false;
+                }
+            }, 1500);
+        }, error -> {
+            hidePdialog();
+            loadData = false;
+            Log.i(TAG, errorResponseString(error));
+            NetworkResponse response = error.networkResponse;
+            if (response.statusCode == 403) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response.data.toString());
+                    final boolean status = jsonObject.getBoolean("status");
+                    final String msg = jsonObject.getString("error");
+                    if (msg.trim().toLowerCase().equals("invalid api key")) {
+                        new AlertDialog.Builder(FormScheduleActivity.this)
+                                .setMessage("Session telah habias / telah login di perangkat lain.")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        session.clearData();
+                                        startActivity(new Intent(FormScheduleActivity.this, LoginActivity.class));
+                                        finish();
+                                    }
+                                })
+                                .show();
                     } else {
                         new AlertDialog.Builder(FormScheduleActivity.this)
-                                .setMessage(message)
+                                .setMessage(msg)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -667,81 +659,23 @@ public class FormScheduleActivity extends AppCompatActivity {
                                 })
                                 .show();
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    new AlertDialog.Builder(FormScheduleActivity.this)
-                            .setMessage(e.getMessage())
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                }
-                            })
-                            .show();
-
-                }
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadData = false;
-                    }
-                }, 1500);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hidePdialog();
-                loadData = false;
-                Log.i(TAG, errorResponseString(error));
-                NetworkResponse response = error.networkResponse;
-                if (response.statusCode == 403) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.data.toString());
-                        final boolean status = jsonObject.getBoolean("status");
-                        final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")) {
-                            new AlertDialog.Builder(FormScheduleActivity.this)
-                                    .setMessage("Session telah habias / telah login di perangkat lain.")
-                                    .setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            session.clearData();
-                                            startActivity(new Intent(FormScheduleActivity.this, LoginActivity.class));
-                                            finish();
-                                        }
-                                    })
-                                    .show();
-                        } else {
-                            new AlertDialog.Builder(FormScheduleActivity.this)
-                                    .setMessage(msg)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            finish();
-                                        }
-                                    })
-                                    .show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    final String msg = getResources().getString(errorResponse(error));
-                    new AlertDialog.Builder(FormScheduleActivity.this)
-                            .setMessage(msg)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                }
-                            })
-                            .show();
                 }
 
+            } else {
+                final String msg = getResources().getString(errorResponse(error));
+                new AlertDialog.Builder(FormScheduleActivity.this)
+                        .setMessage(msg)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .show();
             }
+
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -806,75 +740,69 @@ public class FormScheduleActivity extends AppCompatActivity {
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                hidePdialog();
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, response -> {
+            hidePdialog();
+            try {
+                final boolean status = response.getBoolean("status");
+                final String message = response.getString("message");
+                if (status) {
+                    Toast.makeText(FormScheduleActivity.this, message, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    new AlertDialog.Builder(FormScheduleActivity.this)
+                            .setMessage(message)
+                            .setPositiveButton("OK", null)
+                            .show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                new AlertDialog.Builder(FormScheduleActivity.this)
+                        .setMessage(e.getMessage())
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
+        }, error -> {
+            hidePdialog();
+            Log.i(TAG, errorResponseString(error));
+            NetworkResponse response = error.networkResponse;
+            if (response.statusCode == 403) {
                 try {
-                    final boolean status = response.getBoolean("status");
-                    final String message = response.getString("message");
-                    if (status) {
-                        Toast.makeText(FormScheduleActivity.this, message, Toast.LENGTH_SHORT).show();
-                        setResult(RESULT_OK);
-                        finish();
+                    JSONObject jsonObject = new JSONObject(response.data.toString());
+                    final boolean status = jsonObject.getBoolean("status");
+                    final String msg = jsonObject.getString("error");
+                    if (msg.trim().toLowerCase().equals("invalid api key")) {
+                        new AlertDialog.Builder(FormScheduleActivity.this)
+                                .setMessage("Session telah habias / telah login di perangkat lain.")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        session.clearData();
+                                        startActivity(new Intent(FormScheduleActivity.this, LoginActivity.class));
+                                        finish();
+                                    }
+                                })
+                                .show();
                     } else {
                         new AlertDialog.Builder(FormScheduleActivity.this)
-                                .setMessage(message)
+                                .setMessage(msg)
                                 .setPositiveButton("OK", null)
                                 .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    new AlertDialog.Builder(FormScheduleActivity.this)
-                            .setMessage(e.getMessage())
-                            .setPositiveButton("OK", null)
-                            .show();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                hidePdialog();
-                Log.i(TAG, errorResponseString(error));
-                NetworkResponse response = error.networkResponse;
-                if (response.statusCode == 403) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.data.toString());
-                        final boolean status = jsonObject.getBoolean("status");
-                        final String msg = jsonObject.getString("error");
-                        if (msg.trim().toLowerCase().equals("invalid api key")) {
-                            new AlertDialog.Builder(FormScheduleActivity.this)
-                                    .setMessage("Session telah habias / telah login di perangkat lain.")
-                                    .setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            session.clearData();
-                                            startActivity(new Intent(FormScheduleActivity.this, LoginActivity.class));
-                                            finish();
-                                        }
-                                    })
-                                    .show();
-                        } else {
-                            new AlertDialog.Builder(FormScheduleActivity.this)
-                                    .setMessage(msg)
-                                    .setPositiveButton("OK", null)
-                                    .show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    final String msg = getResources().getString(errorResponse(error));
-                    new AlertDialog.Builder(FormScheduleActivity.this)
-                            .setMessage(msg)
-                            .setPositiveButton("OK", null)
-                            .show();
                 }
 
-
+            } else {
+                final String msg = getResources().getString(errorResponse(error));
+                new AlertDialog.Builder(FormScheduleActivity.this)
+                        .setMessage(msg)
+                        .setPositiveButton("OK", null)
+                        .show();
             }
+
+
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {

@@ -1,8 +1,16 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 28
+    signingConfigs {
+        sign {
+            storeFile file('/home/mrian07/WabotNew-Parseserver/keystore')
+            keyAlias 'key0'
+            storePassword 'kontax_key'
+            keyPassword 'kontax_key'
+        }
+    }
+    compileSdkVersion 29
     defaultConfig {
         applicationId "id.co.kamil.autochat"
         minSdkVersion 21
@@ -10,11 +18,13 @@ android {
         versionCode 27
         versionName "1.18"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.sign
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.sign
         }
     }
     lintOptions {
@@ -22,6 +32,11 @@ android {
         // Or, if you prefer, you can continue to check for errors in release builds,
         // but continue the build even when errors are found:
         abortOnError false
+    }
+    buildToolsVersion '29.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -44,7 +59,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-analytics:17.2.1'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.google.android:flexbox:0.3.0-alpha3'
     implementation "com.github.parse-community.Parse-SDK-Android:parse:1.25.0"
     implementation 'com.github.parse-community:ParseLiveQuery-Android:1.2.2'

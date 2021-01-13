@@ -436,7 +436,8 @@ public class ServiceSyncNew extends Service {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setPackage(sharePref.getSessionStr(SELECTED_WHATSAPP));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.setData(Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(bodyMessage, "UTF-8")));
                 startActivity(intent);
             } catch (UnsupportedEncodingException e) {
@@ -449,27 +450,21 @@ public class ServiceSyncNew extends Service {
                 String sha1 = sha1(image_url) + ".jpg";
                 final String path = getDirWabot("bulk") + "/" + sha1;
                 if (fileExist(getApplicationContext(), path)) {
-                    updateParseOutboxMessage(id, "image_hash", path, new updateParseInterface() {
-                        @Override
-                        public void success() {
-                            for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
-                                String[] str = dataAntrianPesanFirebase.get(i);
-                                if (str[i].equals(id)) {
-                                    dataAntrianPesanFirebase.set(i, new String[]{id, str[1], str[2], path, str[4], str[5]});
-                                }
+                    updateParseOutboxMessage(id, "image_hash", path, () -> {
+                        for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
+                            String[] str = dataAntrianPesanFirebase.get(i);
+                            if (str[i].equals(id)) {
+                                dataAntrianPesanFirebase.set(i, new String[]{id, str[1], str[2], path, str[4], str[5]});
                             }
-                            is_send = false;
-                            startWASender(user_id);
                         }
+                        is_send = false;
+                        startWASender(user_id);
                     });
                 } else {
                     ServiceSyncNew.DownloadTask task = new ServiceSyncNew.DownloadTask();
-                    task.setParam(id, user_id, new DownLoadListener() {
-                        @Override
-                        public void done() {
-                            is_send = false;
-                            startWASender(user_id);
-                        }
+                    task.setParam(id, user_id, () -> {
+                        is_send = false;
+                        startWASender(user_id);
                     });
                     task.execute(stringToURL(image_url));
                 }
@@ -490,13 +485,15 @@ public class ServiceSyncNew extends Service {
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("image");
             sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            sendIntent.setComponent(new ComponentName(sharePref.getSessionStr(SELECTED_WHATSAPP), sharePref.getSessionStr(SELECTED_WHATSAPP)+".ContactPicker"));
+            //sendIntent.setComponent(new ComponentName(sharePref.getSessionStr(SELECTED_WHATSAPP), sharePref.getSessionStr(SELECTED_WHATSAPP)+".ContactPicker"));
+            sendIntent.setPackage(sharePref.getSessionStr(SELECTED_WHATSAPP));
             sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(phoneNumber) + "@s.whatsapp.net");
             sendIntent.putExtra(Intent.EXTRA_TEXT, bodyMessage);
             startActivity(sendIntent);
             Log.e(TAG, "Send Image");
             //kirim ke whatsapp
             startWASender(user_id);
+            System.exit(0);
         }
     }
 
@@ -728,13 +725,13 @@ public class ServiceSyncNew extends Service {
                         try {
                             Log.e(TAG, "childChanged:" + object.get("KeyCust") + ", String : " + object.get("idmessage"));
                             //dbHelper = new DBHelper(getApplicationContext());
-                            String id = object.get("idmessage")+"";
-                            String destination_number = object.get("destination_number")+"";
-                            String message = object.get("message")+"";
-                            String image_hash = object.get("image_hash")+"";
-                            String image_url = object.get("image_url")+"";
-                            String index_order = object.get("error_again")+"";
-                            String sent = object.get("sent")+"";
+                            String id = object.get("idmessage") + "";
+                            String destination_number = object.get("destination_number") + "";
+                            String message = object.get("message") + "";
+                            String image_hash = object.get("image_hash") + "";
+                            String image_url = object.get("image_url") + "";
+                            String index_order = object.get("error_again") + "";
+                            String sent = object.get("sent") + "";
 
                             String sha1 = sha1(image_url) + ".jpg";
                             String path = getDirWabot("bulk") + "/" + sha1;
@@ -760,16 +757,15 @@ public class ServiceSyncNew extends Service {
                     }
                 });
             }
-        });
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
+        }).handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
             @Override
             public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     public void run() {
                         try {
-                            Log.e(TAG, "childRemoved:" + object.get("idmessage")+"");
-                            String id = object.get("idmessage")+"";
+                            Log.e(TAG, "childRemoved:" + object.get("idmessage") + "");
+                            String id = object.get("idmessage") + "";
                             deleteArrayListFirebaseAntrian(id);
                         } catch (Exception e) {
                             e.printStackTrace();
