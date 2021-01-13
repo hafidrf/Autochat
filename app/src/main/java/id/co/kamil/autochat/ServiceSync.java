@@ -1,5 +1,6 @@
 package id.co.kamil.autochat;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -23,7 +24,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.StrictMode;
@@ -51,13 +51,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.FirebaseApp;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.livequery.ParseLiveQueryClient;
-import com.parse.livequery.SubscriptionHandling;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -75,24 +73,27 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import id.co.kamil.autochat.bulksender.WASendService;
 import id.co.kamil.autochat.database.DBHelper;
+import id.co.kamil.autochat.ui.pesan.AntrianPesanFragment;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
@@ -106,12 +107,13 @@ import static id.co.kamil.autochat.utils.API.URL_SYNC_DB_OUTBOX_REAL;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CHILD;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
-import static id.co.kamil.autochat.utils.SharPref.BULK_SENDER_ON_SCREEN;
-import static id.co.kamil.autochat.utils.SharPref.DELAY_BULK_SENDER;
+//import static id.co.kamil.autochat.utils.SharPref.BULK_SENDER_ON_SCREEN;
+//import static id.co.kamil.autochat.utils.SharPref.DELAY_BULK_SENDER;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
-import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
-import static id.co.kamil.autochat.utils.SharPref.STATUS_ERROR_TRY_AGAIN;
-import static id.co.kamil.autochat.utils.SharPref.TRY_AGAIN_BULKSENDER;
+//import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
+//import static id.co.kamil.autochat.utils.SharPref.STATUS_ERROR_TRY_AGAIN;
+//import static id.co.kamil.autochat.utils.SharPref.TRY_AGAIN_BULKSENDER;
 import static id.co.kamil.autochat.utils.Utils.SaveImage;
 import static id.co.kamil.autochat.utils.Utils.errorResponseString;
 import static id.co.kamil.autochat.utils.Utils.fileExist;
@@ -149,8 +151,13 @@ public class ServiceSync extends Service {
     private boolean is_synchronizing_outbox = false;
     private boolean is_synchronizing_db = false;
     private int page_kontak_wabot = 0;
+    private DatabaseReference fOutboxRef;
     private List<String[]> dataAntrianPesanFirebase = new ArrayList<>();
     private List<String[]> dataOutboxUploadPending = new ArrayList<>();
+    private FirebaseDatabase dbFirebase;
+    private String oldNumberPhone;
+    private String oldMessageBody;
+    private Timer timer = new Timer();
 //    private DatabaseReference mKontakReference;
 
 
@@ -203,129 +210,44 @@ public class ServiceSync extends Service {
         session = new SessionManager(this);
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
-        liveQueryParse(session.getValue(KEY_CUST_ID));
-
-        startTimerDB(0);
-        //startTimer();
-        startWASender();
-        startUploadOutbox();
-        //startTimerOutbox();
-        //registerReceiver(screenactionreceiver, screenactionreceiver.getFilter());
-
-        return mStartMode;
-    }
-
-    private void updateParseOutboxMessage(final String idmessage,final String param,final String value) {
-        Log.e(TAG,"idmessage:"+idmessage);
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
-        query.whereEqualTo("idmessage",idmessage);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject entity, ParseException e) {
-                if(e==null) {
-                    entity.put(param, value);
-                    entity.saveInBackground();
-                }
-            }
-        });
-    }
-    private void deleteParseOutboxMessage(final String idmessage) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
-        query.whereEqualTo("idmessage",idmessage);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject entity, ParseException e) {
-                if (e == null) {
-
-                    String keyCust=String.valueOf(entity.get("KeyCust"));
-                    entity.deleteInBackground();
-                    if(getAntrianPesan().isEmpty()){
-                        ParseQuery<ParseObject> query = ParseQuery.getQuery("Outbox");
-                        query.whereEqualTo("KeyCust",keyCust);
-                        query.getFirstInBackground(new GetCallback<ParseObject>() {
-                            @Override
-                            public void done(ParseObject object, ParseException e) {
-                                object.deleteInBackground();
-                            }
-                        });
-                    }
-                }
-            }
-        });
-    }
-    private void liveQueryParse(final String user_id){
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
-        query.whereEqualTo("KeyCust",user_id);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if(e!=null){
-                    e.printStackTrace();
-                    return;
-                }
-                for(ParseObject object:objects){
-                    try {
-                        String id = object.get("idmessage") + "";
-                        String destination_number = object.get("destination_number") + "";
-                        String message = object.get("message") + "";
-                        String image_hash = object.get("image_hash") + "";
-                        String image_url = object.get("image_url") + "";
-                        String index_order = object.get("error_again") + "";
-                        String sent = object.get("sent") + "";
-
-                        String sha1 = sha1(image_url) + ".jpg";
-                        String path = getDirWabot("bulk") + "/" + sha1;
-                        if (fileExist(getApplicationContext(), path)) {
-                            if (image_hash.isEmpty() || object.get("image_hash") == null) {
-                                image_hash = path;
-                            }
-                        }
-                        if (sent.isEmpty()) {
-                            dataAntrianPesanFirebase.add(new String[]{id, destination_number, message, image_hash, image_url, index_order});
-                        } else {
-                            dataOutboxUploadPending.add(new String[]{id, sent});
-                        }
-                    }catch (Exception ex){
-                        ex.printStackTrace();
-                    }
-                }
-                startWASender();
-            }
-        });
-        ParseLiveQueryClient parseLiveQueryClient = null;
         try {
-            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://dash.wabot.id:1337"));
-        } catch (URISyntaxException e) {
-            Log.e(TAG,e.getMessage());
+            if (FirebaseApp.getApps(this).isEmpty()) {
+                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("OutboxMessage");
-        parseQuery.whereEqualTo("KeyCust", user_id);
+        boolean statusWASender = sharePref.getSessionBool(STATUS_BULK_SENDER);
+        Log.e(TAG,"STATUS WASENDER : "+statusWASender);
+        if (statusWASender) {
+            dbFirebase = FirebaseDatabase.getInstance();
+            fOutboxRef = dbFirebase.getReference().child("outbox").child(session.getValue(KEY_CUST_ID));
+            fOutboxRef.keepSynced(true);
 
-        SubscriptionHandling<ParseObject> subscriptionHandling = parseLiveQueryClient.subscribe(parseQuery);
+            ChildEventListener childListenerOutbox = new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    try {
+                        Log.e(TAG, "childAdd:" + dataSnapshot.toString() + ", String : " + s);
 
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
-            @Override
-            public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    public void run() {
-                        try {
-                            Log.e(TAG, "childAdd:" + object.get("KeyCust") + ", String : " + object.get("idmessage"));
+                        if (dataSnapshot.exists()) {
+                            Log.e(TAG, "childAdd Exists:" + dataSnapshot.toString() + ", String : " + s);
+
                             //dbHelper = new DBHelper(getApplicationContext());
-                            String id = object.get("idmessage")+"";
-                            String destination_number = object.get("destination_number")+"";
-                            String message = object.get("message")+"";
-                            String image_hash = object.get("image_hash")+"";
-                            String image_url = object.get("image_url")+"";
-                            String index_order = object.get("error_again")+"";
-                            String sent = object.get("sent")+"";
+                            String id = dataSnapshot.child("id").getValue().toString();
+                            String destination_number = dataSnapshot.child("destination_number").getValue().toString();
+                            String message = dataSnapshot.child("message").getValue().toString();
+                            String image_hash = dataSnapshot.child("image_hash").getValue().toString();
+                            String image_url = dataSnapshot.child("image_url").getValue().toString();
+                            String index_order = dataSnapshot.child("error_again").getValue().toString();
+                            String sent = dataSnapshot.child("sent").getValue().toString();
 
                             String sha1 = sha1(image_url) + ".jpg";
                             String path = getDirWabot("bulk") + "/" + sha1;
                             if (fileExist(getApplicationContext(), path)) {
-                                if (image_hash.isEmpty() || image_hash == null) {
+                                if (TextUtils.isEmpty(image_hash)) {
                                     image_hash = path;
                                 }
                             }
@@ -334,41 +256,39 @@ public class ServiceSync extends Service {
                             } else {
                                 dataOutboxUploadPending.add(new String[]{id, sent});
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
-            @Override
-            public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    public void run() {
-                        try {
-                            Log.e(TAG, "childChanged:" + object.get("KeyCust") + ", String : " + object.get("idmessage"));
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    try {
+                        if (dataSnapshot.exists()) {
+
+                            Log.e(TAG, "childChanged:" + dataSnapshot.toString() + ", String : " + s);
                             //dbHelper = new DBHelper(getApplicationContext());
-                            String id = object.get("idmessage")+"";
-                            String destination_number = object.get("destination_number")+"";
-                            String message = object.get("message")+"";
-                            String image_hash = object.get("image_hash")+"";
-                            String image_url = object.get("image_url")+"";
-                            String index_order = object.get("error_again")+"";
-                            String sent = object.get("sent")+"";
+                            String id = dataSnapshot.child("id").getValue().toString();
+                            String destination_number = dataSnapshot.child("destination_number").getValue().toString();
+                            String message = dataSnapshot.child("message").getValue().toString();
+                            String image_hash = dataSnapshot.child("image_hash").getValue().toString();
+                            String image_url = dataSnapshot.child("image_url").getValue().toString();
+                            String index_order = dataSnapshot.child("error_again").getValue().toString();
+                            String sent = dataSnapshot.child("sent").getValue().toString();
 
                             String sha1 = sha1(image_url) + ".jpg";
                             String path = getDirWabot("bulk") + "/" + sha1;
                             if (fileExist(getApplicationContext(), path)) {
-                                if (image_hash.isEmpty() || image_hash == null) {
+                                if (TextUtils.isEmpty(image_hash)) {
                                     image_hash = path;
                                 }
                             }
                             for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                                 String[] str = dataAntrianPesanFirebase.get(i);
-                                if (str[i].equals(id)) {
+                                if (i < str.length && str[i].equals(id)) {
                                     dataAntrianPesanFirebase.remove(i);
                                     if (sent.isEmpty()) {
                                         dataAntrianPesanFirebase.add(i, new String[]{id, destination_number, message, image_hash, image_url, index_order});
@@ -376,33 +296,56 @@ public class ServiceSync extends Service {
                                         dataOutboxUploadPending.add(new String[]{id, sent});
                                     }
                                 }
+
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
-            @Override
-            public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    public void run() {
-                        try {
-                            Log.e(TAG, "childRemoved:" + object.get("idmessage")+"");
-                            //dbHelper = new DBHelper(getApplicationContext());
-                            String id = object.get("idmessage")+"";
-                            deleteArrayListFirebaseAntrian(id);
-                            //dbHelper.deleteOutboxById(id);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                    try {
+                        Log.e(TAG, "childRemoved:" + dataSnapshot.toString());
+                        //dbHelper = new DBHelper(getApplicationContext());
+                        String id = dataSnapshot.getKey();
+                        deleteArrayListFirebaseAntrian(id);
+                        //dbHelper.deleteOutboxById(id);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    Log.e(TAG, "onChildMoved: " + dataSnapshot);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    throw databaseError.toException();
+                }
+            };
+            fOutboxRef.addChildEventListener(childListenerOutbox);
+        }
+        this.oldMessageBody = "";
+        this.oldNumberPhone = "";
+        startTimerDB(0);
+        //startTimer();
+        //startWASender();
+        //startUploadOutbox();
+        //startTimerOutbox();
+        //registerReceiver(screenactionreceiver, screenactionreceiver.getFilter());
+
+        return mStartMode;
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
     }
 
     private boolean deleteArrayListFirebaseAntrian(String id) {
@@ -481,9 +424,9 @@ public class ServiceSync extends Service {
                             } else if (position == 2) {
                                 syncAutoreply();
                             } else if (position == 3) {
-                                syncKamus();
+                               // syncKamus();
                             } else if (position == 4) {
-                                syncTemplatePromosi();
+//                                syncTemplatePromosi();
                                 //syncKontakWabot();
                             }
                         }
@@ -496,7 +439,7 @@ public class ServiceSync extends Service {
         handler.postDelayed(
                 new Runnable() {
                     public void run() {
-                        if (is_synchronizing == false && is_send == false) {
+                        if (!is_synchronizing && !is_send) {
                             //syncDatabase();
                         }
                     }
@@ -521,7 +464,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_outbox = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_outbox = false;
             startTimerOutbox();
             return;
@@ -591,7 +534,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -611,7 +554,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(1);
             return;
@@ -687,7 +630,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -707,7 +650,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(2);
             return;
@@ -780,7 +723,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -800,7 +743,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(3);
             return;
@@ -873,7 +816,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -886,14 +829,14 @@ public class ServiceSync extends Service {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void syncKamus() {
+    /*private void syncKamus() {
         final String fieldverdb = "ver_kamus";
         final String created = getTgl();
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(4);
             return;
@@ -967,7 +910,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -978,22 +921,22 @@ public class ServiceSync extends Service {
         //RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         //jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
-    }
+    }*/
 
-    private void syncTemplatePromosi() {
+    /*private void syncTemplatePromosi() {
         final String fieldverdb = "ver_template_promosi";
         final String created = getTgl();
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(4);
             mainSynced();
             return;
         }
-        Log.i(TAG, "sedang melakukan sinkronisasi template....");
+        //Log.i(TAG, "sedang melakukan sinkronisasi template....");
         dbHelper.insertLog(created, ID_SERVICE_SYNC, "Persiapan Singkronisasi Database ", "normal", user_id);
         dbVersionCode = dbHelper.getVersionCodeDB2(fieldverdb);
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -1035,7 +978,7 @@ public class ServiceSync extends Service {
                                 for (int i = 0; i < data.length(); i++) {
                                     final String hash = data.getJSONObject(i).getString("picture_hash");
                                     final String url = data.getJSONObject(i).getString("picture_url");
-                                    if (fileExist(getApplicationContext(), getDirWabot("template_promosi") + "/" + hash) == false) {
+                                    if (!fileExist(getApplicationContext(), getDirWabot("template_promosi") + "/" + hash)) {
                                         Picasso.with(getApplicationContext())
                                                 .load(url)
                                                 .into(new Target() {
@@ -1081,7 +1024,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -1102,7 +1045,7 @@ public class ServiceSync extends Service {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
 
         isMainSynced = false;
-    }
+    }*/
 
     private void syncKontakWabot() {
         final String fieldverdb = "ver_db_kontakwabot";
@@ -1115,7 +1058,7 @@ public class ServiceSync extends Service {
         }
         is_synchronizing_db = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing_db = false;
             startTimerDB(0);
             return;
@@ -1194,7 +1137,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -1213,7 +1156,7 @@ public class ServiceSync extends Service {
         sharePref = new SharPref(this);
         is_synchronizing = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
             is_synchronizing = false;
             startTimer();
             return;
@@ -1254,7 +1197,7 @@ public class ServiceSync extends Service {
                             final String versionCode = response.getString("version_code");
                             final JSONArray autoreply = response.getJSONArray("autoreply");
                             final JSONArray autotext = response.getJSONArray("autotext");
-                            final JSONArray outbox = response.getJSONArray("outbox");
+                            //final JSONArray outbox = response.getJSONArray("outbox");
                             final JSONArray kontak = response.getJSONArray("kontak");
                             final JSONArray singkron_kontak_wabot = response.getJSONArray("singkron_kontak_wabot");
                             //Log.i(TAG,response.toString());
@@ -1334,7 +1277,7 @@ public class ServiceSync extends Service {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -1354,20 +1297,16 @@ public class ServiceSync extends Service {
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));
         String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
-        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null);
-        try {
-            if (cur.moveToFirst()) {
+        try (Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, selection, null, null)) {
+            if (cur != null && cur.moveToFirst()) {
                 return true;
             }
-        } finally {
-            if (cur != null)
-                cur.close();
         }
         return false;
     }
 
     private void saveLocalContact(String name, String phone) {
-        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         int rawContactInsertIndex = ops.size();
 
         ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
@@ -1387,22 +1326,19 @@ public class ServiceSync extends Service {
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, phone) // Number of the person
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); // Type of mobile number
         try {
-            ContentProviderResult[] res = getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-        } catch (RemoteException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        } catch (OperationApplicationException e) {
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (RemoteException | OperationApplicationException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void startWASender() {
+    /*private void startWASender() {
         trimCache(this);
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c);
-        final String created = formattedDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        final String created = df.format(c);
 
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
@@ -1416,7 +1352,7 @@ public class ServiceSync extends Service {
         //addListenerOutbox();
 
         String config_delay_bulk = sharePref.getSessionStr(DELAY_BULK_SENDER);
-        if (config_delay_bulk.isEmpty() || config_delay_bulk.equals("")) {
+        if (TextUtils.isEmpty(config_delay_bulk)) {
             config_delay_bulk = "5";
         }
         long timerBulkSender = 3000;
@@ -1449,7 +1385,7 @@ public class ServiceSync extends Service {
         handlerWA.postDelayed(
                 new Runnable() {
                     public void run() {
-                        if (is_uploading_outbox == false && is_send == false) {
+                        if (!is_uploading_outbox && !is_send) {
                             uploadDataOutbox();
                         }
                     }
@@ -1464,6 +1400,7 @@ public class ServiceSync extends Service {
             enabled = Settings.Secure.getInt(getApplicationContext().getContentResolver()
                     , Settings.Secure.ACCESSIBILITY_ENABLED);
         } catch (Settings.SettingNotFoundException e) {
+            Toast.makeText(this,"Aksesbility error",Toast.LENGTH_SHORT).show();
             Log.e(TAG, e.getMessage());
         }
 
@@ -1482,30 +1419,29 @@ public class ServiceSync extends Service {
         }
 
         return false;
-    }
+    }*/
 
     private String getTgl() {
 
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c);
-        return formattedDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return df.format(c);
     }
 
     private void sendWA() {
-        ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
+        //ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
 
         // Initializing a new file
         // The bellow line return a directory in internal storage
-        File dirImage = wrapper.getDir("images", MODE_PRIVATE);
+        //File dirImage = wrapper.getDir("images", MODE_PRIVATE);
 
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
         final String created = getTgl();
-        config_on_screen = sharePref.getSessionBool(BULK_SENDER_ON_SCREEN);
-        boolean accessibility = isAccessibilityEnabled();
+        //config_on_screen = sharePref.getSessionBool(BULK_SENDER_ON_SCREEN);
+        /*boolean accessibility = isAccessibilityEnabled();
         if (!accessibility) {
             is_send = false;
             dbHelper.insertLog(created, ID_SERVICE_WA, "Aksesibilitas Wabot tidak aktif", "warning", user_id);
@@ -1515,50 +1451,56 @@ public class ServiceSync extends Service {
         if (!session.isLoggedIn()) {
             startWASender();
             return;
-        }
+        }*/
         is_send = true;
         final List<String[]> antrianPesan = getAntrianPesan();
+        Log.d(TAG,"antrian : " +antrianPesan.toString());
         Log.i(TAG, "countAntrian:" + antrianPesan.size());
         dbHelper.insertLog(created, ID_SERVICE_WA, "Sedang memeriksa antrian pesan", "normal", user_id);
         if (antrianPesan.size() > 0) {
 
-            String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
-            boolean status_prefTryagain = sharePref.getSessionBool(STATUS_ERROR_TRY_AGAIN);
-            if (prefTryagain.isEmpty() || prefTryagain.equals(null) || prefTryagain.equals("") || prefTryagain == null) {
-                prefTryagain = "5";
+           // String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
+           /* boolean status_prefTryagain = sharePref.getSessionBool(STATUS_ERROR_TRY_AGAIN);
+            if (TextUtils.isEmpty(prefTryagain)) {
+//                prefTryagain = "5";
+                prefTryagain = "1";
             } else if (Integer.parseInt(prefTryagain) < 5) {
-                prefTryagain = "5";
-            }
-            if (appInstalledOrNot("com.whatsapp")) {
+//                prefTryagain = "5";
+                prefTryagain = "1";
+            }*/
+            Log.d(TAG,"INSTALLED OR NOT :"+sharePref.getSessionStr(SELECTED_WHATSAPP));
+            if (appInstalledOrNot(sharePref.getSessionStr(SELECTED_WHATSAPP))) {
                 String id = antrianPesan.get(0)[0];
                 String phoneNumber = antrianPesan.get(0)[1];
                 String bodyMessage = antrianPesan.get(0)[2];
                 String image_hash = antrianPesan.get(0)[3];
                 String image_url = antrianPesan.get(0)[4];
                 String index_order = antrianPesan.get(0)[5];
-                int try_again = sharePref.getSessionInt("tryagain" + id);
-                if (index_order == null || index_order.equals(null) || index_order.equals("null") || index_order.isEmpty()) {
-                    updateParseOutboxMessage(id,"error_again","1");
+                Log.d(TAG," Text Util :"+index_order);
+                //int try_again = sharePref.getSessionInt("tryagain" + id);
+                if (TextUtils.isEmpty(index_order) || index_order.equals("null")) {
+                    fOutboxRef.child(id).child("error_again").setValue(1);
                     //dbHelper.updateAntrianPesan(id,"1");
                 } else {
-                    if (status_prefTryagain) {
-                        if (Integer.valueOf(index_order) >= Integer.parseInt(prefTryagain)) {
+
+                    /*if (status_prefTryagain) {
+                        hapusPesan();
+                        if (Integer.parseInt(index_order) >= Integer.parseInt(prefTryagain)) {
                             //sharePref.createSession(STATUS_BULK_SENDER, false);
+
                             is_send = false;
-                            hapusPesan();
 //                            deleteArrayListFirebaseAntrian(id);
 //                            fOutboxRef.child(id).removeValue();
                             startWASender();
                             return;
                         }
-                    }
-                    int idxOrder=Integer.parseInt(index_order) + 1;
-                    updateParseOutboxMessage(id,"error_again",String.valueOf(idxOrder));
+                    }*/
+                    fOutboxRef.child(id).child("error_again").setValue(Integer.parseInt(index_order) + 1);
                 }
                 Log.i(TAG, "send message...");
                 Log.i(TAG, "phone : " + phoneNumber);
                 Log.i(TAG, "message : " + bodyMessage);
-                String bodyLog = "";
+                String bodyLog;
                 if (bodyMessage.length() > 100) {
                     bodyLog = bodyMessage.substring(0, 100) + "...";
                 } else {
@@ -1567,36 +1509,47 @@ public class ServiceSync extends Service {
                 dbHelper.insertLog(created, ID_SERVICE_WA, "Persiapan Kirim Pesan ke " + phoneNumber + ", isi Pesan : " + bodyLog, "normal", user_id);
                 Log.e(TAG, "ImageHash:" + image_hash);
                 Log.e(TAG, "ImageHUrl:" + image_url);
-                WASendService.setID(id,"");
-                if ((image_hash == null || image_hash.isEmpty() || image_hash.equals(null) || image_hash.equals("null")) && (image_url == null || image_url.isEmpty() || image_url.equals(null) || image_url.equals("null"))) {
+               // WASendService.setID(id);
+
+                if (!(session.getValue("OLD_PHONE").toString().equals(phoneNumber) && session.getValue("OLD_MESSAGE").toString().equals(bodyMessage)) && (TextUtils.isEmpty(image_hash) || image_hash.equals("null")) && (TextUtils.isEmpty(image_url) || image_url.equals("null"))) {
 //                    Intent sendIntent = new Intent();
 //                    sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                    sendIntent.setAction(Intent.ACTION_SEND);
 //                    sendIntent.setType("text/plain");
-//                    sendIntent.setPackage("com.whatsapp");
+//                    sendIntent.setPackage("com.whatsapp.w4b");
 //                    sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(phoneNumber)+"@s.whatsapp.net");
 //                    sendIntent.putExtra(Intent.EXTRA_TEXT,bodyMessage);
 //                    startActivity(sendIntent);
-                    String text = bodyMessage;// Replace with your message.
-
+                    //WASendService.setID(id);
                     String toNumber = PhoneNumberUtils.stripSeparators(phoneNumber);
 
                     try {
+                        //
+                        session.setValue("OLD_MESSAGE",bodyMessage);
+                        session.setValue("OLD_PHONE",phoneNumber);
+//                        this.timer.cancel(); //this will cancel the current task. if there is no active task, nothing happens
+//                        this.timer = new Timer();
+
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setPackage("com.whatsapp");
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setData(Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(text, "UTF-8")));
+                        intent.setPackage(sharePref.getSessionStr(SELECTED_WHATSAPP));
+//                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setData(Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(bodyMessage, "UTF-8")));
+                        Log.d(TAG,"Start Activity execute, data:"+Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(bodyMessage, "UTF-8")).toString());
                         startActivity(intent);
+
                     } catch (UnsupportedEncodingException e) {
+                        Log.e(TAG,"Error startactivity");
                         e.printStackTrace();
                     }
                     Log.e(TAG, "Send Text:");
-                } else if ((image_hash == null || image_hash.isEmpty() || image_hash.equals(null) || image_hash.equals("null")) && !(image_url == null || image_url.isEmpty() || image_url.equals(null) || image_url.equals("null"))) {
+                } else if ((TextUtils.isEmpty(image_hash) || image_hash.equals("null")) && !(TextUtils.isEmpty(image_url) || image_url.equals("null"))) {
                     try {
+                        Log.d(TAG,"Download:"+image_url);
                         String sha1 = sha1(image_url) + ".jpg";
                         String path = getDirWabot("bulk") + "/" + sha1;
                         if (fileExist(getApplicationContext(), path)) {
-                            updateParseOutboxMessage(id,"image_hash",path);
+                            fOutboxRef.child(id).child("image_hash").setValue(path);
                             for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                                 String[] str = dataAntrianPesanFirebase.get(i);
                                 if (str[i].equals(id)) {
@@ -1611,13 +1564,15 @@ public class ServiceSync extends Service {
                         }
 
                     } catch (NoSuchAlgorithmException e) {
+                        Log.d(TAG,"Download Error:"+image_url);
                         e.printStackTrace();
                     }
 
 
                     Log.e(TAG, "Download Image:");
-                } else {
-
+                } else if(!(session.getValue("OLD_PHONE").toString().equals(phoneNumber) && session.getValue("OLD_MESSAGE").toString().equals(bodyMessage))){
+                    session.setValue("OLD_MESSAGE",bodyMessage);
+                    session.setValue("OLD_PHONE",phoneNumber);
                     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                     StrictMode.setVmPolicy(builder.build());
                     File filePath = new File(image_hash);
@@ -1627,107 +1582,41 @@ public class ServiceSync extends Service {
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.setType("image");
                     sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                    sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.ContactPicker"));
+                    sendIntent.setComponent(new ComponentName(sharePref.getSessionStr(SELECTED_WHATSAPP), sharePref.getSessionStr(SELECTED_WHATSAPP)+".ContactPicker"));
                     sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(phoneNumber) + "@s.whatsapp.net");
                     sendIntent.putExtra(Intent.EXTRA_TEXT, bodyMessage);
                     startActivity(sendIntent);
                     Log.e(TAG, "Send Image");
                 }
-
-
             }
         } else {
-            sharePref.createSession(STATUS_BULK_SENDING, false);
+           // sharePref.createSession(STATUS_BULK_SENDING, false);
             dbHelper.insertLog(created, ID_SERVICE_WA, "Tidak ada antrian pesan", "normal", user_id);
             //dbHelper.updateDBVersion("0");
             Log.e(TAG, "tidak ada pesan antrian");
+
         }
         is_send = false;
-        startWASender();
+        //startWASender();
     }
-
-    private void hapusPesan() {
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final JSONArray jsonArray = new JSONArray();
-
-        final List<String[]> antrianPesan = getAntrianPesan();
-        String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
-        if (TextUtils.isEmpty(prefTryagain)) {
-            prefTryagain = "5";
-        }
-        Integer maxTryAgain = Integer.parseInt(prefTryagain);
-//        else if(Integer.parseInt(prefTryagain)<5){
-//            prefTryagain = "5";
-//        }
-        if (antrianPesan.size() <= 0) {
-            return;
-        }
-        for (int i = 0; i < antrianPesan.size(); i++) {
-            String id = antrianPesan.get(i)[0];
-            String index_order = antrianPesan.get(i)[5];
-            Log.e(TAG, "index:" + index_order);
-            Log.e(TAG, "prefTryagain:" + prefTryagain);
-            Integer tryAgain = Integer.parseInt(index_order);
-            if (tryAgain >= maxTryAgain) {
-//                deleteArrayListFirebaseAntrian(id);
-                jsonArray.put(Integer.parseInt(id));
-            }
-        }
-        if (jsonArray.length() <= 0) return;
-        final JSONObject request_body = new JSONObject();
-        try {
-            request_body.put("id", jsonArray);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, request_body.toString());
-        final String uri = Uri.parse(URL_POST_HAPUS_PESAN_ANTRIAN)
-                .buildUpon()
-                .toString();
-
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, request_body, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                try {
-                    final boolean status = response.getBoolean("status");
-                    final String message = response.getString("message");
-                    Log.i(TAG, message);
-                    if (status) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            deleteParseOutboxMessage(jsonArray.getString(i));
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    new AlertDialog.Builder(getApplicationContext())
-                            .setMessage(e.getMessage())
-                            .setPositiveButton("OK", null)
-                            .show();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+    private static final Intent[] POWERMANAGER_INTENTS = {
+            new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
+            new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager")),
+            new Intent().setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")),
+            new Intent().setComponent(new ComponentName("com.samsung.android.lool", "com.samsung.android.sm.ui.battery.BatteryActivity")),
+            new Intent().setComponent(new ComponentName("com.htc.pitroad", "com.htc.pitroad.landingpage.activity.LandingPageActivity")),
+            new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity"))
+    };
 
 
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> header = new HashMap<>();
-                //header.put("Content-Type","application/json");
-                header.put("x-api-key", token);
-                return header;
-            }
-        };
-
-        RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        jsonObjectRequest.setRetryPolicy(policy);
-        requestQueue.add(jsonObjectRequest);
-
-    }
 
     private List<String[]> getAntrianPesan() {
         Collections.sort(dataAntrianPesanFirebase, new Comparator<String[]>() {
@@ -1737,6 +1626,7 @@ public class ServiceSync extends Service {
         });
         return dataAntrianPesanFirebase;
     }
+
 
     public static void trimCache(Context context) {
         try {
@@ -1751,8 +1641,8 @@ public class ServiceSync extends Service {
     public static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
+            for (String child : children) {
+                boolean success = deleteDir(new File(dir, child));
                 if (!success) {
                     return false;
                 }
@@ -1824,16 +1714,17 @@ public class ServiceSync extends Service {
                             Bitmap : The decoded bitmap, or null if the image data could not be decoded.
                 */
                 // Convert BufferedInputStream to Bitmap object
-                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
 
                 // Return the downloaded bitmap
-                return bmp;
+                return BitmapFactory.decodeStream(bufferedInputStream);
 
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 // Disconnect the http url connection
-                connection.disconnect();
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
             return null;
         }
@@ -1848,7 +1739,7 @@ public class ServiceSync extends Service {
                 // Display the downloaded image into ImageView
 
                 // Save bitmap to internal storage
-                dbHelper.insertLog(created, ID_SERVICE_WA, "berhail download gambar pesan", "success", user_id);
+                dbHelper.insertLog(created, ID_SERVICE_WA, "berhasil download gambar pesan", "success", user_id);
                 try {
                     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                     String sha1 = sha1(image_url) + ".jpg";
@@ -1856,7 +1747,7 @@ public class ServiceSync extends Service {
 //                    Uri imageInternalUri = saveImageToInternalStorage(result,sha1);
                     SaveImage(result, "bulk", sha1);
                     String path = getDirWabot("bulk") + "/" + sha1;
-                    updateParseOutboxMessage(idMessage,"image_hash",path);
+                    fOutboxRef.child(idMessage).child("image_hash").setValue(path);
                     for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                         String[] str = dataAntrianPesanFirebase.get(i);
                         if (str[i].equals(idMessage)) {
@@ -1878,10 +1769,7 @@ public class ServiceSync extends Service {
     // Custom method to convert string to url
     protected URL stringToURL(String urlString) {
         try {
-            URL url = new URL(urlString);
-            return url;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            return new URL(urlString);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1922,10 +1810,9 @@ public class ServiceSync extends Service {
         }
 
         // Parse the gallery image url to uri
-        Uri savedImageURI = Uri.parse(file.getAbsolutePath());
 
         // Return the saved image Uri
-        return savedImageURI;
+        return Uri.parse(file.getAbsolutePath());
     }
 
     public static File savebitmap(Bitmap bmp) throws IOException {
@@ -1936,6 +1823,7 @@ public class ServiceSync extends Service {
         bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
         File f = new File(Environment.getExternalStorageDirectory()
                 + File.separator + "testimage.jpg");
+        //noinspection ResultOfMethodCallIgnored
         f.createNewFile();
         FileOutputStream fo = new FileOutputStream(f);
         fo.write(bytes.toByteArray());
@@ -1961,10 +1849,10 @@ public class ServiceSync extends Service {
         dbHelper = new DBHelper(this);
         is_uploading_outbox = true;
         refreshToken();
-        if (token.isEmpty() || token == null || token.equals(null)) {
+        if (TextUtils.isEmpty(token)) {
 
             is_uploading_outbox = false;
-            startUploadOutbox();
+            //startUploadOutbox();
             return;
         }
 
@@ -1982,7 +1870,7 @@ public class ServiceSync extends Service {
         if (arrIdOutbox.length() <= 0) {
             dbHelper.insertLog(created, ID_SERVICE_SYNC, "Data Outbox kosong", "normal", user_id);
             is_uploading_outbox = false;
-            startUploadOutbox();
+            //startUploadOutbox();
             return;
         }
         dbHelper.insertLog(created, ID_SERVICE_SYNC, "Persiapan singkronisasi outbox", "normal", user_id);
@@ -2007,7 +1895,7 @@ public class ServiceSync extends Service {
             @Override
             public void onResponse(JSONObject response) {
                 is_uploading_outbox = false;
-                startUploadOutbox();
+                //startUploadOutbox();
                 Log.i(TAG, "upload outbox selesai! Status : " + is_uploading_outbox);
                 try {
                     final boolean status = response.getBoolean("status");
@@ -2017,7 +1905,8 @@ public class ServiceSync extends Service {
                         final JSONArray data = response.getJSONArray("data");
                         for (int i = 0; i < data.length(); i++) {
                             String id = data.getString(i);
-                            deleteParseOutboxMessage(id);
+                            fOutboxRef.child(id).removeValue();
+                            //dbHelper.deleteOutboxById(id);
                         }
                         Log.i(TAG, "upload outbox selesai! data : " + data.toString());
                         dbHelper.insertLog(created, ID_SERVICE_SYNC, "Singkronisasi outbox selesai", "success", user_id);
@@ -2038,11 +1927,11 @@ public class ServiceSync extends Service {
                 Log.i(TAG, "upload outbox error.");
                 dbHelper.insertLog(created, ID_SERVICE_SYNC, "Error Singkronisasi Outbox : " + errorResponseString(error), "danger", user_id);
                 is_uploading_outbox = false;
-                startUploadOutbox();
+                //startUploadOutbox();
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> header = new HashMap<>();
                 //header.put("Content-Type","application/json");
                 //header.put("Authorization","Bearer " + token);
@@ -2053,7 +1942,7 @@ public class ServiceSync extends Service {
         //RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         //jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
-        startUploadOutbox();
+       // startUploadOutbox();
     }
 
     @Override
@@ -2078,6 +1967,15 @@ public class ServiceSync extends Service {
     public void onDestroy() {
         // The service is no longer used and is being destroyed
         //layar_nyala = false;
+    }
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if("id.co.kamil.autochat".equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

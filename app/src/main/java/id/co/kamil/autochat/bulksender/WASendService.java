@@ -70,6 +70,7 @@ public class WASendService extends AccessibilityService {
         is_send=true;
     }
 
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
@@ -201,14 +202,14 @@ public class WASendService extends AccessibilityService {
         return node;
     }
     private void saveParseOutbox(final String user_id) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Outbox");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
         query.whereEqualTo("KeyCust",user_id);
         // Or use the the non-blocking method countInBackground method with a CountCallback
         query.countInBackground(new CountCallback() {
             public void done(int count, ParseException e) {
                 if (e == null) {
                     if(count<=0){
-                        ParseObject entity = new ParseObject("Outbox");
+                        ParseObject entity = new ParseObject("OutboxMessage");
                         entity.put("KeyCust", user_id);
                         // Saves the new object.
                         // Notice that the SaveCallback is totally optional!

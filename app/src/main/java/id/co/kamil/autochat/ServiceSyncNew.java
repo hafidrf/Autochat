@@ -1,6 +1,7 @@
 package id.co.kamil.autochat;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -269,13 +270,13 @@ public class ServiceSyncNew extends Service {
         dbHelper.insertLog(created, ID_SERVICE_WA, "Sedang memeriksa antrian pesan", "normal", user_id);
         if (antrianPesan.size() > 0) {
 
-            String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
+            /*String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
             boolean status_prefTryagain = sharePref.getSessionBool(STATUS_ERROR_TRY_AGAIN);
             if (prefTryagain.equals("")) {
                 prefTryagain = "5";
             } else if (Integer.parseInt(prefTryagain) < 5) {
                 prefTryagain = "5";
-            }
+            }*/
             Log.d(TAG,"INSTALLED OR NOT :"+sharePref.getSessionStr(SELECTED_WHATSAPP));
             if (cekWAInstalledOrNot(sharePref.getSessionStr(SELECTED_WHATSAPP))) {
                 final String id = antrianPesan.get(0)[0];
@@ -292,7 +293,7 @@ public class ServiceSyncNew extends Service {
                         }
                     });
                 } else {
-                    if (status_prefTryagain && (Integer.parseInt(index_order) >= Integer.parseInt(prefTryagain)) ) {
+                    /*if (status_prefTryagain && (Integer.parseInt(index_order) >= Integer.parseInt(prefTryagain)) ) {
                         hapusPesan(new hapusDoneListener() {
                             @Override
                             public void done() {
@@ -301,7 +302,7 @@ public class ServiceSyncNew extends Service {
                             }
                         });
                         return;
-                    }
+                    }*/
                     int idxOrder=Integer.parseInt(index_order) + 1;
                     updateParseOutboxMessage(id, "error_again", String.valueOf(idxOrder), new updateParseInterface() {
                         @Override
@@ -508,9 +509,9 @@ public class ServiceSyncNew extends Service {
         DownLoadListener downLoadListener;
         URL url;
         public void setParam(String idm,String idu,DownLoadListener listener) {
-           idPesan = idm;
-           user_id= idu;
-           downLoadListener=listener;
+            idPesan = idm;
+            user_id= idu;
+            downLoadListener=listener;
         }
         protected void onPreExecute() {
             String created = getTgl();
@@ -800,6 +801,15 @@ public class ServiceSyncNew extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if("id.co.kamil.autochat".equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

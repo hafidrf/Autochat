@@ -119,10 +119,10 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <!--<service
+        <service
             android:name=".ServiceSync"
             android:label="autochat sync"
-            android:priority="3000" />-->
+            android:priority="1000" />
         <service
             android:name=".bulksender.WASendService"
             android:label="@string/accessibility_service_label"

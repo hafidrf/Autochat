@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,7 +88,6 @@ import static id.co.kamil.autochat.utils.SharPref.LINK_TUTORIAL;
 import static id.co.kamil.autochat.utils.SharPref.REFERRER_URL;
 import static id.co.kamil.autochat.utils.Utils.errorResponse;
 import static id.co.kamil.autochat.utils.Utils.errorResponseString;
-import static id.co.kamil.autochat.utils.Utils.openAppPlaystore;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -122,6 +122,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /** Hiding Title bar of this activity screen */
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        /** Making this activity, full screen */
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
         Stetho.initializeWithDefaults(this);
         updateData();
@@ -268,45 +274,16 @@ public class SplashScreenActivity extends AppCompatActivity {
                         Log.i(TAG, "kontakWabot:" + kontakWabot[i][0] + " - " + kontakWabot[i][1]);
                     }
                     //Log.i(TAG,"kontakWabot:" + kontakWabot.toString());
+                    startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+                    finish();
                     if (status) {
                         final String data = response.getString("data");
                         if (!currentVersion.equals(data)) {
                             if (try_again_version == 0 || try_again_version >= 10) {
                                 if (skip) {
-                                    new AlertDialog.Builder(SplashScreenActivity.this)
-                                            .setMessage(message)
-                                            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    openAppPlaystore(SplashScreenActivity.this);
-                                                    finish();
-                                                }
-                                            })
-                                            .setNegativeButton("Lain kali", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    if (try_again_version >= 10) {
-                                                        try_again_version = 0;
-                                                    }
-                                                    try_again_version++;
-                                                    sharePref.createSession("try_again_version", try_again_version);
-                                                    singkron();
-                                                }
-                                            })
-                                            .setCancelable(false)
-                                            .show();
+
                                 } else {
-                                    new AlertDialog.Builder(SplashScreenActivity.this)
-                                            .setMessage(message)
-                                            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    openAppPlaystore(SplashScreenActivity.this);
-                                                    finish();
-                                                }
-                                            })
-                                            .setCancelable(false)
-                                            .show();
+
                                 }
 
                             } else {

@@ -22,6 +22,8 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,6 +80,8 @@ public class MyNotifiService extends NotificationListenerService {
     private String user_id;
     public static String other_action = "null";
 
+    private FirebaseDatabase dbFirebase;
+    private DatabaseReference fReceivedRef;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -129,6 +133,11 @@ public class MyNotifiService extends NotificationListenerService {
                     userDetail = session.getUserDetails();
                     is_child = Boolean.parseBoolean(userDetail.get(KEY_CHILD));
                     user_id = userDetail.get(KEY_CUST_ID);
+
+                    dbFirebase = FirebaseDatabase.getInstance();
+                    fReceivedRef = dbFirebase.getReference().child("notification").child(user_id);
+                    fReceivedRef.keepSynced(true);
+
                 } catch (NullPointerException e) {
                     Log.i(TAG, e.getMessage());
                 }

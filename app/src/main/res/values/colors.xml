@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/md_blue_700</color>
-    <color name="colorPrimaryDark">@color/md_blue_800</color>
+    <color name="colorPrimary">#0BA678</color>
+    <color name="colorPrimaryDark">#0BA678</color>
     <color name="colorAccent">#D81B60</color>
 
     <color name="candidate_normal">#FF000000</color>

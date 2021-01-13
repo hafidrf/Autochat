@@ -37,6 +37,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -47,6 +48,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -108,6 +110,8 @@ import static id.co.kamil.autochat.utils.SessionManager.KEY_FIRSTNAME;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_LASTNAME;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_PARENT_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP_TYPE;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FOREGROUND_SERVICE;
@@ -160,6 +164,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             switchScreenAlwaysOn, switchEnableForegroundService;
     private Switch switchkeyboard;
     private boolean status_aksesibilitas;
+    //private Spinner typeWhatsapp;
     private Button btnPengaturanKeyboard;
     private Button btnPengaturanAutoReply;
     private boolean status_keyboard;
@@ -211,6 +216,31 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         btnPengaturanKeyboard = (Button) view.findViewById(R.id.btnPengaturanKeyboard);
         btnPengaturanAutoReply = (Button) view.findViewById(R.id.btnPengaturanAutoReply);
         btnSingkronisasi = (Button) view.findViewById(R.id.btnSingkronisasi);
+        //typeWhatsapp = (Spinner) view.findViewById(R.id.selectedTypeWhatsapp);
+        sharePref = new SharPref(getContext());
+        session = new SessionManager(getContext());
+        final String[] dataType = {"Personal","Business"};
+        final String[] dataTypeId = {"com.whatsapp","com.whatsapp.w4b"};
+        final String created = getTgl();
+        Log.d(TAG,"SELECTED WHATSAPP : "+sharePref.getSessionStr(SELECTED_WHATSAPP));
+        ArrayAdapter adapterTypeWhatsapp = new ArrayAdapter(getContext(),R.layout.support_simple_spinner_dropdown_item,dataType);
+        /*typeWhatsapp.setAdapter(adapterTypeWhatsapp);
+        typeWhatsapp.setSelection(adapterTypeWhatsapp.getPosition(sharePref.getSessionStr(SELECTED_WHATSAPP_TYPE)));
+        typeWhatsapp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+//                dbHelper.insertLog(created, ID_SERVICE_WA, "Selected whatsapp : "+dataType[position], "normal", user_id);
+                sharePref.createSession(SELECTED_WHATSAPP,dataTypeId[position]);
+                sharePref.createSession(SELECTED_WHATSAPP_TYPE,dataType[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });*/
+
         btnPengaturan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

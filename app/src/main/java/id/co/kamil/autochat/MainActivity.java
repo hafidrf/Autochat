@@ -329,15 +329,17 @@ public class MainActivity extends AppCompatActivity {
     private void loadService() {
         showPdialog("Menginisiasi Servis Wabot");
         try {
-            Intent intent = new Intent(MainActivity.this, MyNotifiService.class);//启动服务
-            startService(intent);//Start service
-
+            Intent intent = new Intent(MainActivity.this, MyNotifiService.class);
+            startService(intent);
             Intent intent1 = new Intent(MainActivity.this, ServiceSyncNew.class);
+            Intent intent2 = new Intent(MainActivity.this, ServiceSync.class);
             boolean foreground_service = sharePref.getSessionBool(STATUS_FOREGROUND_SERVICE);
             intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, foreground_service);
-            intent1.putExtra(SharPref.STATUS_SYNC_SERVICE, true);
+            intent2.putExtra(SharPref.STATUS_SYNC_SERVICE, true);
             startService(intent1);
+            startService(intent2);
             hidePdialog();
+
         } catch (Exception e) {
             hidePdialog();
             new AlertDialog.Builder(this)

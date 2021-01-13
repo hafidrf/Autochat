@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
@@ -132,6 +133,7 @@ public class AntrianPesanFragment extends Fragment {
 
     private boolean isLoading = false, isloadMore = true;
     private MyHandler mHandler;
+
     private View ftView;
 
     public AntrianPesanFragment() {
@@ -153,6 +155,7 @@ public class AntrianPesanFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            //startWASender(session.getValue(KEY_CUST_ID));
         }
     }
 
@@ -296,16 +299,15 @@ public class AntrianPesanFragment extends Fragment {
         });
         return view;
     }
-
     private void saveParseOutbox(final String user_id) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Outbox");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
         query.whereEqualTo("KeyCust",user_id);
         // Or use the the non-blocking method countInBackground method with a CountCallback
         query.countInBackground(new CountCallback() {
             public void done(int count, ParseException e) {
                 if (e == null) {
                     if(count<=0){
-                        ParseObject entity = new ParseObject("Outbox");
+                        ParseObject entity = new ParseObject("OutboxMessage");
                         entity.put("KeyCust", user_id);
                         // Saves the new object.
                         // Notice that the SaveCallback is totally optional!
@@ -859,7 +861,7 @@ public class AntrianPesanFragment extends Fragment {
     private void changeErrorAgain() {
         String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
         if (TextUtils.isEmpty(prefTryagain)) {
-            prefTryagain = "5";
+            prefTryagain = "100";
         }
         final int maxTryAgain = Integer.parseInt(prefTryagain);
 
@@ -892,13 +894,13 @@ public class AntrianPesanFragment extends Fragment {
                                     dataPesan.set(i, itemPesan);
                                 }
                             }
-                            for (ItemPesan itemPesan : dataPesan) {
+                            /*for (ItemPesan itemPesan : dataPesan) {
                                 if (!TextUtils.isEmpty(itemPesan.getError_again())) {
                                     if (Integer.parseInt(itemPesan.getError_again()) > maxTryAgain) {
                                         hapusPesan(itemPesan.getId());
                                     }
                                 }
-                            }
+                            }*/
                             pesanAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -923,13 +925,13 @@ public class AntrianPesanFragment extends Fragment {
                                     dataPesan.set(i, itemPesan);
                                 }
                             }
-                            for (ItemPesan itemPesan : dataPesan) {
+                            /*for (ItemPesan itemPesan : dataPesan) {
                                 if (!TextUtils.isEmpty(itemPesan.getError_again())) {
                                     if (Integer.parseInt(itemPesan.getError_again()) > maxTryAgain) {
                                         hapusPesan(itemPesan.getId());
                                     }
                                 }
-                            }
+                            }*/
                             pesanAdapter.notifyDataSetChanged();
                         } catch (Exception ex) {
                             ex.printStackTrace();
