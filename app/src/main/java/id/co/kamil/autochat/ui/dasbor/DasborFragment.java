@@ -189,7 +189,6 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-            updateStatusBulkSender();
         }
     }
 
@@ -345,6 +344,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
                 userDetail.get(KEY_LASTNAME)
         ));
 
+        updateStatusBulkSender();
 
         switchAksesibilitas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
