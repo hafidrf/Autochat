@@ -50,8 +50,8 @@ import java.util.Map;
 
 import id.co.kamil.autochat.LoginActivity;
 import id.co.kamil.autochat.R;
-import id.co.kamil.autochat.adapter.AdapterGrup;
-import id.co.kamil.autochat.adapter.ItemGrup;
+import id.co.kamil.autochat.adapter.AdapterGrupNew;
+import id.co.kamil.autochat.adapter.ItemGrupNew;
 import id.co.kamil.autochat.utils.SessionManager;
 
 import static android.app.Activity.RESULT_OK;
@@ -77,8 +77,8 @@ public class GrupAutoReplyFragment extends Fragment {
     private static final String TAG = "GrupAutoReplyFragment";
     private EditText edtCari;
     private ListView listGrup;
-    private List<ItemGrup> dataGrup = new ArrayList<>();
-    private AdapterGrup grupAdapter;
+    private List<ItemGrupNew> dataGrup = new ArrayList<>();
+    private AdapterGrupNew grupAdapter;
     private Menu menuTop;
     private SessionManager session;
     private HashMap<String, String> userDetail;
@@ -221,8 +221,7 @@ public class GrupAutoReplyFragment extends Fragment {
                             final String id = data.getJSONObject(i).getString("id");
                             final String name = data.getJSONObject(i).getString("name");
                             final String description = data.getJSONObject(i).getString("description");
-                            final String total_member = data.getJSONObject(i).getString("total_member");
-                            dataGrup.add(new ItemGrup(id, name, description, total_member, data.getJSONObject(i)));
+                            dataGrup.add(new ItemGrupNew(id, name, description, data.getJSONObject(i)));
                         }
                     } else {
                         showError(true, message, false);
@@ -308,7 +307,7 @@ public class GrupAutoReplyFragment extends Fragment {
     }
 
     private void displayGrup() {
-        grupAdapter = new AdapterGrup(dataGrup, getContext());
+        grupAdapter = new AdapterGrupNew(dataGrup, getContext());
         listGrup.setAdapter(grupAdapter);
         adapterInstance = true;
     }
@@ -327,7 +326,7 @@ public class GrupAutoReplyFragment extends Fragment {
                 menuTop.findItem(R.id.actEdit).setVisible(false);
                 menuTop.findItem(R.id.actTambah).setVisible(false);
                 for (int i = 0; i < dataGrup.size(); i++) {
-                    ItemGrup ikontak = dataGrup.get(i);
+                    ItemGrupNew ikontak = dataGrup.get(i);
                     ikontak.setChkvisible(!ikontak.isChkvisible());
                     dataGrup.set(i, ikontak);
                 }
@@ -356,7 +355,7 @@ public class GrupAutoReplyFragment extends Fragment {
 
         } else if (item.getItemId() == R.id.actSemua) {
             for (int i = 0; i < dataGrup.size(); i++) {
-                ItemGrup ikontak = dataGrup.get(i);
+                ItemGrupNew ikontak = dataGrup.get(i);
                 ikontak.setCheckbox(true);
                 dataGrup.set(i, ikontak);
             }
@@ -367,7 +366,7 @@ public class GrupAutoReplyFragment extends Fragment {
 
     private void listDefault() {
         for (int i = 0; i < dataGrup.size(); i++) {
-            ItemGrup ikontak = dataGrup.get(i);
+            ItemGrupNew ikontak = dataGrup.get(i);
             ikontak.setCheckbox(false);
             ikontak.setChkvisible(false);
             dataGrup.set(i, ikontak);

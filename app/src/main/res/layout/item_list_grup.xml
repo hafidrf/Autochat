@@ -23,7 +23,6 @@
         android:fontFamily="@font/font"/>
     <TextView
         android:id="@+id/member"
-        android:text="20"
         android:layout_weight="1"
         android:gravity="center"
         android:layout_marginLeft="10dp"
@@ -34,7 +33,6 @@
         android:fontFamily="@font/font"/>
     <TextView
         android:id="@+id/id"
-        android:text="2562"
         android:layout_weight="1"
         android:textAlignment="textEnd"
         android:layout_marginRight="20dp"

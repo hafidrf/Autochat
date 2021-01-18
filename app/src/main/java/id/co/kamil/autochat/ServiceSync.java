@@ -109,7 +109,7 @@ import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
 //import static id.co.kamil.autochat.utils.SharPref.BULK_SENDER_ON_SCREEN;
 //import static id.co.kamil.autochat.utils.SharPref.DELAY_BULK_SENDER;
-import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
+//import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 //import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
 //import static id.co.kamil.autochat.utils.SharPref.STATUS_ERROR_TRY_AGAIN;
@@ -124,7 +124,7 @@ public class ServiceSync extends Service {
     private static final String ANDROID_CHANNEL_ID = "id.co.kamil.autochat.ForegroundChannel";
     private static final int ANDROID_FOREGROUND_ID = 3939;
     private static final String TAG = "ServiceSync";
-    public static final String ID_SERVICE_WA = "BulkSender";
+    //public static final String ID_SERVICE_WA = "BulkSender";
     private static final String ID_SERVICE_SYNC = "Sync";
     int mStartMode; // indicates how to behave if the service is killed
     IBinder mBinder; // interface for clients that bind
@@ -311,7 +311,7 @@ public class ServiceSync extends Service {
                         Log.e(TAG, "childRemoved:" + dataSnapshot.toString());
                         //dbHelper = new DBHelper(getApplicationContext());
                         String id = dataSnapshot.getKey();
-                        deleteArrayListFirebaseAntrian(id);
+                      //  deleteArrayListFirebaseAntrian(id);
                         //dbHelper.deleteOutboxById(id);
 
                     } catch (Exception e) {
@@ -348,7 +348,13 @@ public class ServiceSync extends Service {
         super.onLowMemory();
     }
 
-    private boolean deleteArrayListFirebaseAntrian(String id) {
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    /*private boolean deleteArrayListFirebaseAntrian(String id) {
         try {
             for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                 String[] str = dataAntrianPesanFirebase.get(i);
@@ -368,7 +374,7 @@ public class ServiceSync extends Service {
             e.printStackTrace();
         }
         return false;
-    }
+    }*/
 //    private void updateContact(Kontak itemKontak){
 //        mKontakReference.setValue(itemKontak);
 //    }
@@ -424,7 +430,7 @@ public class ServiceSync extends Service {
                             } else if (position == 2) {
                                 syncAutoreply();
                             } else if (position == 3) {
-                               // syncKamus();
+                                // syncKamus();
                             } else if (position == 4) {
 //                                syncTemplatePromosi();
                                 //syncKontakWabot();
@@ -1430,7 +1436,7 @@ public class ServiceSync extends Service {
         return df.format(c);
     }
 
-    private void sendWA() {
+    /*private void sendWA() {
         //ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
 
         // Initializing a new file
@@ -1451,7 +1457,7 @@ public class ServiceSync extends Service {
         if (!session.isLoggedIn()) {
             startWASender();
             return;
-        }*/
+        }
         is_send = true;
         final List<String[]> antrianPesan = getAntrianPesan();
         Log.d(TAG,"antrian : " +antrianPesan.toString());
@@ -1459,7 +1465,7 @@ public class ServiceSync extends Service {
         dbHelper.insertLog(created, ID_SERVICE_WA, "Sedang memeriksa antrian pesan", "normal", user_id);
         if (antrianPesan.size() > 0) {
 
-           // String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
+            // String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
            /* boolean status_prefTryagain = sharePref.getSessionBool(STATUS_ERROR_TRY_AGAIN);
             if (TextUtils.isEmpty(prefTryagain)) {
 //                prefTryagain = "5";
@@ -1468,7 +1474,7 @@ public class ServiceSync extends Service {
 //                prefTryagain = "5";
                 prefTryagain = "1";
             }*/
-            Log.d(TAG,"INSTALLED OR NOT :"+sharePref.getSessionStr(SELECTED_WHATSAPP));
+            /*Log.d(TAG,"INSTALLED OR NOT :"+sharePref.getSessionStr(SELECTED_WHATSAPP));
             if (appInstalledOrNot(sharePref.getSessionStr(SELECTED_WHATSAPP))) {
                 String id = antrianPesan.get(0)[0];
                 String phoneNumber = antrianPesan.get(0)[1];
@@ -1494,8 +1500,8 @@ public class ServiceSync extends Service {
                             startWASender();
                             return;
                         }
-                    }*/
-                    fOutboxRef.child(id).child("error_again").setValue(Integer.parseInt(index_order) + 1);
+                    }
+                    fOutboxRef.//child(id).child("error_again").setValue(Integer.parseInt(index_order) + 1);
                 }
                 Log.i(TAG, "send message...");
                 Log.i(TAG, "phone : " + phoneNumber);
@@ -1509,7 +1515,7 @@ public class ServiceSync extends Service {
                 dbHelper.insertLog(created, ID_SERVICE_WA, "Persiapan Kirim Pesan ke " + phoneNumber + ", isi Pesan : " + bodyLog, "normal", user_id);
                 Log.e(TAG, "ImageHash:" + image_hash);
                 Log.e(TAG, "ImageHUrl:" + image_url);
-               // WASendService.setID(id);
+                // WASendService.setID(id);
 
                 if (!(session.getValue("OLD_PHONE").toString().equals(phoneNumber) && session.getValue("OLD_MESSAGE").toString().equals(bodyMessage)) && (TextUtils.isEmpty(image_hash) || image_hash.equals("null")) && (TextUtils.isEmpty(image_url) || image_url.equals("null"))) {
 //                    Intent sendIntent = new Intent();
@@ -1590,7 +1596,7 @@ public class ServiceSync extends Service {
                 }
             }
         } else {
-           // sharePref.createSession(STATUS_BULK_SENDING, false);
+            // sharePref.createSession(STATUS_BULK_SENDING, false);
             dbHelper.insertLog(created, ID_SERVICE_WA, "Tidak ada antrian pesan", "normal", user_id);
             //dbHelper.updateDBVersion("0");
             Log.e(TAG, "tidak ada pesan antrian");
@@ -1598,7 +1604,7 @@ public class ServiceSync extends Service {
         }
         is_send = false;
         //startWASender();
-    }
+    }*/
     private static final Intent[] POWERMANAGER_INTENTS = {
             new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
             new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
@@ -1662,13 +1668,13 @@ public class ServiceSync extends Service {
             idMessage = id;
         }
 
-        protected void onPreExecute() {
+        /*protected void onPreExecute() {
             // Display the progress dialog on async task start
             String created = getTgl();
             dbHelper.lockOutboxById(idMessage);
             dbHelper.insertLog(created, ID_SERVICE_WA, "Sedang persiapan download gambar pesan..", "normal", user_id);
             //mProgressDialog.show();
-        }
+        }*/
 
         // Do the task in background/non UI thread
         protected Bitmap doInBackground(URL... urls) {
@@ -1685,7 +1691,7 @@ public class ServiceSync extends Service {
                 connection.connect();
 
                 // Get the input stream from http url connection
-                dbHelper.insertLog(created, ID_SERVICE_WA, "Sedang download gambar pesan..", "normal", user_id);
+                //dbHelper.insertLog(created, ID_SERVICE_WA, "Sedang download gambar pesan..", "normal", user_id);
                 InputStream inputStream = connection.getInputStream();
                 /*
                     BufferedInputStream
@@ -1730,7 +1736,7 @@ public class ServiceSync extends Service {
         }
 
         // When all async task done
-        protected void onPostExecute(Bitmap result) {
+        /*protected void onPostExecute(Bitmap result) {
             String created = getTgl();
             String image_url = url.toString();
             // Hide the progress dialog
@@ -1764,58 +1770,58 @@ public class ServiceSync extends Service {
                 //Snackbar.make(mCLayout,"Error",Snackbar.LENGTH_LONG).show();
             }
         }
-    }
+    }*/
 
-    // Custom method to convert string to url
-    protected URL stringToURL(String urlString) {
-        try {
-            return new URL(urlString);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // Custom method to save a bitmap into internal storage
-    protected Uri saveImageToInternalStorage(Bitmap bitmap, String filename) {
-        // Initialize ContextWrapper
-        ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
-
-        // Initializing a new file
-        // The bellow line return a directory in internal storage
-        File file = wrapper.getDir("Images", MODE_PRIVATE);
-
-        // Create a file to save the image
-        file = new File(file, filename + ".jpg");
-
-        try {
-            // Initialize a new OutputStream
-            OutputStream stream = null;
-
-            // If the output file exists, it can be replaced or appended to it
-            stream = new FileOutputStream(file);
-
-            // Compress the bitmap
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-
-            // Flushes the stream
-            stream.flush();
-
-            // Closes the stream
-            stream.close();
-
-        } catch (IOException e) // Catch the exception
-        {
-            e.printStackTrace();
+        // Custom method to convert string to url
+        protected URL stringToURL(String urlString) {
+            try {
+                return new URL(urlString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
-        // Parse the gallery image url to uri
+        // Custom method to save a bitmap into internal storage
+        protected Uri saveImageToInternalStorage(Bitmap bitmap, String filename) {
+            // Initialize ContextWrapper
+            ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
 
-        // Return the saved image Uri
-        return Uri.parse(file.getAbsolutePath());
-    }
+            // Initializing a new file
+            // The bellow line return a directory in internal storage
+            File file = wrapper.getDir("Images", MODE_PRIVATE);
 
-    public static File savebitmap(Bitmap bmp) throws IOException {
+            // Create a file to save the image
+            file = new File(file, filename + ".jpg");
+
+            try {
+                // Initialize a new OutputStream
+                OutputStream stream = null;
+
+                // If the output file exists, it can be replaced or appended to it
+                stream = new FileOutputStream(file);
+
+                // Compress the bitmap
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+                // Flushes the stream
+                stream.flush();
+
+                // Closes the stream
+                stream.close();
+
+            } catch (IOException e) // Catch the exception
+            {
+                e.printStackTrace();
+            }
+
+            // Parse the gallery image url to uri
+
+            // Return the saved image Uri
+            return Uri.parse(file.getAbsolutePath());
+        }
+
+    /*public static File savebitmap(Bitmap bmp) throws IOException {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
@@ -1841,9 +1847,9 @@ public class ServiceSync extends Service {
             app_installed = false;
         }
         return app_installed;
-    }
+    }*/
 
-    private void uploadDataOutbox() {
+    /*private void uploadDataOutbox() {
         final String created = getTgl();
         // Upload data outbox yg sudah berhasil kirim
         dbHelper = new DBHelper(this);
@@ -1942,41 +1948,18 @@ public class ServiceSync extends Service {
         //RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         //jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
-       // startUploadOutbox();
-    }
+        // startUploadOutbox();
+    }*/
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        // A client is binding to the service with bindService()
-        return mBinder;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        // All clients have unbound with unbindService()
-        return mAllowRebind;
-    }
-
-    @Override
-    public void onRebind(Intent intent) {
-        // A client is binding to the service with bindService(),
-        // after onUnbind() has already been called
-    }
-
-    @Override
-    public void onDestroy() {
-        // The service is no longer used and is being destroyed
-        //layar_nyala = false;
-    }
-    private boolean isServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if("id.co.kamil.autochat".equals(service.service.getClassName())) {
-                return true;
+        private boolean isServiceRunning() {
+            ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if ("id.co.kamil.autochat".equals(service.service.getClassName())) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
+
     }
-
-
 }

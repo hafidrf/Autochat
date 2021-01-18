@@ -164,7 +164,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             switchScreenAlwaysOn, switchEnableForegroundService;
     private Switch switchkeyboard;
     private boolean status_aksesibilitas;
-    //private Spinner typeWhatsapp;
+    private Spinner typeWhatsapp;
     private Button btnPengaturanKeyboard;
     private Button btnPengaturanAutoReply;
     private boolean status_keyboard;
@@ -216,7 +216,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         btnPengaturanKeyboard = (Button) view.findViewById(R.id.btnPengaturanKeyboard);
         btnPengaturanAutoReply = (Button) view.findViewById(R.id.btnPengaturanAutoReply);
         btnSingkronisasi = (Button) view.findViewById(R.id.btnSingkronisasi);
-        //typeWhatsapp = (Spinner) view.findViewById(R.id.selectedTypeWhatsapp);
+        typeWhatsapp = (Spinner) view.findViewById(R.id.selectedTypeWhatsapp);
         sharePref = new SharPref(getContext());
         session = new SessionManager(getContext());
         final String[] dataType = {"Personal","Business"};
@@ -224,7 +224,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
         final String created = getTgl();
         Log.d(TAG,"SELECTED WHATSAPP : "+sharePref.getSessionStr(SELECTED_WHATSAPP));
         ArrayAdapter adapterTypeWhatsapp = new ArrayAdapter(getContext(),R.layout.support_simple_spinner_dropdown_item,dataType);
-        /*typeWhatsapp.setAdapter(adapterTypeWhatsapp);
+        typeWhatsapp.setAdapter(adapterTypeWhatsapp);
         typeWhatsapp.setSelection(adapterTypeWhatsapp.getPosition(sharePref.getSessionStr(SELECTED_WHATSAPP_TYPE)));
         typeWhatsapp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -239,7 +239,7 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });*/
+        });
 
         btnPengaturan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -476,6 +476,8 @@ public class DasborFragment extends Fragment  implements  ViewTreeObserver.OnScr
     public void onResume() {
         super.onResume();
         updateStatusBulkSender();
+        loadDashboard();
+
     }
 
     private boolean isAccessibilityEnabled() {

@@ -95,6 +95,7 @@ import static id.co.kamil.autochat.utils.SharPref.LINK_ECOURSE;
 import static id.co.kamil.autochat.utils.SharPref.LINK_MARKETING_TOOL;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TIMWABOT;
 import static id.co.kamil.autochat.utils.SharPref.LINK_TUTORIAL;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FLOATING_WIDGET;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_FOREGROUND_SERVICE;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_SCREEN_ALWAYS_ON;
@@ -332,12 +333,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, MyNotifiService.class);
             startService(intent);
             Intent intent1 = new Intent(MainActivity.this, ServiceSyncNew.class);
-            Intent intent2 = new Intent(MainActivity.this, ServiceSync.class);
+            //Intent intent2 = new Intent(MainActivity.this, ServiceSync.class);
             boolean foreground_service = sharePref.getSessionBool(STATUS_FOREGROUND_SERVICE);
             intent1.putExtra(SharPref.STATUS_FOREGROUND_SERVICE, foreground_service);
             intent1.putExtra(SharPref.STATUS_SYNC_SERVICE, true);
+            //intent1.putExtra(SharPref.SELECTED_WHATSAPP_TYPE, SELECTED_WHATSAPP);
             startService(intent1);
-            startService(intent2);
+            //startService(intent2);
             hidePdialog();
             //System.exit(0);
 

@@ -1,2 +1,1 @@
-# Parse-server intergation Wabot
-
+Wabot update 1.24 last final

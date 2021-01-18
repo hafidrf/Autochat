@@ -19,6 +19,7 @@ import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
@@ -44,23 +45,22 @@ import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_SYNC_DB_OUTBOX;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
-import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
+
 
 public class WASendService extends AccessibilityService {
     private static String idMessage,created;
-    private static String typeApp;
     private static final String TAG = "WASendService";
     private static final String ID_SERVICE_SYNC = "Sync";
-    private static final String waTextFieldID = "com.whatsapp.w4b:id/entry";
     private static String waButtonSendID = "com.whatsapp.w4b:id/send";
     private static String waBackButtonID = "com.whatsapp.w4b:id/back";
     private DBHelper dbHelper;
     private String user_id;
 
 
-    public static void setID(String id, String tgl) {
+    public static void setID(String id,String tgl) {
         idMessage = id;
         created=tgl;
         if(id==null){
@@ -69,7 +69,6 @@ public class WASendService extends AccessibilityService {
         Log.e(TAG,"SetID:"+id);
         is_send=true;
     }
-
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -121,7 +120,7 @@ public class WASendService extends AccessibilityService {
             if (buttonSend == null) {
                 if (backButton == null) {
                     dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + null + " dan ID Button Back : " + null, "warning", user_id);
-                    Log.e(TAG, "button Send : " + null +idMessage);
+                    Log.e(TAG, "button Send : " +idMessage);
                 } else if (statusSending) {
                     backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 } else {
@@ -135,7 +134,7 @@ public class WASendService extends AccessibilityService {
                 });
             }else {
                 buttonSend.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                Log.e(TAG, "button Send : " + buttonSend+idMessage);
+                Log.e(TAG, "button Send : " +idMessage);
                 dbHelper = new DBHelper(this);
                 Date c = Calendar.getInstance().getTime();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -202,15 +201,21 @@ public class WASendService extends AccessibilityService {
         return node;
     }
     private void saveParseOutbox(final String user_id) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Outbox");
         query.whereEqualTo("KeyCust",user_id);
+
         // Or use the the non-blocking method countInBackground method with a CountCallback
         query.countInBackground(new CountCallback() {
             public void done(int count, ParseException e) {
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                final String tglSent = df.format(c);
                 if (e == null) {
                     if(count<=0){
                         ParseObject entity = new ParseObject("OutboxMessage");
-                        entity.put("KeyCust", user_id);
+
+                        //entity.put("KeyCust", user_id);
+                        entity.put("sent", tglSent);
                         // Saves the new object.
                         // Notice that the SaveCallback is totally optional!
                         entity.saveInBackground(new SaveCallback() {
@@ -226,6 +231,11 @@ public class WASendService extends AccessibilityService {
                 }
             }
         });
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
     }
 
     @Override

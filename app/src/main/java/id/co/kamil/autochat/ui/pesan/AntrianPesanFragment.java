@@ -894,13 +894,13 @@ public class AntrianPesanFragment extends Fragment {
                                     dataPesan.set(i, itemPesan);
                                 }
                             }
-                            /*for (ItemPesan itemPesan : dataPesan) {
+                            for (ItemPesan itemPesan : dataPesan) {
                                 if (!TextUtils.isEmpty(itemPesan.getError_again())) {
                                     if (Integer.parseInt(itemPesan.getError_again()) > maxTryAgain) {
                                         hapusPesan(itemPesan.getId());
                                     }
                                 }
-                            }*/
+                            }
                             pesanAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -925,13 +925,13 @@ public class AntrianPesanFragment extends Fragment {
                                     dataPesan.set(i, itemPesan);
                                 }
                             }
-                            /*for (ItemPesan itemPesan : dataPesan) {
+                            for (ItemPesan itemPesan : dataPesan) {
                                 if (!TextUtils.isEmpty(itemPesan.getError_again())) {
                                     if (Integer.parseInt(itemPesan.getError_again()) > maxTryAgain) {
                                         hapusPesan(itemPesan.getId());
                                     }
                                 }
-                            }*/
+                            }
                             pesanAdapter.notifyDataSetChanged();
                         } catch (Exception ex) {
                             ex.printStackTrace();

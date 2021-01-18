@@ -1,7 +1,6 @@
 package id.co.kamil.autochat;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -29,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -78,17 +78,18 @@ import id.co.kamil.autochat.database.DBHelper;
 import id.co.kamil.autochat.utils.SessionManager;
 import id.co.kamil.autochat.utils.SharPref;
 
+import static id.co.kamil.autochat.MainActivity.MAIN_RECEIVER;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_POST_HAPUS_PESAN_ANTRIAN;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CHILD;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
-import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.SharPref.DELAY_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDER;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_BULK_SENDING;
 import static id.co.kamil.autochat.utils.SharPref.STATUS_ERROR_TRY_AGAIN;
 import static id.co.kamil.autochat.utils.SharPref.TRY_AGAIN_BULKSENDER;
+import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.Utils.SaveImage;
 import static id.co.kamil.autochat.utils.Utils.fileExist;
 import static id.co.kamil.autochat.utils.Utils.getDirWabot;
@@ -99,12 +100,15 @@ public class ServiceSyncNew extends Service {
     private static final int ANDROID_FOREGROUND_ID = 3940;
     private static final String TAG = "ServiceSyncNew" ;
     public static final String ID_SERVICE_WA = "BulkSender";
+    int mStartMode;
     private DBHelper dbHelper;
     private SharPref sharePref;
+
     private String token;
     private boolean is_parent;
     private SessionManager session;
     private boolean is_synchronizing = false;
+    private boolean isMainSynced = false;
     public static boolean is_send = false;
 
 
@@ -270,15 +274,16 @@ public class ServiceSyncNew extends Service {
         dbHelper.insertLog(created, ID_SERVICE_WA, "Sedang memeriksa antrian pesan", "normal", user_id);
         if (antrianPesan.size() > 0) {
 
-            /*String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
+            String prefTryagain = sharePref.getSessionStr(TRY_AGAIN_BULKSENDER);
             boolean status_prefTryagain = sharePref.getSessionBool(STATUS_ERROR_TRY_AGAIN);
             if (prefTryagain.equals("")) {
                 prefTryagain = "5";
             } else if (Integer.parseInt(prefTryagain) < 5) {
                 prefTryagain = "5";
-            }*/
+            }
+
             Log.d(TAG,"INSTALLED OR NOT :"+sharePref.getSessionStr(SELECTED_WHATSAPP));
-            if (cekWAInstalledOrNot(sharePref.getSessionStr(SELECTED_WHATSAPP))) {
+            if (appInstalledOrNot(sharePref.getSessionStr(SELECTED_WHATSAPP))) {
                 final String id = antrianPesan.get(0)[0];
                 final String phoneNumber = antrianPesan.get(0)[1];
                 final String bodyMessage = antrianPesan.get(0)[2];
@@ -293,7 +298,7 @@ public class ServiceSyncNew extends Service {
                         }
                     });
                 } else {
-                    /*if (status_prefTryagain && (Integer.parseInt(index_order) >= Integer.parseInt(prefTryagain)) ) {
+                    if (status_prefTryagain && (Integer.parseInt(index_order) >= Integer.parseInt(prefTryagain)) ) {
                         hapusPesan(new hapusDoneListener() {
                             @Override
                             public void done() {
@@ -302,7 +307,7 @@ public class ServiceSyncNew extends Service {
                             }
                         });
                         return;
-                    }*/
+                    }
                     int idxOrder=Integer.parseInt(index_order) + 1;
                     updateParseOutboxMessage(id, "error_again", String.valueOf(idxOrder), new updateParseInterface() {
                         @Override
@@ -409,6 +414,15 @@ public class ServiceSyncNew extends Service {
         requestQueue.add(jsonObjectRequest);
 
     }
+    private void mainSynced() {
+        if (!isMainSynced) return;
+
+        Intent pushNotification = new Intent(MAIN_RECEIVER);
+        pushNotification.putExtra("action", "mainScreenSynced");
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
+
+        isMainSynced = false;
+    }
     protected URL stringToURL(String urlString) {
         try {
             return new URL(urlString);
@@ -436,9 +450,9 @@ public class ServiceSyncNew extends Service {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setPackage(sharePref.getSessionStr(SELECTED_WHATSAPP));
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.setData(Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(bodyMessage, "UTF-8")));
+                Log.d(TAG,"Start Activity execute, data:"+Uri.parse("http://api.whatsapp.com/send?phone=" + toNumber + "&text=" + URLEncoder.encode(bodyMessage, "UTF-8")).toString());
                 startActivity(intent);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -450,21 +464,27 @@ public class ServiceSyncNew extends Service {
                 String sha1 = sha1(image_url) + ".jpg";
                 final String path = getDirWabot("bulk") + "/" + sha1;
                 if (fileExist(getApplicationContext(), path)) {
-                    updateParseOutboxMessage(id, "image_hash", path, () -> {
-                        for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
-                            String[] str = dataAntrianPesanFirebase.get(i);
-                            if (str[i].equals(id)) {
-                                dataAntrianPesanFirebase.set(i, new String[]{id, str[1], str[2], path, str[4], str[5]});
+                    updateParseOutboxMessage(id, "image_hash", path, new updateParseInterface() {
+                        @Override
+                        public void success() {
+                            for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
+                                String[] str = dataAntrianPesanFirebase.get(i);
+                                if (str[i].equals(id)) {
+                                    dataAntrianPesanFirebase.set(i, new String[]{id, str[1], str[2], path, str[4], str[5]});
+                                }
                             }
+                            is_send = false;
+                            startWASender(user_id);
                         }
-                        is_send = false;
-                        startWASender(user_id);
                     });
                 } else {
                     ServiceSyncNew.DownloadTask task = new ServiceSyncNew.DownloadTask();
-                    task.setParam(id, user_id, () -> {
-                        is_send = false;
-                        startWASender(user_id);
+                    task.setParam(id, user_id, new DownLoadListener() {
+                        @Override
+                        public void done() {
+                            is_send = false;
+                            startWASender(user_id);
+                        }
                     });
                     task.execute(stringToURL(image_url));
                 }
@@ -493,7 +513,6 @@ public class ServiceSyncNew extends Service {
             Log.e(TAG, "Send Image");
             //kirim ke whatsapp
             startWASender(user_id);
-            System.exit(0);
         }
     }
 
@@ -578,11 +597,11 @@ public class ServiceSyncNew extends Service {
             }
         }
     }
-    private boolean cekWAInstalledOrNot(String uri) {
+    private boolean appInstalledOrNot(String sessionStr) {
         PackageManager pm = getPackageManager();
         boolean app_installed;
         try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
             app_installed = true;
         } catch (PackageManager.NameNotFoundException e) {
             app_installed = false;
@@ -613,7 +632,13 @@ public class ServiceSyncNew extends Service {
         } else {
             stopForeground(true);
         }
-        return super.onStartCommand(intent, flags, startId);
+        isMainSynced = intent.getBooleanExtra(SharPref.STATUS_SYNC_SERVICE, false);
+        return mStartMode;
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
     }
 
     @Nullable
@@ -725,13 +750,13 @@ public class ServiceSyncNew extends Service {
                         try {
                             Log.e(TAG, "childChanged:" + object.get("KeyCust") + ", String : " + object.get("idmessage"));
                             //dbHelper = new DBHelper(getApplicationContext());
-                            String id = object.get("idmessage") + "";
-                            String destination_number = object.get("destination_number") + "";
-                            String message = object.get("message") + "";
-                            String image_hash = object.get("image_hash") + "";
-                            String image_url = object.get("image_url") + "";
-                            String index_order = object.get("error_again") + "";
-                            String sent = object.get("sent") + "";
+                            String id = object.get("idmessage")+"";
+                            String destination_number = object.get("destination_number")+"";
+                            String message = object.get("message")+"";
+                            String image_hash = object.get("image_hash")+"";
+                            String image_url = object.get("image_url")+"";
+                            String index_order = object.get("error_again")+"";
+                            String sent = object.get("sent")+"";
 
                             String sha1 = sha1(image_url) + ".jpg";
                             String path = getDirWabot("bulk") + "/" + sha1;
@@ -757,15 +782,16 @@ public class ServiceSyncNew extends Service {
                     }
                 });
             }
-        }).handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
+        });
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
             @Override
             public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     public void run() {
                         try {
-                            Log.e(TAG, "childRemoved:" + object.get("idmessage") + "");
-                            String id = object.get("idmessage") + "";
+                            Log.e(TAG, "childremove:" + object.get("KeyCust") + ", String : " + object.get("idmessage"));
+                            String id = object.get("idmessage")+"";
                             deleteArrayListFirebaseAntrian(id);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -798,14 +824,4 @@ public class ServiceSyncNew extends Service {
             e.printStackTrace();
         }
     }
-    private boolean isServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if("id.co.kamil.autochat".equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

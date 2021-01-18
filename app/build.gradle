@@ -15,8 +15,8 @@ android {
         applicationId "id.co.kamil.autochat"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 27
-        versionName "1.18"
+        versionCode 37
+        versionName "1.25"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.sign
     }

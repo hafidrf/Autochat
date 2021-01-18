@@ -45,6 +45,10 @@
             android:label="autochat sync"
             android:priority="3000"/>
         <service
+            android:name=".ServiceSync"
+            android:label="autochat sync"
+            android:priority="000"/>
+        <service
             android:name=".FloatingViewService"
             android:enabled="true"
             android:exported="false" />
@@ -119,10 +123,7 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <service
-            android:name=".ServiceSync"
-            android:label="autochat sync"
-            android:priority="1000" />
+
         <service
             android:name=".bulksender.WASendService"
             android:label="@string/accessibility_service_label"
@@ -195,13 +196,16 @@
                     tools:node="remove" />
             </intent-filter>
         </receiver> <!-- Used for install referrer tracking -->
-        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService" />
-        <service android:name=".service.BackgroundLocationService" />
+        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService"
+            tools:ignore="MissingClass" />
+        <service android:name=".service.BackgroundLocationService"
+            tools:ignore="MissingClass" />
 
         <receiver
             android:name="com.google.android.gms.tagmanager.InstallReferrerReceiver"
             android:exported="true"
-            android:permission="android.permission.INSTALL_PACKAGES">
+            android:permission="android.permission.INSTALL_PACKAGES"
+            tools:ignore="MissingClass">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
