@@ -45,10 +45,6 @@
             android:label="autochat sync"
             android:priority="3000"/>
         <service
-            android:name=".ServiceSync"
-            android:label="autochat sync"
-            android:priority="000"/>
-        <service
             android:name=".FloatingViewService"
             android:enabled="true"
             android:exported="false" />

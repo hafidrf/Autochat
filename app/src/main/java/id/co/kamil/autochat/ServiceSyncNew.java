@@ -1,6 +1,7 @@
 package id.co.kamil.autochat;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -30,6 +31,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -81,6 +83,7 @@ import id.co.kamil.autochat.utils.SharPref;
 import static id.co.kamil.autochat.MainActivity.MAIN_RECEIVER;
 import static id.co.kamil.autochat.utils.API.SOCKET_TIMEOUT;
 import static id.co.kamil.autochat.utils.API.URL_POST_HAPUS_PESAN_ANTRIAN;
+import static id.co.kamil.autochat.utils.API.URL_SYNC_DB2;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CHILD;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_CUST_ID;
 import static id.co.kamil.autochat.utils.SessionManager.KEY_TOKEN;
@@ -91,6 +94,7 @@ import static id.co.kamil.autochat.utils.SharPref.STATUS_ERROR_TRY_AGAIN;
 import static id.co.kamil.autochat.utils.SharPref.TRY_AGAIN_BULKSENDER;
 import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 import static id.co.kamil.autochat.utils.Utils.SaveImage;
+import static id.co.kamil.autochat.utils.Utils.errorResponseString;
 import static id.co.kamil.autochat.utils.Utils.fileExist;
 import static id.co.kamil.autochat.utils.Utils.getDirWabot;
 import static id.co.kamil.autochat.utils.Utils.sha1;
@@ -100,20 +104,22 @@ public class ServiceSyncNew extends Service {
     private static final int ANDROID_FOREGROUND_ID = 3940;
     private static final String TAG = "ServiceSyncNew" ;
     public static final String ID_SERVICE_WA = "BulkSender";
+    private static final String ID_SERVICE_SYNC = "Sync";
     int mStartMode;
+    IBinder mBinder; // interface for clients that bind
+    boolean mAllowRebind; // indicates whether onRebind should be used
     private DBHelper dbHelper;
+    private int dbVersionCode = 0;
     private SharPref sharePref;
-
+    private Handler handler;
     private String token;
     private boolean is_parent;
+    private String user_id;
     private SessionManager session;
     private boolean is_synchronizing = false;
+    private boolean is_synchronizing_db = false;
     private boolean isMainSynced = false;
     public static boolean is_send = false;
-
-
-    public ServiceSyncNew() {
-    }
 
     @Override
     public void onCreate() {
@@ -132,6 +138,7 @@ public class ServiceSyncNew extends Service {
         boolean is_child = Boolean.parseBoolean(userDetail.get(KEY_CHILD));
         is_parent = !is_child;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotificationChannel(String channelName) {
         NotificationChannel chan = new NotificationChannel(ANDROID_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
@@ -141,6 +148,59 @@ public class ServiceSyncNew extends Service {
         service.createNotificationChannel(chan);
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent.getBooleanExtra(SharPref.STATUS_FOREGROUND_SERVICE, false)) {
+            String contentText = "Running service in foreground";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                createNotificationChannel(contentText);
+                Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(contentText)
+                        .setAutoCancel(true);
+                Notification notification = builder.build();
+                startForeground(ANDROID_FOREGROUND_ID, notification);
+            } else {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(contentText)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setAutoCancel(true);
+                Notification notification = builder.build();
+                startForeground(ANDROID_FOREGROUND_ID, notification);
+            }
+        } else {
+            stopForeground(true);
+        }
+        isMainSynced = intent.getBooleanExtra(SharPref.STATUS_SYNC_SERVICE, false);
+        startTimerDB(0);
+        startWASender(user_id);
+        //startUploadOutbox();
+        return mStartMode;
+    }
+
+    private void startTimerDB(final int position) {
+        handler = new Handler();
+        handler.postDelayed(
+                new Runnable() {
+                    public void run() {
+                        if (!is_synchronizing_db) {
+                            if (position == 0) {
+                                syncKontak();
+                            } else if (position == 1) {
+                                syncAutoText();
+                            } else if (position == 2) {
+                                syncAutoreply();
+                            } else if (position == 3) {
+                                // syncKamus();
+                            } else if (position == 4) {
+//                                syncTemplatePromosi();
+                                //syncKontakWabot();
+                            }
+                        }
+                    }
+                }, 10000);
+    }
     public static void trimCache(Context context) {
         try {
             File dir = context.getCacheDir();
@@ -414,6 +474,289 @@ public class ServiceSyncNew extends Service {
         requestQueue.add(jsonObjectRequest);
 
     }
+
+    private void syncKontak() {
+        final String fieldverdb = "ver_db_kontak";
+        final String created = getTgl();
+        dbHelper = new DBHelper(this);
+        sharePref = new SharPref(this);
+        is_synchronizing_db = true;
+        refreshToken(session);
+        if (token.isEmpty() || token == null || token.equals(null)) {
+            is_synchronizing_db = false;
+            startTimerDB(1);
+            return;
+        }
+        Log.i(TAG, "sedang melakukan sinkronisasi kontak....");
+        dbHelper.insertLog(created, ID_SERVICE_SYNC, "Persiapan Singkronisasi Database ", "normal", user_id);
+        dbVersionCode = dbHelper.getVersionCodeDB2(fieldverdb);
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        final JSONObject requestBody = new JSONObject();
+        try {
+            requestBody.put("currentVersion", dbVersionCode);
+            requestBody.put("field", "kontak");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String uri = Uri.parse(URL_SYNC_DB2)
+                .buildUpon()
+                .toString();
+
+        Log.i(TAG, "body:" + requestBody);
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                is_synchronizing_db = false;
+                startTimerDB(1);
+                Log.i(TAG, "sinkronisasi selesai! Status : " + is_synchronizing);
+                try {
+                    final boolean status = response.getBoolean("status");
+                    final String message = response.getString("message");
+                    Log.i(TAG, message);
+                    Log.i(TAG, "response:" + response);
+                    if (status) {
+                        final boolean uptodate = response.getBoolean("is_uptodate");
+                        final String versionCode = response.getString("version_code");
+                        if (!uptodate) {
+                            dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + message, "normal", user_id);
+                            dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sedang melakukan singkronisasi ke DB Lokal", "normal", user_id);
+                            final JSONArray data = response.getJSONArray("data");
+
+                            dbHelper.deleteAllContact();
+                            if (data.length() > 0) {
+                                for (int i = 0; i < data.length(); i++) {
+                                    final String id = data.getJSONObject(i).getString("id");
+                                    final String phone = data.getJSONObject(i).getString("phone");
+                                    final String sapaan = data.getJSONObject(i).getString("sapaan");
+                                    final String firstname = data.getJSONObject(i).getString("firstname");
+                                    final String lastname = data.getJSONObject(i).getString("lastname");
+                                    dbHelper.insertContact(id, phone, sapaan, firstname, lastname);
+                                }
+                            }
+                        }
+                        dbHelper.updateDBVersion2(versionCode, fieldverdb);
+                    } else {
+                        dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + message, "warning", user_id);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.i(TAG, e.getMessage());
+                    dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + e.getMessage(), "danger", user_id);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, errorResponseString(error));
+                dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + errorResponseString(error), "danger", user_id);
+                Log.i(TAG, "sinkronisasi error.");
+                is_synchronizing_db = false;
+                startTimerDB(1);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> header = new HashMap<>();
+                //header.put("Content-Type","application/json");
+                //header.put("Authorization","Bearer " + token);
+                header.put("x-api-key", token);
+                return header;
+            }
+        };
+        RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void syncAutoText() {
+        final String fieldverdb = "ver_db_autotext";
+        final String created = getTgl();
+        dbHelper = new DBHelper(this);
+        sharePref = new SharPref(this);
+        is_synchronizing_db = true;
+        refreshToken(session);
+        if (TextUtils.isEmpty(token)) {
+            is_synchronizing_db = false;
+            startTimerDB(2);
+            return;
+        }
+        Log.i(TAG, "sedang melakukan sinkronisasi autotext....");
+        dbHelper.insertLog(created, ID_SERVICE_SYNC, "Persiapan Singkronisasi Database ", "normal", user_id);
+        dbVersionCode = dbHelper.getVersionCodeDB2(fieldverdb);
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        final JSONObject requestBody = new JSONObject();
+        try {
+            requestBody.put("currentVersion", dbVersionCode);
+            requestBody.put("field", "autotext");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String uri = Uri.parse(URL_SYNC_DB2)
+                .buildUpon()
+                .toString();
+
+        Log.i(TAG, "body:" + requestBody);
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                is_synchronizing_db = false;
+                startTimerDB(2);
+                Log.i(TAG, "sinkronisasi selesai! Status : " + is_synchronizing);
+                try {
+                    final boolean status = response.getBoolean("status");
+                    final String message = response.getString("message");
+                    Log.i(TAG, message);
+                    Log.i(TAG, "response:" + response);
+                    if (status) {
+                        final boolean uptodate = response.getBoolean("is_uptodate");
+                        final String versionCode = response.getString("version_code");
+                        if (!uptodate) {
+                            dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + message, "normal", user_id);
+                            dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sedang melakukan singkronisasi ke DB Lokal", "normal", user_id);
+                            final JSONArray data = response.getJSONArray("data");
+
+                            dbHelper.deleteAllAutoText();
+                            if (data.length() > 0) {
+                                for (int i = 0; i < data.length(); i++) {
+                                    final String shorcut = data.getJSONObject(i).getString("shorcut");
+                                    final String template = data.getJSONObject(i).getString("template");
+                                    dbHelper.insertAutoText(shorcut, template);
+                                }
+                            }
+                        }
+                        dbHelper.updateDBVersion2(versionCode, fieldverdb);
+                    } else {
+                        dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + message, "warning", user_id);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.i(TAG, e.getMessage());
+                    dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + e.getMessage(), "danger", user_id);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, errorResponseString(error));
+                dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + errorResponseString(error), "danger", user_id);
+                Log.i(TAG, "sinkronisasi error.");
+                is_synchronizing_db = false;
+                startTimerDB(2);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                //header.put("Content-Type","application/json");
+                //header.put("Authorization","Bearer " + token);
+                header.put("x-api-key", token);
+                return header;
+            }
+        };
+        RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void syncAutoreply() {
+        final String fieldverdb = "ver_db_autoreply";
+        final String created = getTgl();
+        dbHelper = new DBHelper(this);
+        sharePref = new SharPref(this);
+        is_synchronizing_db = true;
+        refreshToken(session);
+        if (TextUtils.isEmpty(token)) {
+            is_synchronizing_db = false;
+            startTimerDB(3);
+            return;
+        }
+        Log.i(TAG, "sedang melakukan sinkronisasi autoreply....");
+        dbHelper.insertLog(created, ID_SERVICE_SYNC, "Persiapan Singkronisasi Database ", "normal", user_id);
+        dbVersionCode = dbHelper.getVersionCodeDB2(fieldverdb);
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        final JSONObject requestBody = new JSONObject();
+        try {
+            requestBody.put("currentVersion", dbVersionCode);
+            requestBody.put("field", "autoreply");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String uri = Uri.parse(URL_SYNC_DB2)
+                .buildUpon()
+                .toString();
+
+        Log.i(TAG, "body:" + requestBody);
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, uri, requestBody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                is_synchronizing_db = false;
+                startTimerDB(3);
+                Log.i(TAG, "sinkronisasi selesai! Status : " + is_synchronizing);
+                try {
+                    Log.i(TAG, "response:" + response);
+                    final boolean status = response.getBoolean("status");
+                    final String message = response.getString("message");
+                    Log.i(TAG, message);
+                    if (status) {
+                        final boolean uptodate = response.getBoolean("is_uptodate");
+                        final String versionCode = response.getString("version_code");
+                        if (!uptodate) {
+                            dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + message, "normal", user_id);
+                            dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sedang melakukan singkronisasi ke DB Lokal", "normal", user_id);
+                            final JSONArray data = response.getJSONArray("data");
+
+                            dbHelper.deleteAllAutoReply();
+                            if (data.length() > 0) {
+                                for (int i = 0; i < data.length(); i++) {
+                                    final String keyword = data.getJSONObject(i).getString("keyword");
+                                    final String balasan = data.getJSONObject(i).getString("balasan");
+                                    dbHelper.insertAutoReply(keyword, balasan);
+                                }
+                            }
+                        }
+                        dbHelper.updateDBVersion2(versionCode, fieldverdb);
+                    } else {
+                        dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + message, "warning", user_id);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.i(TAG, e.getMessage());
+                    dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + e.getMessage(), "danger", user_id);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, errorResponseString(error));
+                dbHelper.insertLog(created, ID_SERVICE_SYNC, "Sync DB : " + errorResponseString(error), "danger", user_id);
+                Log.i(TAG, "sinkronisasi error.");
+                is_synchronizing_db = false;
+                startTimerDB(3);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                //header.put("Content-Type","application/json");
+                //header.put("Authorization","Bearer " + token);
+                header.put("x-api-key", token);
+                return header;
+            }
+        };
+        RetryPolicy policy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
+    }
+
     private void mainSynced() {
         if (!isMainSynced) return;
 
@@ -608,44 +951,37 @@ public class ServiceSyncNew extends Service {
         }
         return app_installed;
     }
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getBooleanExtra(SharPref.STATUS_FOREGROUND_SERVICE, false)) {
-            String contentText = "Running service in foreground";
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                createNotificationChannel(contentText);
-                Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
-                        .setContentTitle(getString(R.string.app_name))
-                        .setContentText(contentText)
-                        .setAutoCancel(true);
-                Notification notification = builder.build();
-                startForeground(ANDROID_FOREGROUND_ID, notification);
-            } else {
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID)
-                        .setContentTitle(getString(R.string.app_name))
-                        .setContentText(contentText)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setAutoCancel(true);
-                Notification notification = builder.build();
-                startForeground(ANDROID_FOREGROUND_ID, notification);
-            }
-        } else {
-            stopForeground(true);
-        }
-        isMainSynced = intent.getBooleanExtra(SharPref.STATUS_SYNC_SERVICE, false);
-        return mStartMode;
-    }
+
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
     }
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        // A client is binding to the service with bindService()
+        return mBinder;
     }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        // All clients have unbound with unbindService()
+        return mAllowRebind;
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        // A client is binding to the service with bindService(),
+        // after onUnbind() has already been called
+    }
+
+    @Override
+    public void onDestroy() {
+        // The service is no longer used and is being destroyed
+        //layar_nyala = false;
+    }
+
 
     private void initDataQueryParse(final String user_id){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("OutboxMessage");
@@ -823,5 +1159,17 @@ public class ServiceSyncNew extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("id.co.kamil.autochat".equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }
