@@ -115,6 +115,7 @@ public class ServiceSyncNew extends Service {
     private String token;
     private boolean is_parent;
     private String user_id;
+    private HashMap<String, String> userDetail;
     private SessionManager session;
     private boolean is_synchronizing = false;
     private boolean is_synchronizing_db = false;
@@ -129,8 +130,8 @@ public class ServiceSyncNew extends Service {
         dbHelper = new DBHelper(this);
         sharePref = new SharPref(this);
         refreshToken(session);
-        initDataQueryParse(session.getValue(KEY_CUST_ID));
         startWASender(session.getValue(KEY_CUST_ID));
+        initDataQueryParse(session.getValue(KEY_CUST_ID));
     }
     private void refreshToken(SessionManager session) {
         HashMap<String, String> userDetail = session.getUserDetails();
@@ -232,16 +233,23 @@ public class ServiceSyncNew extends Service {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         final String created = df.format(c);
 
+        session = new SessionManager(this);
+        dbHelper = new DBHelper(this);
+        sharePref = new SharPref(this);
+        refreshToken(session);
+        //initDataQueryParse(session.getValue(KEY_CUST_ID));
+        userDetail = session.getUserDetails();
+
         String config_delay_bulk = sharePref.getSessionStr(DELAY_BULK_SENDER);
         if (config_delay_bulk.equals("")) {
             config_delay_bulk = "5";
         }
-        long timerBulkSender = 3000;
+        long timerBulkSender = 5000;
         if (Integer.parseInt(config_delay_bulk) < 5) {
             config_delay_bulk = "5";
         }
         if (Integer.parseInt(config_delay_bulk) > 0) {
-            timerBulkSender = Integer.parseInt(config_delay_bulk) * 1000;
+            timerBulkSender = Integer.parseInt(config_delay_bulk) * 5000;
         }
         Handler handlerWA = new Handler();
         handlerWA.postDelayed(new Runnable() {
@@ -418,7 +426,7 @@ public class ServiceSyncNew extends Service {
                 jsonArray.put(Integer.parseInt(id));
             }
         }
-        if (jsonArray.length() <= 0) {
+        if (jsonArray.length() < 0) {
             doneListener.done();
             return;
         }
@@ -813,7 +821,7 @@ public class ServiceSyncNew extends Service {
                             for (int i = 0; i < dataAntrianPesanFirebase.size(); i++) {
                                 String[] str = dataAntrianPesanFirebase.get(i);
                                 if (str[i].equals(id)) {
-                                    dataAntrianPesanFirebase.set(i, new String[]{id, str[1], str[2], path, str[4], str[5]});
+                                    dataAntrianPesanFirebase.set(i, new String[]{id, str[1], str[2],str[3], path, str[4], str[5]});
                                 }
                             }
                             is_send = false;
@@ -940,11 +948,11 @@ public class ServiceSyncNew extends Service {
             }
         }
     }
-    private boolean appInstalledOrNot(String sessionStr) {
+    private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         boolean app_installed;
         try {
-            pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
             app_installed = true;
         } catch (PackageManager.NameNotFoundException e) {
             app_installed = false;

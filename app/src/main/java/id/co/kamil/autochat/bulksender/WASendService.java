@@ -51,11 +51,13 @@ import static id.co.kamil.autochat.utils.SharPref.SELECTED_WHATSAPP;
 
 
 public class WASendService extends AccessibilityService {
+    private static String typeApp;
     private static String idMessage,created;
     private static final String TAG = "WASendService";
     private static final String ID_SERVICE_SYNC = "Sync";
     private static String waButtonSendID = "com.whatsapp.w4b:id/send";
     private static String waBackButtonID = "com.whatsapp.w4b:id/back";
+    private static long try_again = 0;
     private DBHelper dbHelper;
     private String user_id;
 
@@ -154,10 +156,10 @@ public class WASendService extends AccessibilityService {
                                     public void done(ParseException e) {
                                         //dbHelper.updateSent(idMessage, "1", tglSent, "0");
                                         dbHelper.insertLog(tglSent, ID_SERVICE_WA, "Berhasil dikirim", "success", user_id);
-                                        if (backButton != null) {
-                                            backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                                            Log.e(TAG, "button Back : " + backButton + idMessage);
-                                        }
+                                        setID(null , null);
+                                        try_again = 0;
+
+                                        backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                                         updateSentPesan(idMessage,created, new SentPesanListener() {
                                             @Override
                                             public void done() {

@@ -93,7 +93,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:text="PREMIUM"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="@color/md_amber_600"
                             android:textStyle="bold" />
@@ -253,21 +252,26 @@
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:paddingLeft="15dp"
-                                android:paddingRight="15dp"
-                                android:visibility="gone">
+                                android:paddingRight="15dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="TIPE WHASTAPP"
-                                    android:visibility="gone"
                                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                                     android:textColor="#222" />
+
+                                <View
+                                    android:id="@+id/view"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
                                 <Spinner
                                     android:id="@+id/selectedTypeWhatsapp"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:visibility="gone"/>
+                                    android:layout_weight="1"/>
                             </LinearLayout>
 
                             <LinearLayout
