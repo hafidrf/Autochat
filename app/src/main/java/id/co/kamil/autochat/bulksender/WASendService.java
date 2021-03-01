@@ -123,10 +123,13 @@ public class WASendService extends AccessibilityService {
                 if (backButton == null) {
                     dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + null + " dan ID Button Back : " + null, "warning", user_id);
                     Log.e(TAG, "button Send : " +idMessage);
+                    System.out.println("cek 1");
                 } else if (statusSending) {
                     backButton.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    System.out.println("cek 2");
                 } else {
                     dbHelper.insertLog(created, ID_SERVICE_WA, "ID Button Send : " + null, "warning", user_id);
+                    System.out.println("cek 3");
                 }
                 updateSentPesan(idMessage,created, new SentPesanListener() {
                     @Override
@@ -156,6 +159,7 @@ public class WASendService extends AccessibilityService {
                                     public void done(ParseException e) {
                                         //dbHelper.updateSent(idMessage, "1", tglSent, "0");
                                         dbHelper.insertLog(tglSent, ID_SERVICE_WA, "Berhasil dikirim", "success", user_id);
+                                        System.out.println("cek 4");
                                         setID(null , null);
                                         try_again = 0;
 
@@ -179,6 +183,7 @@ public class WASendService extends AccessibilityService {
             e.printStackTrace();
             String stackTrace = Log.getStackTraceString(e);
             dbHelper.insertLog(created, ID_SERVICE_WA, stackTrace, "danger", user_id);
+            System.out.println("cek 5");
         }
     }
 
